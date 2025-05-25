@@ -1,6 +1,18 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/loginSlice";
+import Cookies from "js-cookie";
 
 const BasicMenu = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+
+  const handleLogout = () => {
+    Cookies.remove('access_token');
+    dispatch(logout());
+    // 필요시 추가 동작
+  };
+
   return (  
   <nav id='navbar' className=" flex  bg-blue-300">
 
@@ -19,9 +31,18 @@ const BasicMenu = () => {
     </div>
 
     <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
-        <div className="text-white text-sm m-1 rounded" >
-          Login
-        </div>
+        {isLoggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="text-white text-sm m-1 rounded bg-red-500 px-3 py-1"
+          >
+            Logout
+          </button>
+        ) : (
+          <Link to="/login" className="text-white text-sm m-1 rounded">
+            Login
+          </Link>
+        )}
     </div>
   </nav>
   );
