@@ -12,6 +12,8 @@ const TodoIndex = lazy(() => import("../pages/todo/IndexPage"))
 
 const TodoList =  lazy(() => import("../pages/todo/ListPage"))
 
+const Payment = lazy(()=>import("../pages/PaymentPage"))
+
 const root = createBrowserRouter([
 
   {
@@ -26,6 +28,10 @@ const root = createBrowserRouter([
     path: "todo",
     element: <Suspense fallback={Loading}><TodoIndex/></Suspense>,
     children: todoRouter()
+  },
+  {
+    path: "/payment",
+    element: <Suspense fallback={Loading}><Payment/></Suspense>
   }
 
 
