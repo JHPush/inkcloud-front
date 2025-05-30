@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../api/memberApi';
+import { login } from '../../api/keycloakApi';
 import { setLogin, logout } from '../../store/loginSlice';
-import Cookies from 'js-cookie';
+import { setAccessToken, removeAccessToken } from '../../utils/cookieUtils';
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -12,26 +13,57 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const user = useSelector(state => state.login.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      const tokenData = await login(email, password);
-      Cookies.set('access_token', tokenData.access_token, { expires: 1 });
+      const tokenData = await login(email, password); // tokenData.access_token이 실제 토큰 문자열
+      setAccessToken(tokenData.access_token);
+
+      // JWT 토큰 디코딩
+      const decoded = jwtDecode(tokenData.access_token);
+
+      // role 추출
+      let role = null;
+      if (decoded.realm_access && Array.isArray(decoded.realm_access.roles)) {
+        if (decoded.realm_access.roles.includes("ADMIN")) {
+          role = "ADMIN";
+        } else if (decoded.realm_access.roles.includes("USER")) {
+          role = "USER";
+        }
+      }
+      console.log("role:", role)
+
+      const user = {
+        email: decoded.email,
+        firstName: decoded.given_name,
+        lastName: decoded.family_name,
+        role
+      };
+
+      console.log("user:", user)
       dispatch(setLogin({
         isLoggedIn: true,
-        accessToken: tokenData.access_token,
-        user: email
+        user
       }));
-      navigate('/');
+
+      if (user.role === "USER") {
+        navigate('/');
+      } else if (user.role === "ADMIN") {
+        navigate('/admin');
+      } else {
+        // 권한 없음 또는 기타 처리
+        setError('권한이 없습니다.');
+      }
     } catch (err) {
       setError('로그인에 실패했습니다.');
     }
   };
 
   const handleLogout = () => {
-    Cookies.remove('access_token');
+    removeAccessToken();
     dispatch(logout());
     setEmail('');
     setPassword('');
@@ -39,16 +71,6 @@ const LoginPage = () => {
     navigate('/login');
   };
 
-  if (isLoggedIn) {
-    return (
-      <div style={{ maxWidth: 400, margin: '0 auto', padding: 20 }}>
-        <h2>로그아웃</h2>
-        <button onClick={handleLogout} style={{ width: '100%', padding: 10, background: '#f87171', color: 'white', border: 'none', borderRadius: 4 }}>
-          로그아웃
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div style={{ maxWidth: 400, margin: '0 auto', padding: 20 }}>
@@ -83,6 +105,9 @@ const LoginPage = () => {
         )}
         <button type="submit" style={{ width: '100%', padding: 10 }}>
           로그인
+        </button>
+        <button type="button" onClick={()=>{navigate('/forgot')}} style={{ width: '100%', padding: 10 }}>
+          비밀번호 찾기
         </button>
       </form>
     </div>

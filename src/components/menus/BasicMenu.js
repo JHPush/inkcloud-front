@@ -27,6 +27,13 @@ const BasicMenu = () => {
         <li className="pr-6 text-2xl">
           <Link to={'/todo/'}>Todo</Link>
         </li>
+        <li className="pr-6 text-2xl">
+          <Link to={'/mypage'}>마이페이지</Link>
+        </li>
+          <li className="pr-6 text-2xl">
+          <Link to={'/admin'}>관리자페이지</Link>
+        </li>
+     
       </ul>
     </div>
 
@@ -43,6 +50,11 @@ const BasicMenu = () => {
             Login
           </Link>
         )}
+    </div>
+    <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
+          <Link to="/signup" className="text-white text-sm m-1 rounded">
+            회원가입
+          </Link>
     </div>
   </nav>
   );

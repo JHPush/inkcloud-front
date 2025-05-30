@@ -1,32 +1,109 @@
 import axios from 'axios';
+import jwtAxios from '../utils/jwtAxios';
 
-const PREFIX_URL = "http://localhost:25000/api/v1/members";
+const MEMBER_SERVICE_URL = "http://localhost:25000/api/v1/members";
 
-// Keycloak OIDC 토큰 발급 함수
-const KEYCLOAK_TOKEN_URL = 'http://localhost:8080/realms/inkcloud/protocol/openid-connect/token';
-
-const KEYCLOAK_CLIENT_ID = process.env.REACT_APP_KEYCLOAK_CLIENT_ID;
-const KEYCLOAK_CLIENT_SECRET = process.env.REACT_APP_KEYCLOAK_CLIENT_SECRET;
-
-// 함수 이름을 login으로 변경
-export const login = async (username, password) => {
-  const params = new URLSearchParams();
-  params.append('grant_type', 'password');
-  params.append('client_id', KEYCLOAK_CLIENT_ID);
-  params.append('username', username); 
-  params.append('password', password);
-  params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
-
-
-  try {
-    const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    });
-    console.log("response: ", response)
-    return response.data; // access_token, refresh_token 등 포함
-    
-  } catch (error) {
-    throw new Error('Keycloak 인증 실패');
-  }
+//회원가입시 인증번호 발송
+export const SendVerificationEmail = async(email) => {
+  const response = await axios.post(
+      `${MEMBER_SERVICE_URL}/signup/email/send`, { email }
+  );
+  return response.data;
 };
 
+//회원가입시 인증번호 검증 
+export const VerifyCode = async(email, code) => {
+  const response = await axios.post(
+      `${MEMBER_SERVICE_URL}/signup/email/verify`, { email, code}
+  );
+  console.log("response:", response)
+  return response.data;
+  
+};
+
+//회원가입
+export const registerMember = async(form) => {
+  const response = await axios.post(
+      `${MEMBER_SERVICE_URL}/signup`,
+      {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        password: form.password,
+        phoneNumber: form.phoneNumber,
+        zipcode: form.zipcode,
+        addressMain: form.addressMain,
+        addressSub: form.addressSub,
+        role: form.role
+      }
+  );
+  return response.data;
+};
+
+//회원 정보 조회 - 사용자
+export const getMyInfo = async() => {
+  const response = await jwtAxios.get(`${MEMBER_SERVICE_URL}/detail`);
+  return response.data;
+};
+
+//회원 정보 상세 조회 - 관리자
+export const getUserInfo = async({email}) => {
+  const response = await jwtAxios.get(`${MEMBER_SERVICE_URL}/detail/admin`, {email});
+  return response.data;
+};
+
+//회원 정보 목록 조회 ,검색, 페이징- 관리자
+export const getUserList = async({email, name, page, size}) => {
+  const response = await jwtAxios.get(
+    `${MEMBER_SERVICE_URL}`,
+    {
+      params: { email, name, page, size }
+    }
+  );
+  return response.data;
+};
+
+//사용자-회원 정보 수정 -전화번호 주소 
+export const updateMyInfo = async({ phoneNumber, zipcode, addressMain, addressSub }) => {
+  const response = await jwtAxios.patch(
+    `${MEMBER_SERVICE_URL}/update`,     
+   { phoneNumber, zipcode, addressMain, addressSub }
+  );
+  return response.data;
+};
+
+//비밀번호 변경 
+export const changePassword = async({newPassword}) => {
+  const response = await jwtAxios.patch(`${MEMBER_SERVICE_URL}/change-password`, {newPassword} );
+  return response.data;
+};
+
+//비밀번호 찾기- 이메일 발송
+export const requestPwdCode = async({email, firstName, lastName}) => {
+  const response = await axios.post(`${MEMBER_SERVICE_URL}/password/request`, {email, firstName, lastName} );
+  return response.data;
+};
+
+//비밀번호 찾기- 인증번호 검증
+export const verifyPwdCode = async({email, code}) => {
+  const response = await axios.post(`${MEMBER_SERVICE_URL}/password/verify`, {email, code} );
+  return response.data;
+};
+
+//비밀번호 찾기- 재설정
+export const resetPassword = async({email, password}) => {
+  const response = await axios.post(`${MEMBER_SERVICE_URL}/password/reset`, {email, password} );
+  return response.data;
+};
+
+//회원탈퇴 - 사용자
+export const withdrawMyself = async() => {
+  const response = await jwtAxios.patch(`${MEMBER_SERVICE_URL}/withdraw`);
+  return response.data;
+};
+
+//회원삭제 - 관리자
+export const deleteMember = async(emailList) => {
+  const response = await jwtAxios.patch(`${MEMBER_SERVICE_URL}/withdraw/admin`, emailList);
+  return response.data;
+};
