@@ -14,3 +14,18 @@ export const getAccessToken = () => {
 export const removeAccessToken = () => {
   Cookies.remove('access_token');
 };
+
+// refreshToken 저장
+export const setRefreshToken = (token, options = { expires: 7 }) => {
+  Cookies.set('refresh_token', token, options);
+};
+
+// refreshToken 가져오기
+export const getRefreshToken = () => {
+  return Cookies.get('refresh_token');
+};
+
+// refreshToken 삭제
+export const removeRefreshToken = () => {
+  Cookies.remove('refresh_token');
+};
