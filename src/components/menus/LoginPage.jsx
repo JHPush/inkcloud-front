@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../../api/keycloakApi';
-import { setLogin, logout } from '../../store/loginSlice';
-import { setAccessToken, removeAccessToken } from '../../utils/cookieUtils';
+import { setLogin } from '../../store/loginSlice';
+import { setAccessToken, setRefreshToken} from '../../utils/cookieUtils';
 import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
@@ -12,15 +12,14 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
-  const user = useSelector(state => state.login.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      const tokenData = await login(email, password); // tokenData.access_token이 실제 토큰 문자열
+      const tokenData = await login(email, password); // tokenData.access_token, tokenData.refresh_token
       setAccessToken(tokenData.access_token);
+      setRefreshToken(tokenData.refresh_token);
 
       // JWT 토큰 디코딩
       const decoded = jwtDecode(tokenData.access_token);
@@ -62,14 +61,6 @@ const LoginPage = () => {
     }
   };
 
-  const handleLogout = () => {
-    removeAccessToken();
-    dispatch(logout());
-    setEmail('');
-    setPassword('');
-    setError('');
-    navigate('/login');
-  };
 
 
   return (

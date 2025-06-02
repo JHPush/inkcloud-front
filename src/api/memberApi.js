@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jwtAxios from '../utils/jwtAxios';
+import jwtAxios from './jwtAxios';
 
 const MEMBER_SERVICE_URL = "http://localhost:25000/api/v1/members";
 

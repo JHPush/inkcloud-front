@@ -10,7 +10,7 @@ const WithdrawMember = () => {
   const dispatch = useDispatch();
 
   const handleWithdraw = async () => {
-    // if (!window.confirm("정말로 회원을 탈퇴하시겠습니까?")) return;
+    if (!window.confirm("정말로 회원을 탈퇴하시겠습니까? 탈퇴 후 7일간 가입이 불가능합니다.")) return;
     try {
       await withdrawMyself(); // JWT 토큰으로 본인 탈퇴 요청
 

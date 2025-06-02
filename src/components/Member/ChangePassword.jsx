@@ -8,12 +8,21 @@ const ChangePassword = ({ onSuccess, email }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // 비밀번호 정책: 8자 이상, 대소문자, 숫자, 특수문자 포함
+  const validatePassword = (pw) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/.test(pw);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (!newPassword) {
       setError("비밀번호를 입력하세요.");
+      return;
+    }
+    if (!validatePassword(newPassword)) {
+      setError("비밀번호는 8자 이상, 대소문자, 숫자, 특수문자를 모두 포함해야 합니다.");
       return;
     }
     if (!confirmPassword) {
@@ -49,12 +58,16 @@ const ChangePassword = ({ onSuccess, email }) => {
   return (
     <form onSubmit={handleSubmit} className="p-4 bg-white rounded shadow max-w-md mx-auto">
       <div className="mb-2 font-bold text-lg">{email ? "비밀번호 재설정" : "비밀번호 변경"}</div>
+      <div className="text-xs text-gray-500 mb-2">
+        비밀번호는 <span className="font-semibold">8자 이상</span>이며, <span className="font-semibold">대소문자</span>, <span className="font-semibold">숫자</span>, <span className="font-semibold">특수문자</span>를 모두 포함해야 합니다.
+      </div>
       <input
         type="password"
         placeholder="새 비밀번호"
         value={newPassword}
         onChange={e => setNewPassword(e.target.value)}
         className="w-full input input-bordered mb-2"
+
       />
       <input
         type="password"
@@ -62,9 +75,10 @@ const ChangePassword = ({ onSuccess, email }) => {
         value={confirmPassword}
         onChange={e => setConfirmPassword(e.target.value)}
         className="w-full input input-bordered mb-2"
+
       />
       <button type="submit" className="w-full btn btn-primary">확인</button>
-      {error && <div className="text-red-600 mt-2">{error}</div>}
+      {error && <div className="text-xs text-red-600 mt-2">{error}</div>}
     </form>
   );
 };

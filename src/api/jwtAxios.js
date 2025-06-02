@@ -1,12 +1,19 @@
 import axios from "axios";
-import { getAccessToken, getRefreshToken, setAccessToken } from "../utils/cookieUtils";
+import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken } from "../utils/cookieUtils";
 import { refreshToken as refreshTokenApi } from "./keycloakApi";
 
-const jwtAxios = axios.create();
+// // axios 인스턴스 생성
+const jwtAxios = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:25000/api/v1",
+  withCredentials: true, // 필요시
+});
+
 
 jwtAxios.interceptors.request.use(
   config => {
     const token = getAccessToken();
+    const refresh = getRefreshToken();
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -15,17 +22,26 @@ jwtAxios.interceptors.request.use(
 );
 
 jwtAxios.interceptors.response.use(
-  response => response,
+  response => {
+    return response;
+  },
   async error => {
     const originalRequest = error.config;
+    console.log("error:", error)
     // access token 만료(401) & 재시도 안 했을 때만
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    // if (error.response && error.response.status === 401 && !originalRequest._retry) {
+        if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const refresh = getRefreshToken();
+        console.log("refresh:", refresh)
         if (!refresh) throw new Error("No refresh token");
         const data = await refreshTokenApi(refresh);
         setAccessToken(data.access_token);
+        if (data.refresh_token) {
+          console.log("refresh토큰 재설정:")
+          setRefreshToken(data.refresh_token); // 새 refresh token 저장
+        }
         originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
         return jwtAxios(originalRequest); // 재요청
       } catch (e) {

@@ -1,11 +1,9 @@
-// src/components/layout/AdminLayout.jsx
 
 import { BookOpenIcon, UsersIcon, ClipboardListIcon, BellIcon, InboxIcon } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import Cookies from "js-cookie";
-import { logout } from '../store/loginSlice';
+import { logoutUtil } from '../utils/logoutUtils';
 
 const sideMenu = [
   { name: '회원관리', icon: <UsersIcon className="w-5 h-5" />, path: '/admin/member' },
@@ -18,11 +16,11 @@ export default function AdminLayout({ children }) {
   const dispatch = useDispatch();
     const isLoggedIn = useSelector(state => state.login.isLoggedIn);
 
-  const handleLogout = () => {
-    Cookies.remove('access_token');
-    dispatch(logout());
-    // 필요시 추가 동작
-  };
+    const handleLogout = () => {
+      logoutUtil(dispatch)
+    }
+
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}

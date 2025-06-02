@@ -1,16 +1,13 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/loginSlice";
-import Cookies from "js-cookie";
+import { logoutUtil } from "../../utils/logoutUtils";
 
 const BasicMenu = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.login.isLoggedIn);
 
   const handleLogout = () => {
-    Cookies.remove('access_token');
-    dispatch(logout());
-    // 필요시 추가 동작
+    logoutUtil(dispatch)
   };
 
   return (  
@@ -29,9 +26,6 @@ const BasicMenu = () => {
         </li>
         <li className="pr-6 text-2xl">
           <Link to={'/mypage'}>마이페이지</Link>
-        </li>
-          <li className="pr-6 text-2xl">
-          <Link to={'/admin'}>관리자페이지</Link>
         </li>
      
       </ul>

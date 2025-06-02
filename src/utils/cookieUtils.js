@@ -23,6 +23,7 @@ export const setRefreshToken = (token, options = { expires: 7 }) => {
 // refreshToken 가져오기
 export const getRefreshToken = () => {
   return Cookies.get('refresh_token');
+  
 };
 
 // refreshToken 삭제

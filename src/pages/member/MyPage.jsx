@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import BasicLayout from "../../layouts/BasicLayout";
 import MyInfoPage from "./MyInfoPage";
 import WithdrawMember from "../../components/Member/WithdrawMember"; 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import ShippingList from "../../components/Member/shipping/ShippingList";
 
 const MyPage = () => {
@@ -15,7 +15,6 @@ const MyPage = () => {
       setTab(location.state.tab);
     }
   },[location.state])
-
 
   return (
     <BasicLayout>
