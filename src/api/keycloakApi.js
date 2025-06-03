@@ -12,10 +12,12 @@ const KEYCLOAK_CLIENT_SECRET = process.env.REACT_APP_KEYCLOAK_CLIENT_SECRET;
 export const login = async (username, password) => {
   const params = new URLSearchParams();
   params.append('grant_type', 'password');
-  params.append('client_id', KEYCLOAK_CLIENT_ID);
+  params.append('client_id', 'react-app');
+    // params.append('client_id', KEYCLOAK_CLIENT_ID);
   params.append('username', username); 
   params.append('password', password);
-  params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
+  params.append('client_secret', 'peA9vcpOhJXPanF7e1HgKUyXsw3sxf0F' );
+    // params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
 
 
   try {

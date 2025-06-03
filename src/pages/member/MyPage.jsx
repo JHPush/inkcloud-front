@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import BasicLayout from "../../layouts/BasicLayout";
 import MyInfoPage from "./MyInfoPage";
 import WithdrawMember from "../../components/Member/WithdrawMember"; 
 import { useLocation } from "react-router-dom";
 import ShippingList from "../../components/Member/shipping/ShippingList";
+import MemberLayout from "../../layouts/MemberLayout";
 
 const MyPage = () => {
   const [tab, setTab] = useState("info");
@@ -17,7 +17,7 @@ const MyPage = () => {
   },[location.state])
 
   return (
-    <BasicLayout>
+    <MemberLayout tab={tab} setTab={setTab}>
       <div className="text-3xl mb-4">마이페이지</div>
       <div className="flex gap-4 mb-6">
         <button
@@ -42,7 +42,7 @@ const MyPage = () => {
       {tab === "info" && <MyInfoPage />}
       {tab === "address" && <ShippingList />}
       {tab === "withdraw" && <WithdrawMember />}
-    </BasicLayout>
+    </MemberLayout>
   );
 };
 

@@ -1,14 +1,14 @@
 import { useState } from "react";
 import FindPassword from "../../components/Member/FindPassword";
 import ChangePassword from "../../components/Member/ChangePassword";
-import BasicLayout from "../../layouts/BasicLayout";
+import MemberLayout from "../../layouts/MemberLayout";
 
 const ForgotPwdPage = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
 
   return (
-    <BasicLayout>
+    <MemberLayout>
       {step === 1 && (
         <FindPassword
           onSuccess={(email) => {
@@ -25,7 +25,7 @@ const ForgotPwdPage = () => {
           {/* 비밀번호가 성공적으로 변경되었습니다. */}
         </div>
       )}
-    </BasicLayout>
+    </MemberLayout>
   );
 };
 
