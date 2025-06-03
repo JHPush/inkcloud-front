@@ -16,7 +16,7 @@ export const login = async (username, password) => {
     // params.append('client_id', KEYCLOAK_CLIENT_ID);
   params.append('username', username); 
   params.append('password', password);
-  params.append('client_secret', 'peA9vcpOhJXPanF7e1HgKUyXsw3sxf0F' );
+  params.append('client_secret', '' );
     // params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
 
 
