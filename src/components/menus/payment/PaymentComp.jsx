@@ -105,7 +105,7 @@ const PaymentComp = () => {
             storeId: process.env.REACT_APP_STORE_ID,
             channelKey: process.env.REACT_APP_CHANNEL_ID,
             paymentId: orderStartResult.paymentId,
-            orderName: orderStartResult.orderId,
+            orderName: items[0].name + '외 ' + items.reduce((sum, item) => sum + item.quantity, 0) + '건',
             totalAmount: orderStartResult.price,
             currency: "KRW",
             payMethod: "CARD",
