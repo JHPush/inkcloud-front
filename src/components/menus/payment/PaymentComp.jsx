@@ -1,10 +1,11 @@
 import PortOne from "@portone/browser-sdk/v2"
 import { useEffect, useState } from "react"
-import { getPaymentValidation, postPaymentSuccess, postValidationAddServer } from "../../../api/paymentApi"
+import { getPaymentValidation, postOrderStart, postPaymentSuccess, postValidationAddServer } from "../../../api/paymentApi"
 
 const PaymentComp = () => {
     const [items, setItems] = useState([])
-    const [user, setUser] =useState(null)
+    const [user, setUser] = useState(null)
+    const [ship, setShip] = useState(null)
     const [paymentStatus, setPaymentStatus] = useState({
         status: "IDLE",
     })
@@ -17,24 +18,46 @@ const PaymentComp = () => {
 
     //     loadItem().catch((error) => console.error(error))
     //   }, [])
-    useEffect(()=>{
+    useEffect(() => {
         console.log("payment Status : ", paymentStatus)
 
-    },[paymentStatus])
+    }, [paymentStatus])
 
     useEffect(() => {
         if (items && items.length === 0)
-            setItems([{
-                name: "테스트",
-                price: 500,
-                count: 2
-            }])
-        if(!user){
+            setItems([
+                {
+                    name: "객체지향의 사실과 오해",
+                    price: 500,
+                    quantity: 1,
+                    auther: "조영호",
+                    publisher: "위키북스",
+                    thumbnailUrl: "https://example.com/item1.jpg"
+                },
+                {
+                    name: "클린 코드",
+                    price: 500,
+                    quantity: 1,
+                    auther: "로버트 C. 마틴",
+                    publisher: "인사이트",
+                    thumbnailUrl: "https://example.com/item2.jpg"
+                }
+            ])
+        if (!user) {
             setUser({
-                fullName:'테스트유저',
-                email:'qnrntmvls@gmail.com',
-                phoneNumber:'01095244987'
-                
+                memberEmail: 'qnrntmvls@gmail.comm',
+                memberContact: '010-9524-4987',
+                memberName: '박지호',
+
+            })
+        }
+        if (!ship) {
+            setShip({
+                name: "김철수",
+                receiver: "박지호",
+                addressMain: "서울시 강남구 테헤란로 123",
+                addressSub: "402호",
+                contact: "010-9876-5432"
             })
         }
     }, [])
@@ -54,32 +77,45 @@ const PaymentComp = () => {
     }
 
     const handleSubmit = async (e) => {
-        const paymentId = randomId()
         e.preventDefault()
 
-        const addValidationResponse = await postValidationAddServer({
-                                    paymentId: paymentId,
-                                    email: user.email,
-                                    // method:"CARD",
-                                    totalCount: items.reduce((sum, item)=> sum + item.count,0), 
-                                    totalAmount: items.reduce((sum, item)=> sum + item.count * item.price,0)
-                                })
+        // =====================
+        // 여기 재고 확인 api 필요
+        // =====================
+
+        // const paymentId = randomId()
+        // const addValidationResponse = await postValidationAddServer({
+        //                             orderId: '12250443b9426485',
+        //                             paymentId: paymentId,
+        //                             email: user.email,
+        //                             // method:"CARD",
+        //                             totalCount: items.reduce((sum, item)=> sum + item.count,0), 
+        //                             totalAmount: items.reduce((sum, item)=> sum + item.count * item.price,0)
+        //                         })
+        const orderStartResult = await postOrderStart({
+            price: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+            quantity: items.reduce((sum, item) => sum + item.quantity, 0),
+            member: user,
+            orderItems: items,
+            orderShip:ship
+        })
+
         setPaymentStatus({ status: "PENDING" })
         const payment = await PortOne.requestPayment({
             storeId: process.env.REACT_APP_STORE_ID,
             channelKey: process.env.REACT_APP_CHANNEL_ID,
-            paymentId,
-            orderName: items[0].name,
-            totalAmount: items.reduce((sum, payment)=>  sum + payment.price*payment.count, 0),
+            paymentId: orderStartResult.paymentId,
+            orderName: orderStartResult.orderId,
+            totalAmount: orderStartResult.price,
             currency: "KRW",
             payMethod: "CARD",
             customer: {
-                fullName: user.fullName,
-                email: user.email,
-                phoneNumber: user.phoneNumber,
+                fullName: user.memberName,
+                email: user.memberEmail,
+                phoneNumber: user.memberContact,
             },
             products: [
-                {id: 'testId', name:'테스트이름', amount:500, quantity:2}
+                { id: 'testId', name: '테스트이름', amount: 500, quantity: 2 }
             ]
             // customData: {
             //     count: items.reduce((sum, payment)=> sum + payment.count),
@@ -93,10 +129,10 @@ const PaymentComp = () => {
             return
         }
         console.log('status : ', payment.code);
-        setPaymentStatus(payment.transactionType === "PAYMENT"?{status:'PAID'}:{status:'FAILED'}) 
-        
-        
-       
+        setPaymentStatus(payment.transactionType === "PAYMENT" ? { status: 'PAID' } : { status: 'FAILED' })
+
+
+
         // console.log('res : ',addValidationResponse)
         // if (completeResponse.ok) {
         //     console.log("paymentComp Data : ", completeResponse)
@@ -128,19 +164,19 @@ const PaymentComp = () => {
                                 <img src={`/${items[0].id}.png`} />
                             </div>
                             <div className="item-text">
-                                {items.map((item, idx)=>(
-                                <>
-                                <h5>상품명 : {item.name}</h5>
-                                <p>결제 수량 : {item.count}</p>
-                                <p>결제 금액 : {item.price}원</p>
-                                </>
+                                {items.map((item, idx) => (
+                                    <>
+                                        <h5>상품명 : {item.name}</h5>
+                                        <p>결제 수량 : {item.quantity}</p>
+                                        <p>결제 금액 : {item.price}원</p>
+                                    </>
                                 )
                                 )}
                             </div>
                         </div>
                         <div className="price">
                             <label>총 구입 가격</label>
-                            {items.reduce((sum, payment)=>  sum + payment.price*payment.count, 0)}원
+                            {items.reduce((sum, item) => sum + item.price * item.quantity, 0)}원
                         </div>
                     </article>
                     <button
