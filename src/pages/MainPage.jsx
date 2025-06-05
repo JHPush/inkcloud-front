@@ -1,14 +1,12 @@
-import AdminLayout from "../layouts/AdminLayout";
+import React from "react";
 import BasicLayout from "../layouts/BasicLayout";
 
 const MainPage = () => {
   return (
-    <AdminLayout>
-      
+    <BasicLayout>
       <div className=" text-3xl">Main Page</div>
-    </AdminLayout> 
-    
-   );
+    </BasicLayout> 
+  );
 }
  
 export default MainPage;

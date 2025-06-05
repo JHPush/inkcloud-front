@@ -1,6 +1,15 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUtil } from "../../utils/logoutUtils";
 
 const BasicMenu = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+
+  const handleLogout = () => {
+    logoutUtil(dispatch)
+  };
+
   return (  
   <nav id='navbar' className=" flex  bg-blue-300">
 
@@ -18,13 +27,31 @@ const BasicMenu = () => {
         <li className="pr-6 text-2xl">
           <Link to={'/payment'}>payment</Link>
         </li>
+        <li className="pr-6 text-2xl">
+          <Link to={'/mypage'}>마이페이지</Link>
+        </li>
+     
       </ul>
     </div>
 
     <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
-        <div className="text-white text-sm m-1 rounded" >
-          Login
-        </div>
+        {isLoggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="text-white text-sm m-1 rounded bg-red-500 px-3 py-1"
+          >
+            Logout
+          </button>
+        ) : (
+          <Link to="/login" className="text-white text-sm m-1 rounded">
+            Login
+          </Link>
+        )}
+    </div>
+    <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
+          <Link to="/signup" className="text-white text-sm m-1 rounded">
+            회원가입
+          </Link>
     </div>
   </nav>
   );
