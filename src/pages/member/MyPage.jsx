@@ -24,19 +24,19 @@ const MyPage = () => {
           className={`btn btn-outline ${tab === "info" ? "btn-active" : ""}`}
           onClick={() => setTab("info")}
         >
-          내 정보
+          {/* 내 정보 */}
         </button>
         <button
           className={`btn btn-outline ${tab === "address" ? "btn-active" : ""}`}
           onClick={() => setTab("address")}
         >
-          배송지 관리
+          {/* 배송지 관리 */}
         </button>
         <button
           className={`btn btn-outline ${tab === "withdraw" ? "btn-active" : ""}`}
           onClick={() => setTab("withdraw")}
         >
-          회원탈퇴
+          {/* 회원탈퇴 */}
         </button>
       </div>
       {tab === "info" && <MyInfoPage />}
