@@ -35,6 +35,8 @@ const AddShipping = lazy(() => import("../components/Member/shipping/AddShipping
 
 const ModifyShipping = lazy(() => import("../components/Member/shipping/ModifyShipping"))
 
+const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
+
 const root = createBrowserRouter([
 
   {
@@ -105,6 +107,10 @@ const root = createBrowserRouter([
   {
     path: "products/:id",
     element: <Suspense fallback={Loading}><ProductDetail /></Suspense>
+  },
+  {
+    path: "admin/reviews",
+    element: <Suspense fallback={Loading}><AdminReviewPage /></Suspense>
   }
 
 ])

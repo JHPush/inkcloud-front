@@ -24,7 +24,7 @@ export const login = async (username, password) => {
     const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-    console.log("response: ", response)
+    // console.log("response: ", response)
     return response.data; // access_token, refresh_token 등 포함
     
   } catch (error) {
@@ -34,8 +34,8 @@ export const login = async (username, password) => {
 
 //Refresh Token 요청
 export const refreshToken = async (refreshToken) => {
-    console.log("refreshToken", refreshToken)
-  console.log("리프레시토큰 발급 요청")
+  //   console.log("refreshToken", refreshToken)
+  // console.log("리프레시토큰 발급 요청")
   const params = new URLSearchParams();
   params.append('grant_type', 'refresh_token');
   params.append('client_id', KEYCLOAK_CLIENT_ID);
@@ -46,7 +46,7 @@ export const refreshToken = async (refreshToken) => {
     const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-      console.log("리프레시토큰 발급 요청 키클록 응답", response.data)
+      // console.log("리프레시토큰 발급 요청 키클록 응답", response.data)
     return response.data;
     
   } catch (error) {
