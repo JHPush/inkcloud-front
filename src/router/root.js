@@ -15,7 +15,6 @@ const TodoIndex = lazy(() => import("../pages/todo/IndexPage"))
 const ProductList = lazy(() => import("../pages/product/ProductListPage"));
 const ProductDetail = lazy(() => import("../pages/product/ProductDetailPage"));
 
-const Payment = lazy(()=>import("../pages/PaymentPage"))
 
 const LoginPage = lazy(() => import("../components/menus/LoginPage"))
 
@@ -36,6 +35,11 @@ const AddShipping = lazy(() => import("../components/Member/shipping/AddShipping
 const ModifyShipping = lazy(() => import("../components/Member/shipping/ModifyShipping"))
 
 const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
+// =========================== 주문 & 결제 ==========================
+const PaymentPage = lazy(()=>import("../pages/Order_Payment/PaymentPage"))
+const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
+
+
 
 const root = createBrowserRouter([
 
@@ -97,10 +101,6 @@ const root = createBrowserRouter([
     children: todoRouter()
   },
   {
-    path: "/payment",
-    element: <Suspense fallback={Loading}><Payment/></Suspense>
-  },
-  {
   path: "products",
   element: <Suspense fallback={Loading}><ProductList /></Suspense>
   },
@@ -111,6 +111,14 @@ const root = createBrowserRouter([
   {
     path: "admin/reviews",
     element: <Suspense fallback={Loading}><AdminReviewPage /></Suspense>
+  },
+  {
+    path: "/payment",
+    element: <Suspense fallback={Loading}><PaymentPage/></Suspense>
+  },
+  {
+    path: "/order",
+    element: <Suspense fallback={Loading}><OrderPage/></Suspense>
   }
 
 ])

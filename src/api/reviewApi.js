@@ -55,9 +55,9 @@ export const getReviewDetail = async (id) => {
 };
 
 //회원 리뷰 수정
-export const updateReview = async (id) => {
+export const updateReview = async (id, {rating, comment}) => {
   const response = await jwtAxios.patch(
-    `${MEMBER_SERVICE_URL}/${id}`
+    `${MEMBER_SERVICE_URL}/${id}`, {rating, comment}
   );
   return response.data;
 };

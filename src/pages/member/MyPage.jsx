@@ -6,6 +6,7 @@ import ShippingList from "../../components/Member/shipping/ShippingList";
 import MemberLayout from "../../layouts/MemberLayout";
 import MemberReviewList from "../../components/review/MemberReviewList";
 
+
 const MyPage = () => {
   const [tab, setTab] = useState("info");
   const location = useLocation();
@@ -17,9 +18,10 @@ const MyPage = () => {
     }
   },[location.state])
 
+
   return (
     <MemberLayout tab={tab} setTab={setTab}>
-      <div className="text-3xl mb-4">마이페이지</div>
+      {/* <div className="text-3xl mb-4">마이페이지</div> */}
       <div className="flex gap-4 mb-6">
         <button
           className={`btn btn-outline ${tab === "info" ? "btn-active" : ""}`}

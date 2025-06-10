@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserList } from "../../../api/memberApi";
 import DeleteMembers from "./DeleteMembers";
+import { useSelector } from "react-redux";
 
 const GetMemberList = () => {
   const [members, setMembers] = useState([]);
@@ -10,6 +11,8 @@ const GetMemberList = () => {
   const [search, setSearch] = useState("");
   const [isSearched, setIsSearched] = useState(false);
   const navigate = useNavigate();
+
+
 
   // 검색 및 목록 조회
   const fetchMembers = async (params = {}) => {
