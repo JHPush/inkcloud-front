@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../../api/productApi";
 
 const ProductListPage = () => {
@@ -8,6 +9,8 @@ const ProductListPage = () => {
   const [categoryIds, setCategoryIds] = useState([]);
   const [sortType, setSortType] = useState("LATEST");
   const [categories, setCategories] = useState([]);
+
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     try {
@@ -26,7 +29,7 @@ const ProductListPage = () => {
       setCategories(data?.categoryCounts ?? []);
     } catch (error) {
       console.error("❌ 검색 실패", error);
-      setProducts([]); // 에러 발생 시에도 빈 배열로 초기화
+      setProducts([]);
       setCategories([]);
     }
   };
@@ -122,7 +125,11 @@ const ProductListPage = () => {
 
       <div>
         {(products || []).map((product) => (
-          <div key={product.id}>
+          <div
+            key={product.id}
+            style={{ cursor: "pointer", borderBottom: "1px solid #ccc", padding: "10px" }}
+            onClick={() => navigate(`/products/${product.id}`)}
+          >
             <img src={product.image} width="100" alt="book" />
             <p>{product.name}</p>
             <p>{product.author}</p>
