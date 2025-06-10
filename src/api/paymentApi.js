@@ -7,13 +7,13 @@ const ADD_COMPLETE = '/validate'
 const ORDER_BASE_URI = '/orders'
 
 
-export const postValidationAddServer = async (form)=>{
-    console.log('form : ', form)
-    console.log('url : ', PREFIX_URL)
-    return (await jwtAxios.post(`${PREFIX_URL + PAYMENT_BASE_URI + ADD_COMPLETE}`, 
-        form, 
-        {headers:{'Content-Type':'application/json'}}));
-}
+// export const postValidationAddServer = async (form)=>{
+//     console.log('form : ', form)
+//     console.log('url : ', PREFIX_URL)
+//     return (await jwtAxios.post(`${PREFIX_URL + PAYMENT_BASE_URI + ADD_COMPLETE}`, 
+//         form, 
+//         {headers:{'Content-Type':'application/json'}}));
+// }
 
 export const postOrderStart = async (form)=>{
     console.log('form : ', form)
@@ -21,3 +21,5 @@ export const postOrderStart = async (form)=>{
         form, 
         {headers:{'Content-Type':'application/json'}})).data;
 }
+
+

@@ -123,33 +123,36 @@ const OrderComp = () => {
     };
 
     const checkOrderShip = () => {
-        if (!orderShip.name) {
+        if(!orderShip){
+            alert('배송정보를 정확하게 입력하세요')
+            return false;
+        }
+        else if (!orderShip.name || orderShip.name ==='') {
             alert('배송지 이름을 입력하세요')
             nameRef.current?.focus()
             return false;
         }
-        else if (!orderShip.receiver) {
+        else if (!orderShip.receiver || orderShip.receiver==='') {
             alert('수령인을 입력하세요')
             receiverRef.current?.focus()
             return false;
         }
-        else if (!orderShip.contact) {
+        else if (!orderShip.contact || orderShip.contact==='') {
             alert('수령인 연락처를 입력하세요')
             contactRef.current?.focus()
             return false;
         }
-        else if (!orderShip.zipcode) {
+        else if (!orderShip.zipcode||orderShip.zipcode==='') {
             alert('주소를 입력하세요')
             return false;
-        }
+        }else
 
         return true;
     }
 
     const handleRegisterShipment = () => {
-        if (!checkOrderShip)
+        if (!checkOrderShip())
             return;
-
         const regist = async () => {
             const res = await registerShip(orderShip)
             setOrderShip(res)
@@ -161,7 +164,7 @@ const OrderComp = () => {
         regist()
     }
     const handleUpdateShipment = () => {
-        if (!checkOrderShip)
+        if (!checkOrderShip())
             return;
 
         const update = async () => {
@@ -199,7 +202,13 @@ const OrderComp = () => {
     }
 
     const handleOrderSubmit = async (e) => {
+        if (!checkOrderShip)
+            return;
+        
+        
         e.preventDefault();
+
+
         const orderStartResult = await postOrderStart({
             price: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
             quantity: cartItems.reduce((sum, item) => sum + item.quantity, 0),
@@ -254,7 +263,6 @@ const OrderComp = () => {
                 message: payment.message
             })
             console.log('status : ', payment.code)
-
             return;
         }
         setPaymentStatus(payment.transactionType === "PAYMENT" ? { status: 'PAID' } : { status: 'FAILED' })
