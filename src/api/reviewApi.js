@@ -37,3 +37,35 @@ export const deleteReviews = async (reviewIds) => {
   );
   return response.data;
 };
+
+//회원 리뷰 조회 
+export const getReviewsByMember = async () => {
+  const response = await jwtAxios.get(
+    `${MEMBER_SERVICE_URL}/members/me`
+  );
+  return response.data;
+};
+
+//회원 리뷰 상세조회
+export const getReviewDetail = async (id) => {
+  const response = await jwtAxios.get(
+    `${MEMBER_SERVICE_URL}/detail/${id}`
+  );
+  return response.data;
+};
+
+//회원 리뷰 수정
+export const updateReview = async (id) => {
+  const response = await jwtAxios.patch(
+    `${MEMBER_SERVICE_URL}/${id}`
+  );
+  return response.data;
+};
+
+//상품별 리뷰 조회 
+export const getReviewsByProduct = async (productId) => {
+  const response = await axios.get(
+    `${MEMBER_SERVICE_URL}/products/${productId}`
+  );
+  return response.data;
+};
