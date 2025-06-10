@@ -1,5 +1,5 @@
-import PaymentComp from "../components/menus/payment/PaymentComp";
-import BasicLayout from "../layouts/BasicLayout";
+import PaymentComp from "../../components/Order/PaymentComp"
+import BasicLayout from "../../layouts/BasicLayout"
 
 const AboutPage = () => {
   return ( 

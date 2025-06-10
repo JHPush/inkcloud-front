@@ -25,7 +25,7 @@ const BasicMenu = () => {
           <Link to={'/todo/'}>Todo</Link>
         </li>
         <li className="pr-6 text-2xl">
-          <Link to={'/payment'}>payment</Link>
+          <Link to={'/order'}>주문</Link>
         </li>
         <li className="pr-6 text-2xl">
           <Link to={'/mypage'}>마이페이지</Link>

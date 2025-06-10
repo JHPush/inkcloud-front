@@ -13,7 +13,7 @@ jwtAxios.interceptors.request.use(
   config => {
     const token = getAccessToken();
     const refresh = getRefreshToken();
-    console.log(`token : ${token}`)
+    // console.log(`token : ${token}`)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

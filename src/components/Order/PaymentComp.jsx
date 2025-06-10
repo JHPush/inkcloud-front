@@ -1,6 +1,6 @@
 import PortOne from "@portone/browser-sdk/v2"
 import { useEffect, useState } from "react"
-import { getPaymentValidation, postOrderStart, postPaymentSuccess, postValidationAddServer } from "../../../api/paymentApi"
+import { getPaymentValidation, postOrderStart, postPaymentSuccess, postValidationAddServer } from "../../api/paymentApi"
 
 const PaymentComp = () => {
     const [items, setItems] = useState([])
@@ -83,15 +83,6 @@ const PaymentComp = () => {
         // 여기 재고 확인 api 필요
         // =====================
 
-        // const paymentId = randomId()
-        // const addValidationResponse = await postValidationAddServer({
-        //                             orderId: '12250443b9426485',
-        //                             paymentId: paymentId,
-        //                             email: user.email,
-        //                             // method:"CARD",
-        //                             totalCount: items.reduce((sum, item)=> sum + item.count,0), 
-        //                             totalAmount: items.reduce((sum, item)=> sum + item.count * item.price,0)
-        //                         })
         const orderStartResult = await postOrderStart({
             price: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
             quantity: items.reduce((sum, item) => sum + item.quantity, 0),
@@ -130,21 +121,6 @@ const PaymentComp = () => {
         }
         console.log('status : ', payment.code);
         setPaymentStatus(payment.transactionType === "PAYMENT" ? { status: 'PAID' } : { status: 'FAILED' })
-
-
-
-        // console.log('res : ',addValidationResponse)
-        // if (completeResponse.ok) {
-        //     console.log("paymentComp Data : ", completeResponse)
-        //     setPaymentStatus({
-        //         status: completeResponse.status,
-        //     })
-        // } else {
-        //     setPaymentStatus({
-        //         status: "FAILED",
-        //         message: completeResponse,
-        //     })
-        // }
     }
 
     const isWaitingPayment = paymentStatus.status !== "IDLE"

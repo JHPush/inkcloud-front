@@ -16,6 +16,7 @@ export const postValidationAddServer = async (form)=>{
 }
 
 export const postOrderStart = async (form)=>{
+    console.log('form : ', form)
     return (await jwtAxios.post(`${PREFIX_URL + ORDER_BASE_URI}`, 
         form, 
         {headers:{'Content-Type':'application/json'}})).data;
