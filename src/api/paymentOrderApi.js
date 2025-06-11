@@ -3,12 +3,11 @@ import jwtAxios from "./jwtAxios";
 import qs from 'qs'
 
 const PREFIX_URL = process.env.REACT_APP_PREFIX_URL;
-const PAYMENT_BASE_URI = '/payments'
-const ADD_COMPLETE = '/validate'
 
 const ORDER_BASE_URI = '/orders'
 const PRODUCT_BASE_URI = '/products'
 const PRODUCT_INVEN = '/quantities'
+const MEMBER_ORDERS = '/member'
 
 
 // export const postValidationAddServer = async (form)=>{
@@ -28,6 +27,26 @@ export const postOrderStart = async (form)=>{
 export const getOrderInfo = async(orderId)=>{
     return (await jwtAxios.get(`${PREFIX_URL + ORDER_BASE_URI}`
                 , {params: {order_id: orderId}, headers:{'Content-Type':'application/json'}} )).data
+}
+export const getOrdersByMember = async(state, startDate, endDate, sortBy, sortDir, page, size)=>{
+    const params = {};
+
+    if(startDate && endDate){
+        params.startDate = startDate;
+        params.endDate = endDate;
+    }
+    if(state) params.state = state;
+    if(sortBy) params.sortBy = sortBy;
+    if(sortDir) params.sortDir = sortDir;
+
+    if(page && size){
+        params.page=page;
+        params.size=size;
+    }
+
+
+    return (await jwtAxios.get(`${PREFIX_URL + ORDER_BASE_URI + MEMBER_ORDERS}`
+                , {params, headers:{'Content-Type':'application/json'}} )).data
 }
 
 export const getProductInven = async (prodList) => {

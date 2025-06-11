@@ -1,6 +1,6 @@
 import PortOne from "@portone/browser-sdk/v2"
 import { useEffect, useState } from "react"
-import { getPaymentValidation, postOrderStart, postPaymentSuccess, postValidationAddServer } from "../../api/paymentApi"
+import { getPaymentValidation, postOrderStart, postPaymentSuccess, postValidationAddServer } from "../../api/paymentOrderApi"
 
 const PaymentComp = () => {
     const [items, setItems] = useState([])

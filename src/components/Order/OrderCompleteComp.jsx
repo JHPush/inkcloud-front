@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getOrderInfo } from "../../api/paymentApi";
+import { getOrderInfo } from "../../api/paymentOrderApi";
 
 
 

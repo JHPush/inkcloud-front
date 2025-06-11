@@ -1,28 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { getMyInfo } from "../../api/memberApi";
 import { getShipList, modifyShip, registerShip } from "../../api/shipApi";
-import { getProductInven, postOrderStart } from "../../api/paymentApi";
+import { getProductInven, postOrderStart } from "../../api/paymentOrderApi";
 import PortOne from "@portone/browser-sdk/v2";
 import { useLocation, useNavigate } from "react-router-dom";
-
-const dummyCartItems = [
-    {
-        itemId: '1',
-        name: "더미 책 1",
-        author: "김",
-        publisher: "잡빛",
-        price: 500,
-        quantity: 1,
-    },
-    {
-        itemId: '2',
-        name: "더미책2",
-        author: "이",
-        publisher: "생각출판",
-        price: 500,
-        quantity: 1,
-    },
-];
 
 const OrderComp = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -55,8 +36,8 @@ const OrderComp = () => {
                     addressMain: updatedUser.addressMain,
                     addressSub: updatedUser.addressSub,
                     contact: updatedUser.phoneNumber,
-                    name: updatedUser.firstName + updatedUser.lastName,
-                    receiver: updatedUser.firstName + updatedUser.lastName,
+                    name:  updatedUser.lastName +updatedUser.firstName,
+                    receiver: updatedUser.lastName +updatedUser.firstName,
                     zipcode: updatedUser.zipcode,
                     memberEmail: updatedUser.email
                 });
@@ -78,7 +59,7 @@ const OrderComp = () => {
     useEffect(() => {
         switch (paymentStatus.status) {
             case 'PAID':
-                navi('/order-complete', { state: orderResult, replace: true })
+                navi('/order/complete', { state: orderResult, replace: true })
                 break;
             case 'FAILED':
                 console.log('주문 실패!')
@@ -205,8 +186,8 @@ const OrderComp = () => {
                     addressMain: user.addressMain,
                     addressSub: user.addressSub,
                     contact: user.phoneNumber,
-                    name: user.firstName + user.lastName,
-                    receiver: user.firstName + user.lastName,
+                    name: user.lastName+user.firstName,
+                    receiver: user.lastName+user.firstName,
                     zipcode: user.zipcode
                 });
                 break;
@@ -266,7 +247,7 @@ const OrderComp = () => {
             member: {
                 memberEmail: user.email,
                 memberContact: user.phoneNumber,
-                memberName: user.firstName + user.lastName
+                memberName:   user.lastName+user.firstName
             },
             orderItems: cartItems,
             orderShip: orderShip
