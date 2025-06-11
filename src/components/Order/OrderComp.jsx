@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { getMyInfo } from "../../api/memberApi";
 import { getShipList, modifyShip, registerShip } from "../../api/shipApi";
-import { postOrderStart } from "../../api/paymentApi";
+import { getProductInven, postOrderStart } from "../../api/paymentApi";
 import PortOne from "@portone/browser-sdk/v2";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const dummyCartItems = [
     {
         itemId: '1',
-        name: "그때 어떻게 살건인가",
+        name: "더미 책 1",
         author: "김",
         publisher: "잡빛",
         price: 500,
@@ -15,7 +16,7 @@ const dummyCartItems = [
     },
     {
         itemId: '2',
-        name: "생각하는 힘",
+        name: "더미책2",
         author: "이",
         publisher: "생각출판",
         price: 500,
@@ -24,7 +25,7 @@ const dummyCartItems = [
 ];
 
 const OrderComp = () => {
-    const [cartItems, setCartItems] = useState(dummyCartItems);
+    const [cartItems, setCartItems] = useState([]);
     const [user, setUser] = useState(null)
     const [userShip, setUserShip] = useState([])
     const [orderShip, setOrderShip] = useState(null)
@@ -34,12 +35,17 @@ const OrderComp = () => {
     const receiverRef = useRef()
     const contactRef = useRef()
     const shipRadioRef = useRef({})
-    const [paymentStatus, setPaymentStatus] = useState({
-        status: "IDLE",
-    })
+    const [paymentStatus, setPaymentStatus] = useState({ status: "IDLE", })
+    const [orderResult, setOrderResult] = useState()
+    const loc = useLocation();
+    const navi = useNavigate();
 
     useEffect(() => {
         if (user) return;
+        const dataArr = Array.isArray(loc.state) ? loc.state : [loc.state];
+        console.log(dataArr)
+        setCartItems(dataArr)
+
         const fetchMyInfo = async () => {
             const res = await getMyInfo();
             setUser(prev => {
@@ -68,6 +74,21 @@ const OrderComp = () => {
             ref.checked = true;
 
     }, [updateRefId])
+
+    useEffect(() => {
+        switch (paymentStatus.status) {
+            case 'PAID':
+                navi('/order-complete', { state: orderResult, replace: true })
+                break;
+            case 'FAILED':
+                console.log('주문 실패!')
+                break;
+            case 'CANCELD':
+                console.log('주문 취소!')
+
+                break;
+        }
+    }, [paymentStatus.status])
 
 
     const fetchMyDelivery = async () => {
@@ -123,31 +144,31 @@ const OrderComp = () => {
     };
 
     const checkOrderShip = () => {
-        if(!orderShip){
+        if (!orderShip) {
             alert('배송정보를 정확하게 입력하세요')
             return false;
         }
-        else if (!orderShip.name || orderShip.name ==='') {
+        else if (!orderShip.name || orderShip.name === '') {
             alert('배송지 이름을 입력하세요')
             nameRef.current?.focus()
             return false;
         }
-        else if (!orderShip.receiver || orderShip.receiver==='') {
+        else if (!orderShip.receiver || orderShip.receiver === '') {
             alert('수령인을 입력하세요')
             receiverRef.current?.focus()
             return false;
         }
-        else if (!orderShip.contact || orderShip.contact==='') {
+        else if (!orderShip.contact || orderShip.contact === '') {
             alert('수령인 연락처를 입력하세요')
             contactRef.current?.focus()
             return false;
         }
-        else if (!orderShip.zipcode||orderShip.zipcode==='') {
+        else if (!orderShip.zipcode || orderShip.zipcode === '') {
             alert('주소를 입력하세요')
             return false;
-        }else
+        } else
 
-        return true;
+            return true;
     }
 
     const handleRegisterShipment = () => {
@@ -201,13 +222,43 @@ const OrderComp = () => {
         }
     }
 
+    const checkProductInven = async () => {
+        const productIds = cartItems.map(item => ({ product_id: item.itemId }));
+        const productInven = await getProductInven(productIds);
+
+        if (!productInven || productInven.length !== cartItems.length) {
+            alert('재고 조회에 문제가 생겼습니다');
+            return false;
+        }
+
+        // 판매 중이 아닌 제품 필터링
+        const filteredProductInven = productInven.filter(item => item.status !== 'ON_SALE');
+        if (filteredProductInven.length > 0) {
+            const findItem = cartItems.find(item => item.itemId === filteredProductInven[0].productId);
+            console.log('item : ', findItem)
+            alert(findItem.name + '가 판매 중이 아닙니다');
+            return false;
+        }
+
+        // 2. 재고 부족 확인
+        const invenMap = new Map(productInven.map(item => [item.productId, item.quantity])); // itemId 사용
+        const filteredArr = cartItems.filter(item => item.quantity > invenMap.get(item.itemId));
+
+        if (filteredArr.length > 0) { // 배열이 비어 있지 않을 때만 실행
+            alert(filteredArr[0].name + '의 재고가 부족합니다');
+            return false;
+        }
+        return true;
+    }
+
     const handleOrderSubmit = async (e) => {
-        if (!checkOrderShip)
+        if (!checkOrderShip())
             return;
-        
-        
         e.preventDefault();
 
+        const check = await checkProductInven();
+        if(!check)
+            return;
 
         const orderStartResult = await postOrderStart({
             price: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -221,8 +272,14 @@ const OrderComp = () => {
             orderShip: orderShip
         })
         console.log('result :', orderStartResult)
-        if(orderStartResult.code == '500'){
-            console.error('주문 생성 오류')
+        setOrderResult(orderStartResult);
+
+        if (orderStartResult.code == '500') {
+            console.error('주문 생성 오류');
+            setPaymentStatus({
+                status: "FAILED",
+                message: "Failed Create Order"
+            })
             return;
         }
 
@@ -247,7 +304,7 @@ const OrderComp = () => {
                 }
             },
             products: cartItems.map(item => ({
-                id: item.itemId,
+                id: String(item.itemId),
                 name: item.name,
                 amount: item.price,
                 quantity: item.quantity
@@ -280,37 +337,52 @@ const OrderComp = () => {
                         <h2 className="text-xl font-bold text-gray-800 mb-6">🛒 주문 상품 정보</h2>
                         <div className="space-y-4">
                             {cartItems.map((item) => (
-                                <div key={item.id} className="flex items-center border-b pb-4">
-                                    <div className="w-24 h-32 bg-gray-200 rounded-lg" />
-                                    <div className="ml-4 flex-1">
-                                        <p className="text-base font-medium text-gray-700">{item.name}</p>
-                                        <p className="text-sm text-gray-500">저자: {item.author}</p>
-                                        <p className="text-sm text-gray-500">출판사: {item.publisher}</p>
+                                <>
+
+                                    <div key={item.id} className="flex items-center border-b pb-4">
+                                        <div className="w-24 h-32 bg-gray-200 rounded-lg" />
+                                        <div className="ml-4 flex-1">
+                                            <p className="text-base font-medium text-gray-700">{item.name}</p>
+                                            <p className="text-sm text-gray-500">저자: {item.author}</p>
+                                            <p className="text-sm text-gray-500">출판사: {item.publisher}</p>
+                                        </div>
+                                        <div className="ml-4 flex flex-col items-center gap-2">
+                                            <div className="flex items-center gap-2">
+
+                                                <div className="text-lg font-semibold w-24 text-right text-gray-700">
+                                                    {(item.price).toLocaleString()}원
+                                                </div>
+                                                <button
+                                                    className="px-2 py-1 rounded border text-sm"
+                                                    onClick={() => decreaseQuantity(item.id)}
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="w-6 text-center">{item.quantity}</span>
+                                                <button
+                                                    className="px-2 py-1 rounded border text-sm"
+                                                    onClick={() => increaseQuantity(item.id)}
+                                                >
+                                                    +
+                                                </button>
+                                                {cartItems.length > 1 ? (
+                                                    <button
+                                                        className="ml-2 text-red-500 hover:text-red-700"
+                                                        onClick={() => removeItem(item.id)}
+                                                    >
+                                                        🗑
+                                                    </button>
+                                                ) : null}
+                                            </div>
+
+                                            {/* 합 금액을 버튼 아래 배치 */}
+                                            <div className="flex self-end text-sm font-semibold text-gray-700 ">
+                                                합 {(item.price * item.quantity).toLocaleString()}원
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="text-lg font-semibold w-24 text-right text-gray-700">
-                                        {(item.price * item.quantity).toLocaleString()}원
-                                    </div>
-                                    <div className="ml-4 flex items-center gap-2">
-                                        <button
-                                            className="px-2 py-1 rounded border text-sm"
-                                            onClick={() => decreaseQuantity(item.id)}
-                                        >
-                                            -
-                                        </button>
-                                        <span className="w-6 text-center">{item.quantity}</span>
-                                        <button
-                                            className="px-2 py-1 rounded border text-sm"
-                                            onClick={() => increaseQuantity(item.id)}
-                                        >
-                                            +
-                                        </button>
-                                        {cartItems.length > 1 ?
-                                            <button className="ml-2 text-red-500 hover:text-red-700" onClick={() => removeItem(item.id)} >
-                                                🗑
-                                            </button> : <></>
-                                        }
-                                    </div>
-                                </div>
+
+                                </>
                             ))}
                             <div className="text-right font-semibold text-xl text-gray-800">
                                 총 결제 금액: <span className="text-blue-600">{totalAmount.toLocaleString()}원</span>
@@ -414,7 +486,7 @@ const OrderComp = () => {
                 </div>
 
                 {/* 결제 정보 (우측) */}
-                <aside  className="space-y-6 border rounded-2xl p-6 shadow-md h-fit bg-white">
+                <aside className="space-y-6 border rounded-2xl p-6 shadow-md h-fit bg-white">
                     <h2 className="text-xl font-bold text-gray-800">💳 결제 정보</h2>
                     <div className="text-sm space-y-2 text-gray-700">
                         <p>주문 수량: <span className="font-medium">{cartItems.reduce((sum, i) => sum + i.quantity, 0)}</span></p>

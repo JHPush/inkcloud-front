@@ -28,6 +28,9 @@ const BasicMenu = () => {
           <Link to={'/order'}>주문</Link>
         </li>
         <li className="pr-6 text-2xl">
+          <Link to={'/products'}>상품</Link>
+        </li>
+        <li className="pr-6 text-2xl">
           <Link to={'/mypage'}>마이페이지</Link>
         </li>
      

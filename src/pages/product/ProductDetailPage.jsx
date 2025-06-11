@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchProductById } from "../../api/productApi";
 import { addToCart } from "../../api/cartApi";
 
@@ -7,12 +7,14 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const navi = useNavigate()
 
   useEffect(() => {
     const loadProduct = async () => {
       try {
         const data = await fetchProductById(id);
         setProduct(data);
+        console.log('정보 : ', data)
       } catch (error) {
         console.error("❌ 상품 정보 불러오기 실패", error);
       }
@@ -41,8 +43,17 @@ const ProductDetailPage = () => {
   };
 
   const handleBuyNow = (e) => {
-    e.stopPropagation();
-    alert("🛠️ 아직 구현되지 않은 기능입니다.");
+    // e.stopPropagation();
+    // alert("🛠️ 아직 구현되지 않은 기능입니다.");
+    const state = {
+      itemId: product.id,
+      name: product.name,
+      author: product.author,
+      publisher: product.publisher,
+      price: product.price,
+      quantity: quantity
+    }
+    navi('/order', {state: state})
   };
 
   if (!product) {

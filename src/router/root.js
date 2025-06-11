@@ -37,13 +37,14 @@ const ModifyShipping = lazy(() => import("../components/Member/shipping/ModifySh
 // =========================== 주문 & 결제 ==========================
 const PaymentPage = lazy(()=>import("../pages/Order_Payment/PaymentPage"))
 const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
+const OrderCompletePage = lazy(()=>import("../pages/Order_Payment/OrderCompletePage"))
 
 
 
 const root = createBrowserRouter([
 
   {
-    path: "",
+    path: "/",
     element: <Suspense fallback={Loading}><Main/></Suspense>
   },
   {
@@ -115,6 +116,10 @@ const root = createBrowserRouter([
   {
     path: "/order",
     element: <Suspense fallback={Loading}><OrderPage/></Suspense>
+  },
+  {
+    path: "/order-complete",
+    element: <Suspense fallback={Loading}><OrderCompletePage/></Suspense>
   }
 
 ])
