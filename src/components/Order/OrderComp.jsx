@@ -36,8 +36,8 @@ const OrderComp = () => {
                     addressMain: updatedUser.addressMain,
                     addressSub: updatedUser.addressSub,
                     contact: updatedUser.phoneNumber,
-                    name:  updatedUser.lastName +updatedUser.firstName,
-                    receiver: updatedUser.lastName +updatedUser.firstName,
+                    name: updatedUser.lastName + updatedUser.firstName,
+                    receiver: updatedUser.lastName + updatedUser.firstName,
                     zipcode: updatedUser.zipcode,
                     memberEmail: updatedUser.email
                 });
@@ -62,10 +62,14 @@ const OrderComp = () => {
                 navi('/order/complete', { state: orderResult, replace: true })
                 break;
             case 'FAILED':
-                console.log('주문 실패!')
+                alert('사용자 주문 취소')
+                setPaymentStatus({
+                    status: 'IDLE'
+                })
                 break;
             case 'CANCELD':
-                console.log('주문 취소!')
+                alert('비정상 접근')
+                navi('/')
 
                 break;
         }
@@ -186,8 +190,8 @@ const OrderComp = () => {
                     addressMain: user.addressMain,
                     addressSub: user.addressSub,
                     contact: user.phoneNumber,
-                    name: user.lastName+user.firstName,
-                    receiver: user.lastName+user.firstName,
+                    name: user.lastName + user.firstName,
+                    receiver: user.lastName + user.firstName,
                     zipcode: user.zipcode
                 });
                 break;
@@ -238,7 +242,7 @@ const OrderComp = () => {
         e.preventDefault();
 
         const check = await checkProductInven();
-        if(!check)
+        if (!check)
             return;
 
         const orderStartResult = await postOrderStart({
@@ -247,7 +251,7 @@ const OrderComp = () => {
             member: {
                 memberEmail: user.email,
                 memberContact: user.phoneNumber,
-                memberName:   user.lastName+user.firstName
+                memberName: user.lastName + user.firstName
             },
             orderItems: cartItems,
             orderShip: orderShip
