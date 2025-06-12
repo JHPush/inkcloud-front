@@ -8,7 +8,7 @@ const statusMapping = {
   PREPARE: "상품준비중",
   SHIPPING: "배송중",
   SHIPPED: "배송완료",
-  CANCELLD: "주문취소",
+  CANCELED: "주문취소",
   FAILED: "주문오류",
 };
 
@@ -152,7 +152,7 @@ const MemberOrdersComp = () => {
               <option value="PREPARE">상품준비중</option>
               <option value="SHIPPING">배송중</option>
               <option value="SHIPPED">배송완료</option>
-              <option value="CANCELD">주문취소</option>
+              <option value="CANCELED">주문취소</option>
               <option value="FAILED">주문오류</option>
             </select>
           </div>
@@ -179,7 +179,7 @@ const MemberOrdersComp = () => {
                     주문번호: {order.id}
                   </p>
                   <p className="text-sm mt-1 text-gray-700">
-                    주문자: {order.member?.memberName}
+                    주문자: {order.orderName}
                   </p>
                 </div>
                 <div className="text-right">

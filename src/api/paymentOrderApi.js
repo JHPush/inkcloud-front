@@ -59,4 +59,9 @@ export const getProductInven = async (prodList) => {
     })).data;
 };
 
+export const putCancelOrder = async(id)=>{
+    return await jwtAxios.put(`${PREFIX_URL + ORDER_BASE_URI}`, null, {
+        params: {order_id: id}, headers: {'Content-Type': 'application/json'}
+    }).data;
+}
 

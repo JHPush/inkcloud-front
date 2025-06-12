@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOrderInfo } from "../../api/paymentOrderApi";
+import { getOrderInfo, putCancelOrder } from "../../api/paymentOrderApi";
 
 
 // mock data
@@ -43,7 +43,7 @@ const statusMapping = {
   PREPARE: "상품준비중",
   SHIPPING: "배송중",
   SHIPPED: "배송완료",
-  CANCELLD: "주문취소",
+  CANCELED: "주문취소",
   FAILED: "주문오류",
 };
 
@@ -64,7 +64,17 @@ const OrderDetailComp = () => {
 
   console.log('order : ', order)
 
-  const handleCancelOrder=async()=>{
+  const handleCancelOrder = () => {
+    if (!window.confirm('주문을 취소하시겠습니까?'))
+      return;
+    const res = putCancelOrder(id).then(data => {
+      console.log('주문취소 완료')
+      alert('주문이 취소되었습니다')
+      window.history.back();
+    }).catch(e => {
+      console.error('주문 취소 실패')
+
+    })
 
   }
 
@@ -72,13 +82,13 @@ const OrderDetailComp = () => {
 
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center">
-      <h1 className="text-2xl font-bold mb-6">주문 상세</h1>
-      {order?.state === "PREPARE"? <button
-          onClick={console.log}
+        <h1 className="text-2xl font-bold mb-6">주문 상세</h1>
+        {order?.state === "PREPARE" ? <button
+          onClick={handleCancelOrder}
           className="text-white text-sm m-1 rounded bg-red-500 px-3 py-1 ml-auto">
           주문 취소
-        </button>:<></>}
-        
+        </button> : <></>}
+
       </div>
 
       <div className="bg-white p-6 rounded-2xl shadow space-y-6">
@@ -91,8 +101,8 @@ const OrderDetailComp = () => {
             <p>주문일시: {new Date(order?.createdAt).toLocaleString()}</p>
             <p>주문 상태:
               <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${order?.state === "PENDING"
-                  ? "bg-yellow-100 text-yellow-800"
-                  : "bg-green-100 text-green-800"
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-green-100 text-green-800"
                 }`}>
                 {statusMapping[order?.state] || order?.state}
               </span>
