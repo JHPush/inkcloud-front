@@ -30,14 +30,6 @@ const ShippingForm = ({initialForm, onSubmit, submitLabel}) =>{
     }));
   };
 
-  // 연락처 유효성 검사
-  // const isValidPhone = () => {
-  //   return (
-  //     phoneAreaCodes.includes(contactArea) &&
-  //     /^\d{3,4}$/.test(contactMid) &&
-  //     /^\d{4}$/.test(contactLast)
-  //   );
-  // };
 
   // 카카오 주소 검색 완료 시
   const handleAddressComplete = ({ zipcode, addressMain }) => {

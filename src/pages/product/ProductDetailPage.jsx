@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import ProductReviewList from "../../components/review/ProductRevewList";
+
 import { fetchProductById } from "../../api/productApi";
 import { addToCart } from "../../api/cartApi";
 
@@ -13,6 +15,7 @@ const ProductDetailPage = () => {
     const loadProduct = async () => {
       try {
         const data = await fetchProductById(id);
+ 
         setProduct(data);
         console.log('정보 : ', data)
       } catch (error) {
@@ -115,29 +118,14 @@ const ProductDetailPage = () => {
 
         {/* 리뷰 요약 */}
         <div className="mb-6">
-          <p className="text-lg font-medium">평균 평점: ⭐ 4.2 / 5</p>
-          <p className="text-sm text-gray-600">총 3개의 리뷰</p>
+          <p className="text-lg font-medium">평균 평점: ⭐ {product.rating.toFixed(1)} / 5</p>
+          <p className="text-sm text-gray-600">총 {product.reviewsCount}개의 리뷰</p>
         </div>
 
         {/* 리뷰 리스트 (Mock) */}
-        <div className="space-y-6">
-          <div className="border p-4 rounded shadow-sm">
-            <p className="text-sm text-gray-800 mb-1">작성자: user1</p>
-            <p className="text-yellow-500 mb-1">⭐ 5</p>
-            <p className="text-gray-700">정말 유익한 책이었어요. 추천합니다!</p>
-          </div>
-          <div className="border p-4 rounded shadow-sm">
-            <p className="text-sm text-gray-800 mb-1">작성자: user2</p>
-            <p className="text-yellow-500 mb-1">⭐ 4</p>
-            <p className="text-gray-700">좋긴 한데 조금 어려웠어요.</p>
-          </div>
-          <div className="border p-4 rounded shadow-sm">
-            <p className="text-sm text-gray-800 mb-1">작성자: user3</p>
-            <p className="text-yellow-500 mb-1">⭐ 3</p>
-            <p className="text-gray-700">기본은 괜찮은데 기대보단 아쉬웠네요.</p>
-          </div>
-        </div>
+
       </div>
+      <ProductReviewList productId={id}/>
     </div>
   );
 };

@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUtil } from "../../utils/logoutUtils";
+import { useState } from "react";
+import Modal from "react-modal";
+import LoginPage from "./LoginPage";
+
+Modal.setAppElement("#root"); // App의 루트 엘리먼트에 맞게 설정
 
 const BasicMenu = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     logoutUtil(dispatch)
@@ -49,9 +55,12 @@ const BasicMenu = () => {
             Logout
           </button>
         ) : (
-          <Link to="/login" className="text-white text-sm m-1 rounded">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="text-white text-sm m-1 rounded"
+          >
             Login
-          </Link>
+          </button>
         )}
     </div>
     <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
@@ -59,6 +68,25 @@ const BasicMenu = () => {
             회원가입
           </Link>
     </div>
+
+    {/* 로그인 모달 */}
+    <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={{
+          content: {
+            maxWidth: 450,
+            margin: "auto",
+            borderRadius: 12,
+            padding: 10, 
+            minHeight: "unset",
+            height: "fit-content",
+          }
+        }}
+      >
+        <button onClick={() => setIsOpen(false)} className="absolute top-3 right-5 text-xl">✕</button>
+        <LoginPage />
+      </Modal>
   </nav>
   );
 }

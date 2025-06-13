@@ -21,6 +21,18 @@ const MemberLayout = ({ children, tab, setTab }) => {
                 >
                   내 정보
                 </button>
+                </li>
+                <li>
+                <button
+                  className={`block w-full text-left px-2 py-1 rounded ${
+                    tab === "review"
+                      ? "bg-white text-blue-600 font-bold"
+                      : "text-gray-600 hover:text-blue-600"
+                  }`}
+                  onClick={() => setTab("review")}
+                >
+                  리뷰 관리
+                </button>
               </li>
               <li>
                 <button

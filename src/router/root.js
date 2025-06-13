@@ -34,6 +34,7 @@ const AddShipping = lazy(() => import("../components/Member/shipping/AddShipping
 
 const ModifyShipping = lazy(() => import("../components/Member/shipping/ModifyShipping"))
 
+const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
 // =========================== 주문 & 결제 ==========================
 const PaymentPage = lazy(()=>import("../pages/Order_Payment/PaymentPage"))
 const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
@@ -42,6 +43,8 @@ const MemberOrdersPage = lazy(()=>import("../pages/Order_Payment/MemberOrdersPag
 const OrderDetailPage = lazy(()=>import("../pages/Order_Payment/OrderDetailPage"))
 const OrderManagementPage = lazy(()=>import('../pages/Order_Payment/admin/OrderManagementPage'))
 
+
+const SalesStatsChart = lazy(() => import("../components/stats/SalesStatsChart"))
 
 
 
@@ -112,7 +115,10 @@ const root = createBrowserRouter([
     path: "products/:id",
     element: <Suspense fallback={Loading}><ProductDetail /></Suspense>
   },
-  
+  {
+    path: "admin/reviews",
+    element: <Suspense fallback={Loading}><AdminReviewPage /></Suspense>
+  },
   {
     path: "/payment",
     element: <Suspense fallback={Loading}><PaymentPage/></Suspense>
@@ -136,6 +142,10 @@ const root = createBrowserRouter([
   {
     path: "/admin/orders",
     element: <Suspense fallback={Loading}><OrderManagementPage/></Suspense>
+  },
+  {
+    path: "/admin/stats",
+    element: <Suspense fallback={Loading}><SalesStatsChart/></Suspense>
   }
 
 ])
