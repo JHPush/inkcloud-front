@@ -40,6 +40,7 @@ const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
 const OrderCompletePage = lazy(()=>import("../pages/Order_Payment/OrderCompletePage"))
 const MemberOrdersPage = lazy(()=>import("../pages/Order_Payment/MemberOrdersPage"))
 const OrderDetailPage = lazy(()=>import("../pages/Order_Payment/OrderDetailPage"))
+const OrderManagementPage = lazy(()=>import('../pages/Order_Payment/admin/OrderManagementPage'))
 
 
 
@@ -131,6 +132,10 @@ const root = createBrowserRouter([
   {
     path: "/order/member/:id",
     element: <Suspense fallback={Loading}><OrderDetailPage/></Suspense>
+  },
+  {
+    path: "/admin/orders",
+    element: <Suspense fallback={Loading}><OrderManagementPage/></Suspense>
   }
 
 ])
