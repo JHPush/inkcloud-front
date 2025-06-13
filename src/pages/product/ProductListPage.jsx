@@ -47,7 +47,7 @@ const ProductListPage = () => {
 
   const handleAddToCart = async (productId) => {
     try {
-      await addToCart(productId, 1); // 수량 기본값 1
+      await addToCart({productId: productId, quantity:1}); // 수량 기본값 1
       alert("장바구니에 추가되었습니다.");
     } catch (error) {
       console.error("장바구니 추가 실패:", error);
