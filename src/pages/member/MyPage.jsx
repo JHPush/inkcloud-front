@@ -4,7 +4,7 @@ import WithdrawMember from "../../components/Member/WithdrawMember";
 import { useLocation } from "react-router-dom";
 import ShippingList from "../../components/Member/shipping/ShippingList";
 import MemberLayout from "../../layouts/MemberLayout";
-import MemberReviewList from "../../components/review/MemberReviewList";
+import MemberReviewPage from "../review/MemberReviewPage";
 
 
 const MyPage = () => {
@@ -30,7 +30,7 @@ const MyPage = () => {
           {/* 내 정보 */}
         </button>
         <button
-          className={`btn btn-outline ${tab === "address" ? "btn-active" : ""}`}
+          className={`btn btn-outline ${tab === "review" ? "btn-active" : ""}`}
           onClick={() => setTab("review")}
         >
           {/* 리뷰관리 */}
@@ -49,7 +49,7 @@ const MyPage = () => {
         </button>
       </div>
       {tab === "info" && <MyInfoPage />}
-      {tab === "review" && <MemberReviewList />}
+      {tab === "review" && <MemberReviewPage />}
       {tab === "address" && <ShippingList />}
       {tab === "withdraw" && <WithdrawMember />}
     </MemberLayout>

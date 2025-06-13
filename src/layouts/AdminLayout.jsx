@@ -1,4 +1,4 @@
-import { BookOpenIcon, UsersIcon, ClipboardListIcon, BellIcon, InboxIcon, StarIcon } from 'lucide-react';
+import { BookOpenIcon, UsersIcon, ClipboardListIcon, StarIcon, LineChartIcon } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -7,9 +7,8 @@ import { logoutUtil } from '../utils/logoutUtils';
 const sideMenu = [
   { name: '회원관리', icon: <UsersIcon className="w-5 h-5" />, path: '/admin/member' },
   { name: '주문내역', icon: <ClipboardListIcon className="w-5 h-5" />, path: '/admin/orders' },
-  { name: '공지사항', icon: <BellIcon className="w-5 h-5" />, path: '/admin/notices' },
-  { name: '1:1 문의', icon: <InboxIcon className="w-5 h-5" />, path: '/admin/inquiries' },
   { name: '리뷰관리', icon: <StarIcon className="w-5 h-5" />, path: '/admin/reviews' },
+  { name: '매출현황', icon: <LineChartIcon className="w-5 h-5" />, path: '/admin/stats' },
 ];
 
 export default function AdminLayout({ children }) {

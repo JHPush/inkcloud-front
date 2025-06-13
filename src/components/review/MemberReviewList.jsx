@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { getReviewsByMember, updateReview } from "../../api/reviewApi";
 import DeleteReview from "./DeleteReview";
-import { Star } from "lucide-react";
 import ReviewForm from "./ReviewForm";
+import StarRating from "./StarRating";
 
-// 별점 표시 컴포넌트
-const StarRating = ({ rating }) => (
-  <span className="flex">
-    {[1, 2, 3, 4, 5].map((n) => (
-      <Star
-        key={n}
-        size={18}
-        color={n <= rating ? "#facc15" : "#e5e7eb"}
-        fill={n <= rating ? "#facc15" : "none"}
-        style={{ marginRight: 2 }}
-      />
-    ))}
-  </span>
-);
+// 기간 옵션
+const PERIOD_OPTIONS = [
+  { label: "오늘", value: "1d" },
+  { label: "1개월", value: "1m" },
+  { label: "3개월", value: "3m" },
+  { label: "6개월", value: "6m" },
+  { label: "전체", value: "5y" },
+];
 
 //회원별 리뷰 리스트
 const MemberReviewList = () => {
   const [reviews, setReviews] = useState([]);
   const [editReview, setEditReview] = useState(null); // 수정할 리뷰 정보
+  const [period, setPeriod] = useState("3month"); // 기본값 3개월
 
   // 리뷰 새로고침
-  const refreshReviews = async () => {
+  const refreshReviews = async (selectedPeriod = period) => {
     try {
-      const data = await getReviewsByMember();
+      const data = await getReviewsByMember(selectedPeriod);
       setReviews(data);
+      console.log(period)
+      console.log(data)
     } catch (e) {
       console.error("error:", e);
     }
   };
-
+ 
   useEffect(() => {
-    refreshReviews();
-  }, []);
+    refreshReviews(period);
+    // eslint-disable-next-line
+  }, [period]);
 
   // 리뷰 수정 팝업 닫기
   const closeEdit = () => setEditReview(null);
@@ -50,12 +48,22 @@ const MemberReviewList = () => {
     }catch (e) {
         console.error("error:",e)
     }
-
   };
 
   return (
     <div>
       <h2 className="text-lg font-bold mb-4">내 리뷰 목록</h2>
+      <div className="mb-4 flex justify-end">
+        <select
+          value={period}
+          onChange={e => setPeriod(e.target.value)}
+          className="border rounded px-3 py-1 text-sm"
+        >
+          {PERIOD_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
       {reviews.length === 0 ? (
         <div>작성한 리뷰가 없습니다.</div>
       ) : (
@@ -68,11 +76,12 @@ const MemberReviewList = () => {
                 {editReview && editReview.id === review.id ? (
                   // 수정 중인 리뷰만 폼으로 표시
                   <ReviewForm
+                      open={!!editReview}
+                    onClose={closeEdit}
                     productName={review.productName}
                     initialRating={review.rating}
                     initialComment={review.comment}
                     onSubmit={handleEditSubmit}
-                    onCancel={closeEdit}
                   />
                 ) : (
                   <>
@@ -87,7 +96,7 @@ const MemberReviewList = () => {
                     <div className="flex gap-2">
                       <DeleteReview
                         reviewIds={[review.id]}
-                        onSuccess={refreshReviews}
+                        onSuccess={() => refreshReviews(period)}
                       >
                         <span
                           className="text-blue-600 border border-blue-400 px-3 py-2 rounded hover:bg-blue-50 text-sm"

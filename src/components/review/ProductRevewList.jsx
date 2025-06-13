@@ -1,23 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getReviewsByProduct } from "../../api/reviewApi";
 import DeleteReview from "./DeleteReview";
-import { Star } from "lucide-react";
 import { useSelector } from "react-redux";
-
-// 별점 표시 컴포넌트
-const StarRating = ({ rating }) => (
-  <span className="flex">
-    {[1, 2, 3, 4, 5].map((n) => (
-      <Star
-        key={n}
-        size={18}
-        color={n <= rating ? "#facc15" : "#e5e7eb"}
-        fill={n <= rating ? "#facc15" : "none"}
-        style={{ marginRight: 2 }}
-      />
-    ))}
-  </span>
-);
+import StarRating from "./StarRating";
+import { getSortedReviews } from "../../hooks/SortingReview";
 
 const ProductReviewList = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
@@ -39,16 +25,6 @@ const ProductReviewList = ({ productId }) => {
     if (productId) refreshReviews();
   }, [productId]);
 
-  // 정렬 함수
-  const getSortedReviews = () => {
-    if (sort === "latest") {
-      return [...reviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
-    if (sort === "rating") {
-      return [...reviews].sort((a, b) => b.rating - a.rating);
-    }
-    return reviews;
-  };
 
   return (
     <div>
@@ -66,7 +42,7 @@ const ProductReviewList = ({ productId }) => {
         <div>작성한 리뷰가 없습니다.</div>
       ) : (
         <ul>
-          {getSortedReviews().map((review) => {
+          {getSortedReviews(reviews, sort).map((review) => {
             // 이메일 앞 3글자만 보이고 나머지는 *로 마스킹
             const maskEmail = (email) => {
               if (!email) return "";
@@ -104,6 +80,11 @@ const ProductReviewList = ({ productId }) => {
           })}
         </ul>
       )}
+
+    {/* 공지사항 위치: 여기! */}
+{/* <div className="mt-4 p-4 bg-yellow-300 border border-yellow-500 rounded text-base text-black">
+  ※ 리뷰 작성 시 욕설, 비방, 개인정보 노출 등 부적절한 내용은 사전 통보 없이 삭제될 수 있습니다.
+</div> */}
     </div>
   );
 };

@@ -12,8 +12,7 @@ const jwtAxios = axios.create({
 jwtAxios.interceptors.request.use(
   config => {
     const token = getAccessToken();
-    const refresh = getRefreshToken();
-    // console.log(`token : ${token}`)
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -28,7 +27,6 @@ jwtAxios.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
     // access token 만료(401) & 재시도 안 했을 때만
-    // if (error.response && error.response.status === 401 && !originalRequest._retry) {
         if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
@@ -44,8 +42,7 @@ jwtAxios.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
         return jwtAxios(originalRequest); // 재요청
       } catch (e) {
-        // refresh token도 만료: 로그아웃 등 처리
-        // removeAccessToken(); removeRefreshToken(); 등
+        // refresh token 만료
         window.location.href = "/login";
         return Promise.reject(e);
       }
@@ -54,13 +51,5 @@ jwtAxios.interceptors.response.use(
   }
 );
 
-//응답 인터셉터: 토큰 만료 등 처리(옵션)
-jwtAxios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    // 401 등 토큰 만료 시 처리 로직 추가 가능
-    return Promise.reject(error);
-  }
-);
 
 export default jwtAxios;

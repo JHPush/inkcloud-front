@@ -2,26 +2,30 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserList } from "../../../api/memberApi";
 import DeleteMembers from "./DeleteMembers";
-import { useSelector } from "react-redux";
+import useCheckBox from "../../../hooks/useCheckBox";
+import usePaging from "../../../hooks/usePaging"; // 추가
+import Pagination from "../../common/Pagination";
 
 const GetMemberList = () => {
   const [members, setMembers] = useState([]);
-  const [checked, setChecked] = useState([]);
+  const { checked, setChecked, handleAllCheck, handleCheck } = useCheckBox(members, "email");
+  const { page, setPage, totalPages, setTotalPages, size } = usePaging(0, 1, 20); // usePaging 사용
   const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState("");
   const [isSearched, setIsSearched] = useState(false);
   const navigate = useNavigate();
 
-
-
   // 검색 및 목록 조회
   const fetchMembers = async (params = {}) => {
     try {
       const data = await getUserList({
+        page: params.page ?? page,
+        size: params.size ?? size,
         email: (params.search ?? search) || undefined,
         name: (params.search ?? search) || undefined,
       });
       setMembers(data.content || []);
+      setTotalPages(data.totalPages || 1); // totalPages 갱신
     } catch (err) {
       console.error("error:", err);
     }
@@ -30,35 +34,21 @@ const GetMemberList = () => {
   useEffect(() => {
     fetchMembers();
     // eslint-disable-next-line
-  }, [refresh]);
+  }, [refresh, page, size]); // page, size 변경 시에도 fetch
 
   // 검색 버튼 클릭
   const handleSearch = () => {
-    fetchMembers({ search });
+    setPage(0); // 검색 시 1페이지로 이동
+    fetchMembers({ search, page: 0 });
     setIsSearched(true);
   };
 
   // 돌아가기 버튼 클릭
   const handleBack = () => {
     setSearch("");
-    fetchMembers({ search: "" });
+    setPage(0);
+    fetchMembers({ search: "", page: 0 });
     setIsSearched(false);
-  };
-
-  // 전체 선택/해제
-  const handleAllCheck = (e) => {
-    if (e.target.checked) {
-      setChecked(members.map((m) => m.id || m.email));
-    } else {
-      setChecked([]);
-    }
-  };
-
-  // 개별 선택/해제
-  const handleCheck = (id) => {
-    setChecked((prev) =>
-      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
-    );
   };
 
   // 회원 상세로 이동
@@ -111,7 +101,7 @@ const GetMemberList = () => {
         )}
       </div>
 
-      {/* 삭제 버튼을 여기로 이동 */}
+      {/* 삭제 버튼 */}
       <div className="mb-4 flex justify-start">
         <DeleteMembers
           selectedEmails={checked}
@@ -126,7 +116,8 @@ const GetMemberList = () => {
               <th className="border px-4 py-2 w-16">
                 <input
                   type="checkbox"
-                  checked={checked.length === members.length && members.length > 0}
+                  // checked={checked.length === members.length && members.length > 0}
+                  checked={members.length > 0 && members.every(member => checked.includes(member.email))}
                   onChange={handleAllCheck}
                 />
               </th>
@@ -183,6 +174,7 @@ const GetMemberList = () => {
           </tbody>
         </table>
       </div>
+    <Pagination page={page} totalPages={totalPages} setPage={setPage} />
     </div>
   );
 };

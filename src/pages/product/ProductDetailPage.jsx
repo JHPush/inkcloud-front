@@ -107,7 +107,7 @@ const ProductDetailPage = () => {
 
         {/* 리뷰 요약 */}
         <div className="mb-6">
-          <p className="text-lg font-medium">평균 평점: ⭐ {product.rating} / 5</p>
+          <p className="text-lg font-medium">평균 평점: ⭐ {product.rating.toFixed(1)} / 5</p>
           <p className="text-sm text-gray-600">총 {product.reviewsCount}개의 리뷰</p>
         </div>
 

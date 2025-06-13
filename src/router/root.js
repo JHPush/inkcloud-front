@@ -39,6 +39,8 @@ const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
 const PaymentPage = lazy(()=>import("../pages/Order_Payment/PaymentPage"))
 const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
 
+const SalesStatsChart = lazy(() => import("../components/stats/SalesStatsChart"))
+
 
 
 const root = createBrowserRouter([
@@ -119,6 +121,10 @@ const root = createBrowserRouter([
   {
     path: "/order",
     element: <Suspense fallback={Loading}><OrderPage/></Suspense>
+  },
+  {
+    path: "/admin/stats",
+    element: <Suspense fallback={Loading}><SalesStatsChart/></Suspense>
   }
 
 ])

@@ -6,7 +6,7 @@ const MEMBER_SERVICE_URL = "http://localhost:25000/api/v1/reviews";
 // 관리자 리뷰 조회, 검색
 export const getReviewsByAdmin = async({
   page = 0,
-  size = 10,
+  size = 20,
   keyword = "",
   startDate,
   endDate,
@@ -39,9 +39,9 @@ export const deleteReviews = async (reviewIds) => {
 };
 
 //회원 리뷰 조회 
-export const getReviewsByMember = async () => {
+export const getReviewsByMember = async (period) => {
   const response = await jwtAxios.get(
-    `${MEMBER_SERVICE_URL}/members/me`
+    `${MEMBER_SERVICE_URL}/members/me?period=${period}`
   );
   return response.data;
 };
@@ -50,6 +50,14 @@ export const getReviewsByMember = async () => {
 export const getReviewDetail = async (id) => {
   const response = await jwtAxios.get(
     `${MEMBER_SERVICE_URL}/detail/${id}`
+  );
+  return response.data;
+};
+
+//회원 리뷰 작성
+export const writeReview = async ({productId, productName, rating, comment}) => {
+  const response = await jwtAxios.post(
+    `${MEMBER_SERVICE_URL}`, {productId, productName, rating, comment}
   );
   return response.data;
 };

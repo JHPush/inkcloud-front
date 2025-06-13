@@ -2,10 +2,22 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { getReviewsByAdmin } from "../../api/reviewApi";
 import DeleteReview from "../../components/review/DeleteReview";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import StarRating from "../../components/review/StarRating";
+import useCheckBox from "../../hooks/useCheckBox";
+import usePaging from "../../hooks/usePaging";
+import Pagination from "../../components/common/Pagination";
+import { getSortedReviews } from "../../hooks/SortingReview";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 
 const AdminReviewPage = () => {
   const [reviews, setReviews] = useState([]);
-  const [checked, setChecked] = useState([]);
+  const {checked, setChecked, handleAllCheck, handleCheck} = useCheckBox(reviews, "id")
+  const { page, setPage, totalPages, setTotalPages, size } = usePaging(0, 1, 20);
   const [search, setSearch] = useState("");
   const [isSearched, setIsSearched] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -15,12 +27,15 @@ const AdminReviewPage = () => {
   const [minRating, setMinRating] = useState("");
   const [maxRating, setMaxRating] = useState("");
   const [quickDate, setQuickDate] = useState(""); // 어떤 빠른 날짜 버튼이 선택됐는지
+  const [sort, setSort] = useState("latest"); // 정렬 기준, 기본값 최신순
+  
+
 
   // 리뷰 목록 조회
   const fetchReviews = async (params = {}) => {
     const data = await getReviewsByAdmin({
-      page: 0,
-      size: 10,
+      page: params.page ?? page,
+      size: size,
       keyword: (params.search ?? search) || "",
       startDate: (params.startDate ?? startDate) || null,
       endDate: (params.endDate ?? endDate) || null,
@@ -28,16 +43,18 @@ const AdminReviewPage = () => {
       maxRating: (params.maxRating ?? maxRating) || null,
     });
     setReviews(data.content || []);
+    setTotalPages(data.totalPages || 1);
   };
 
   useEffect(() => {
-    fetchReviews();
+    fetchReviews({ page });
     // eslint-disable-next-line
-  }, [refresh]);
+  }, [refresh, page]);
 
   // 검색 버튼 클릭
   const handleSearch = () => {
-    fetchReviews({ search, startDate, endDate, minRating, maxRating });
+    setPage(0);
+    fetchReviews({ search, startDate, endDate, minRating, maxRating, page: 0 });
     setIsSearched(true);
   };
 
@@ -49,24 +66,10 @@ const AdminReviewPage = () => {
     setMinRating("");
     setMaxRating("");
     setQuickDate("");
-    fetchReviews({ search: "" });
+
     setIsSearched(false);
-  };
-
-  // 전체 선택/해제
-  const handleAllCheck = (e) => {
-    if (e.target.checked) {
-      setChecked(reviews.map((r) => r.id));
-    } else {
-      setChecked([]);
-    }
-  };
-
-  // 개별 선택/해제
-  const handleCheck = (id) => {
-    setChecked((prev) =>
-      prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]
-    );
+    setPage(0);
+    setRefresh((prev) => !prev);
   };
 
   // 삭제 성공 시
@@ -77,37 +80,45 @@ const AdminReviewPage = () => {
 
   // 삭제 실패 시
   const handleDeleteError = (err) => {
-    // 필요시 에러 처리
+    alert("리뷰 삭제에 실패했습니다. 다시 시도해 주세요.");
+    console.error("리뷰 삭제 에러:", err);
   };
 
-  // 빠른 날짜 선택 핸들러 (내부 내용은 그대로, fetchReviews 호출하지 않음)
+  // 빠른 날짜 선택 핸들러 (KST LocalDateTime, 오프셋 없는 문자열)
   const handleQuickDate = (range) => {
-    const today = new Date();
+    // 이미 선택된 버튼을 다시 누르면 해제
+    if (quickDate === range) {
+      setQuickDate("");
+      setStartDate("");
+      setEndDate("");
+      return;
+    }
+    const now = dayjs().tz("Asia/Seoul");
     let start, end;
     switch (range) {
       case "today":
-        start = new Date(today.setHours(0, 0, 0, 0));
-        end = new Date(today.setHours(23, 59, 59, 999));
+        start = now.startOf("day");
+        end = now;
         break;
       case "yesterday":
-        start = new Date(today.setDate(today.getDate() - 1));
-        end = new Date(today.setHours(23, 59, 59, 999));
+        start = now.subtract(1, "day").startOf("day");
+        end = now.subtract(1, "day").endOf("day");
         break;
       case "week":
-        start = new Date(today.setDate(today.getDate() - today.getDay()));
-        end = new Date(today.setHours(23, 59, 59, 999));
+        start = now.subtract(6, "day").startOf("day");
+        end = now;
         break;
       case "month":
-        start = new Date(today.setDate(1));
-        end = new Date(today.setHours(23, 59, 59, 999));
+        start = now.subtract(29, "day").startOf("day");
+        end = now;
         break;
       default:
         return;
     }
-    setStartDate(start.toISOString());
-    setEndDate(end.toISOString());
+    // 오프셋 없는 문자열로 변환 (YYYY-MM-DDTHH:mm:ss)
+    setStartDate(start.format("YYYY-MM-DDTHH:mm:ss"));
+    setEndDate(end.format("YYYY-MM-DDTHH:mm:ss"));
     setQuickDate(range);
-    // fetchReviews 호출하지 않음
   };
 
   return (
@@ -126,23 +137,15 @@ const AdminReviewPage = () => {
               placeholder="책 이름, 내용, 작성자 이메일로 검색"
             />
           </div>
-          {/* {isSearched && (
-            <button
-              onClick={handleBack}
-              className="text-blue-500 hover:underline mt-2"
-            >
-              전체목록 보기
-            </button>
-          )} */}
         </div>
 
-{/* 날짜 필터 버튼 */}
+        {/* 날짜 필터 버튼 */}
         <div className="flex flex-wrap gap-3 mb-4 justify-center">
           {[
             { key: "today", label: "오늘" },
             { key: "yesterday", label: "어제" },
-            { key: "week", label: "일주일" },
-            { key: "month", label: "이번 달" },
+            { key: "week", label: "최근 7일" },
+            { key: "month", label: "최근 30일" },
           ].map((btn) => (
             <button
               key={btn.key}
@@ -174,25 +177,26 @@ const AdminReviewPage = () => {
           <div className="flex gap-2 items-center mb-4 justify-center">
             <input
               type="date"
-              value={startDate ? startDate.slice(0, 10) : ""}
+              max={dayjs().tz("Asia/Seoul").format("YYYY-MM-DD")}
+              value={startDate ? dayjs(startDate).tz("Asia/Seoul").format("YYYY-MM-DD") : ""}
               onChange={(e) => {
-                // 00:00:00.000Z로 변환
-                const iso = new Date(e.target.value).toISOString();
-                setStartDate(iso);
-                setQuickDate(""); // 상세검색 시 빠른날짜 선택 해제
+                // 00:00:00로 변환 (오프셋 없이)
+                const d = dayjs(e.target.value).tz("Asia/Seoul").startOf("day");
+                setStartDate(d.format("YYYY-MM-DDTHH:mm:ss"));
+                setQuickDate("");
               }}
               className="border rounded px-2 py-1"
             />
             <span>~</span>
             <input
               type="date"
-              value={endDate ? endDate.slice(0, 10) : ""}
+              min={startDate ? dayjs(startDate).tz("Asia/Seoul").format("YYYY-MM-DD") : undefined}
+              max={dayjs().tz("Asia/Seoul").format("YYYY-MM-DD")}
+              value={endDate ? dayjs(endDate).tz("Asia/Seoul").format("YYYY-MM-DD") : ""}
               onChange={(e) => {
-                // 23:59:59.999Z로 변환
-                const d = new Date(e.target.value);
-                d.setHours(23, 59, 59, 999);
-                const iso = d.toISOString();
-                setEndDate(iso);
+                // 23:59:59로 변환 (오프셋 없이)
+                const d = dayjs(e.target.value).tz("Asia/Seoul").endOf("day");
+                setEndDate(d.format("YYYY-MM-DDTHH:mm:ss"));
                 setQuickDate("");
               }}
               className="border rounded px-2 py-1"
@@ -239,23 +243,43 @@ const AdminReviewPage = () => {
             검색
           </button>
         </div>
-        
+
         {isSearched && (
-            <button
-              onClick={handleBack}
-              className="text-blue-500 hover:underline mt-2"
-            >
-              전체목록 보기
-            </button>
-          )}
+          <button
+            onClick={handleBack}
+            className="text-blue-500 hover:underline mt-2"
+          >
+            전체목록으로 돌아가기 
+          </button>
+        )}
 
         {/* 삭제 버튼 */}
         <div className="mb-4 flex justify-start">
-          <DeleteReview
-            reviewIds={checked}
-            onSuccess={handleDeleteSuccess}
-            onError={handleDeleteError}
-          />
+        <DeleteReview
+          reviewIds={checked}
+          onSuccess={handleDeleteSuccess}
+          onError={handleDeleteError}
+        >
+        <span
+          className="px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition text-sm font-medium"
+          style={{ minWidth: 80, textAlign: "center" }}
+        >
+          선택 삭제
+        </span>
+        </DeleteReview>
+        </div>
+
+        {/* 정렬 드롭다운 */}
+        <div className="flex justify-end mb-4">
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="border rounded px-3 py-1 text-sm"
+            style={{ minWidth: 120 }}
+          >
+            <option value="latest">최신순</option>
+            <option value="rating">별점 높은순</option>
+          </select>
         </div>
 
         {/* 리뷰 테이블 */}
@@ -276,8 +300,8 @@ const AdminReviewPage = () => {
                 <th className="border px-2 py-1">작성자 이메일</th>
                 <th className="border px-2 py-1">책 이름</th>
                 <th className="border px-2 py-1">평점</th>
-                <th className="border px-2 py-1">댓글</th>
-                <th className="border px-2 py-1">작성일</th>
+                <th className="border px-2 py-1">내용</th>
+                <th className="border px-2 py-1">작성일(수정일)</th>
               </tr>
             </thead>
             <tbody>
@@ -290,7 +314,7 @@ const AdminReviewPage = () => {
                   </td>
                 </tr>
               ) : (
-                reviews.map((review) => (
+                getSortedReviews(reviews, sort).map((review) => (
                   <tr key={review.id}>
                     <td className="border px-4 py-2">
                       <input
@@ -302,7 +326,7 @@ const AdminReviewPage = () => {
                     <td className="border px-2 py-1">{review.id}</td>
                     <td className="border px-2 py-1">{review.email}</td>
                     <td className="border px-2 py-1">{review.productName}</td>
-                    <td className="border px-2 py-1">{review.rating}</td>
+                    <td className="border px-2 py-1"><StarRating rating= {review.rating}/></td>
                     <td className="border px-2 py-1">{review.comment}</td>
                     {/* 수정일이 있으면 수정일을 작성일로 보여줌 */}
                     <td className="border px-2 py-1">
@@ -318,6 +342,7 @@ const AdminReviewPage = () => {
             </tbody>
           </table>
         </div>
+        <Pagination page={page} totalPages={totalPages} setPage={setPage} />
       </div>
     </AdminLayout>
   );

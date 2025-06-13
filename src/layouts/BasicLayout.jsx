@@ -1,13 +1,9 @@
 import BasicMenu from "../components/menus/BasicMenu";
 
-const BasicLayout = ({children}) => {
+const BasicLayout = ({children, onLoginClick}) => {
   return ( 
   <>
-
-    {/* 기존 헤더 대신 BasicMenu*/ }
-    <BasicMenu/> 
-
-    {/* 상단 여백 my-5 제거 */}
+    <BasicMenu /> 
     <div 
     className="bg-white my-5 w-full flex flex-col space-y-1 md:flex-row md:space-x-1 md:space-y-0">
       

@@ -164,8 +164,9 @@ const ProductListPage = () => {
                 {product.price.toLocaleString()}원
               </p>
             </div>
-            <div className="text-center w-24">
-              <p className="text-sm text-gray-600">★ {product.rating} / 10</p>
+            <div className="text-center w-24"> 
+              {/* 소수 첫째자리까지 표시 */}
+              <p className="text-sm text-gray-600">★ {product.rating.toFixed(1)} / 10</p>
               <button
                 className="mt-2 w-full bg-gray-300 hover:bg-gray-400 text-sm px-2 py-1 rounded"
                 onClick={() => handleAddToCart(product.id)}
