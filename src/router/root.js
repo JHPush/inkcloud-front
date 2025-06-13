@@ -15,6 +15,8 @@ const TodoIndex = lazy(() => import("../pages/todo/IndexPage"))
 const ProductList = lazy(() => import("../pages/product/ProductListPage"));
 const ProductDetail = lazy(() => import("../pages/product/ProductDetailPage"));
 
+const CartPage = lazy(() => import("../pages/cart/CartPage"))
+
 
 const LoginPage = lazy(() => import("../components/menus/LoginPage"))
 
@@ -111,7 +113,10 @@ const root = createBrowserRouter([
     path: "products/:id",
     element: <Suspense fallback={Loading}><ProductDetail /></Suspense>
   },
-  
+  {
+    path: "/carts",
+    element: <Suspense fallback={Loading}><CartPage /></Suspense>
+  },
   {
     path: "/payment",
     element: <Suspense fallback={Loading}><PaymentPage/></Suspense>
