@@ -1,5 +1,7 @@
 import jwtAxios from './jwtAxios';
 
+const PREFIX = "https://localhost:15000/api/v1/carts"
+
 const CART_API_URL = '/api/v1/carts';
 
 
@@ -35,6 +37,6 @@ export const updateCartItemQuantity = async (cartId, quantity) => {
 export const addToCart = async (data) => {
 
   const response = await jwtAxios.post(CART_API_URL, data);
-  
+
   return response.data;
 };
