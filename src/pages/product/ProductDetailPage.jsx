@@ -49,7 +49,7 @@ const ProductDetailPage = () => {
     // e.stopPropagation();
     // alert("🛠️ 아직 구현되지 않은 기능입니다.");
     const state = {
-      itemId: product.id,
+      id: product.id,
       name: product.name,
       author: product.author,
       publisher: product.publisher,

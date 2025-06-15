@@ -1,43 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOrderInfo, putCancelOrder } from "../../api/paymentOrderApi";
-
-
-// mock data
-const mockOrder = {
-  id: '23423',
-  createdAt: "2025-06-11T05:21:24.366348",
-  updatedAt: "2025-06-11T05:21:24.366354",
-  member: {
-    name: "지호박",
-    contact: "01043544354",
-    email: "a@gmail.com",
-  },
-  orderItems: [
-    {
-      itemId: "1",
-      name: "자바스페셜2",
-      price: 1000,
-      quantity: 1,
-      author: "남궁성",
-    },
-  ],
-  orderShip: {
-    receiver: "지호박",
-    contact: "01043544354",
-    zipcode: "6364",
-    addressMain: "서울 강남구 밤고개로 120",
-    addressSub: "",
-  },
-  paymentDto: {
-    price: 1000,
-    count: 1,
-    method: "CARD",
-    pg: "INICIS_V2",
-    at: "2025-06-11T14:21:53.857693",
-  },
-  state: "PENDING",
-};
+import { getOrderInfo, patchOrdersWithState, patchUpdateOrdersWithState, putCancelOrder } from "../../api/paymentOrderApi";
+import { getMyInfo } from "../../api/memberApi";
 
 const statusMapping = {
   PREPARE: "상품준비중",
@@ -47,13 +11,22 @@ const statusMapping = {
   FAILED: "주문오류",
 };
 
-const OrderDetailComp = () => {
 
+const OrderDetailComp = () => {
+  const [user, setUser] = useState(null);
   const [order, setOrder] = useState();
   const { id } = useParams();
+  const [stateType, setStateType] = useState("PREPARE");
 
   useEffect(() => {
     if (!id) return;
+
+    getMyInfo().then(data => {
+      setUser(data)
+    }).catch(e => {
+      console.error('내 정보 조회 실패')
+    })
+
 
     getOrderInfo(id).then(data => {
       setOrder(data);
@@ -62,7 +35,6 @@ const OrderDetailComp = () => {
     })
   }, [id])
 
-  console.log('order : ', order)
 
   const handleCancelOrder = () => {
     if (!window.confirm('주문을 취소하시겠습니까?'))
@@ -73,8 +45,14 @@ const OrderDetailComp = () => {
       window.history.back();
     }).catch(e => {
       console.error('주문 취소 실패')
-
     })
+  }
+
+  const handleOnUpdateOrders = async (id) => {
+    const res = await patchOrdersWithState(id, stateType);
+    console.log('reer : ', res)
+    setOrder(res);
+    alert('상태가 반영되었습니다.')
 
   }
 
@@ -83,11 +61,28 @@ const OrderDetailComp = () => {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center">
         <h1 className="text-2xl font-bold mb-6">주문 상세</h1>
-        {order?.state === "PREPARE" ? <button
-          onClick={handleCancelOrder}
-          className="text-white text-sm m-1 rounded bg-red-500 px-3 py-1 ml-auto">
-          주문 취소
-        </button> : <></>}
+        {order?.state === "PREPARE" || user?.role === "ADMIN" ?
+          <>
+            <div className="flex items-center gap-2">
+              <select value={stateType}
+                onChange={(e) => setStateType(e.target.value)}
+                className="border rounded px-3 py-1">
+                <option value="PREPARE">상품준비중</option>
+                <option value="SHIPPING">배송중</option>
+                <option value="SHIPPED">배송완료</option>
+                {/* <option value="CANCELED">주문 취소</option> */}
+              </select>
+              <button onClick={() => handleOnUpdateOrders(order.id)} type="button" className="bg-blue-500 text-white px-4 py-1 rounded">
+                변경
+              </button>
+            </div>
+            <button
+              onClick={handleCancelOrder}
+              className="text-white text-sm m-1 rounded bg-red-500 px-3 py-1 ml-auto">
+              주문 취소
+            </button>
+          </>
+          : <></>}
 
       </div>
 

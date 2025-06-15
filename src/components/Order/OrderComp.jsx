@@ -208,7 +208,8 @@ const OrderComp = () => {
     }
 
     const checkProductInven = async () => {
-        const productIds = cartItems.map(item => ({ product_id: item.itemId }));
+        const productIds = cartItems.map(item => ({ product_id: item.id }));
+        console.log('ids :', cartItems)
         const productInven = await getProductInven(productIds);
 
         if (!productInven || productInven.length !== cartItems.length) {
@@ -244,6 +245,10 @@ const OrderComp = () => {
         const check = await checkProductInven();
         if (!check)
             return;
+        console.log('items : ', cartItems.map(({ id, ...rest }) => ({
+                ...rest,
+                itemId: id
+            })))
 
         const orderStartResult = await postOrderStart({
             price: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -253,7 +258,10 @@ const OrderComp = () => {
                 memberContact: user.phoneNumber,
                 memberName: user.lastName + user.firstName
             },
-            orderItems: cartItems,
+            orderItems: cartItems.map(({ id, ...rest }) => ({
+                ...rest,
+                itemId: id
+            })),
             orderShip: orderShip
         })
         console.log('result :', orderStartResult)

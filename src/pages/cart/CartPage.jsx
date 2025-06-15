@@ -99,7 +99,8 @@ const CartPage = () => {
       alert('주문할 상품을 선택해주세요.');
       return;
     }
-    navigate('/order', { state: itemsToOrder  });
+    console.log('cart : ', itemsToOrder)
+    navigate('/order', { state: itemsToOrder.map(item => ({...item.product, quantity: item.quantity}))  });
   };
 
   useEffect(() => {
