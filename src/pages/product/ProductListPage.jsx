@@ -1,14 +1,19 @@
 // src/pages/product/ProductListPage.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { fetchProducts } from "../../api/productApi";
 import { addToCart } from "../../api/cartApi";
 
 const ProductListPage = () => {
+  const [searchParams] = useSearchParams();
+  const initialCategory = searchParams.get("category");
+
   const [products, setProducts] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [searchFields, setSearchFields] = useState(["name"]);
-  const [categoryIds, setCategoryIds] = useState([]);
+  const [categoryIds, setCategoryIds] = useState(
+    initialCategory ? [initialCategory] : []
+  );
   const [sortType, setSortType] = useState("POPULAR");
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(0);
@@ -37,7 +42,7 @@ const ProductListPage = () => {
 
   useEffect(() => {
     handleSearch(0);
-  }, []);
+  }, [initialCategory]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -47,7 +52,7 @@ const ProductListPage = () => {
 
   const handleAddToCart = async (productId) => {
     try {
-      await addToCart({productId: productId, quantity:1}); // 수량 기본값 1
+      await addToCart({ productId, quantity: 1 });
       alert("장바구니에 추가되었습니다.");
     } catch (error) {
       console.error("장바구니 추가 실패:", error);
@@ -57,7 +62,6 @@ const ProductListPage = () => {
 
   const handleBuyNow = (productId) => {
     console.log("바로 구매 클릭:", productId);
-    // 추후 구매 페이지로 이동 또는 결제 로직 추가 예정
   };
 
   return (
@@ -73,7 +77,9 @@ const ProductListPage = () => {
               <input
                 type="checkbox"
                 checked={searchFields.includes(field)}
-                onChange={() => toggleItem(field, searchFields, setSearchFields)}
+                onChange={() =>
+                  toggleItem(field, searchFields, setSearchFields)
+                }
                 className="mr-2"
               />
               {field.toUpperCase()}
@@ -88,7 +94,9 @@ const ProductListPage = () => {
               <input
                 type="checkbox"
                 checked={categoryIds.includes(cat.categoryId)}
-                onChange={() => toggleItem(cat.categoryId, categoryIds, setCategoryIds)}
+                onChange={() =>
+                  toggleItem(cat.categoryId, categoryIds, setCategoryIds)
+                }
                 className="mr-2"
               />
               {cat.categoryName} ({cat.count})
@@ -128,7 +136,10 @@ const ProductListPage = () => {
 
         {/* 정렬 */}
         <div className="flex justify-between mb-4 items-center">
-          <h2 className="text-2xl font-bold">검색 결과</h2>
+          <h2 className="text-2xl font-bold">
+            검색 결과{" "}
+            {initialCategory ? `- "${initialCategory}" 카테고리` : ""}
+          </h2>
           <select
             className="border p-2 rounded"
             value={sortType}
@@ -154,31 +165,57 @@ const ProductListPage = () => {
               className="w-24 h-32 object-cover mr-4 cursor-pointer"
               onClick={() => navigate(`/products/${product.id}`)}
             />
-            <div className="flex-1 cursor-pointer" onClick={() => navigate(`/products/${product.id}`)}>
+            <div
+              className="flex-1 cursor-pointer"
+              onClick={() => navigate(`/products/${product.id}`)}
+            >
               <h3 className="font-semibold text-lg">{product.name}</h3>
-              <p className="text-sm text-gray-700 mt-1">{product.introduction}</p>
+              <p className="text-sm text-gray-700 mt-1">
+                {product.introduction}
+              </p>
               <p className="text-sm text-gray-500 mt-1">
-                {product.author} | {product.publisher} | {product.publicationDate}
+                {product.author} | {product.publisher} |{" "}
+                {product.publicationDate}
               </p>
               <p className="text-red-600 mt-2 font-semibold">
                 {product.price.toLocaleString()}원
               </p>
             </div>
-            <div className="text-center w-24"> 
-              {/* 소수 첫째자리까지 표시 */}
-              <p className="text-sm text-gray-600">★ {product.rating.toFixed(1)} / 10</p>
-              <button
-                className="mt-2 w-full bg-gray-300 hover:bg-gray-400 text-sm px-2 py-1 rounded"
-                onClick={() => handleAddToCart(product.id)}
-              >
-                장바구니
-              </button>
-              <button
-                className="mt-1 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm px-2 py-1 rounded"
-                onClick={() => handleBuyNow(product.id)}
-              >
-                바로 구매
-              </button>
+            <div className="text-center w-24">
+              <p className="text-sm text-gray-600">
+                ★ {product.rating.toFixed(1)} / 10
+              </p>
+              {product.status !== "ON_SALE" ? (
+                <button
+                  className="mt-2 w-full bg-gray-400 text-white text-sm px-2 py-1 rounded cursor-not-allowed"
+                  disabled
+                >
+                  {product.status === "OUT_OF_STOCK" ? "품절" : "절판"}
+                </button>
+              ) : (
+                <button
+                  className="mt-2 w-full bg-gray-300 hover:bg-gray-400 text-sm px-2 py-1 rounded"
+                  onClick={() => handleAddToCart(product.id)}
+                >
+                  장바구니
+                </button>
+              )}
+
+              {product.status !== "ON_SALE" ? (
+                <button
+                  className="mt-1 w-full bg-gray-400 text-white text-sm px-2 py-1 rounded cursor-not-allowed"
+                  disabled
+                >
+                  {product.status === "OUT_OF_STOCK" ? "품절" : "절판"}
+                </button>
+              ) : (
+                <button
+                  className="mt-1 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm px-2 py-1 rounded"
+                  onClick={() => handleBuyNow(product.id)}
+                >
+                  바로 구매
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -195,7 +232,9 @@ const ProductListPage = () => {
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i}
-              className={`px-3 py-1 border rounded ${i === page ? "bg-blue-600 text-white" : ""}`}
+              className={`px-3 py-1 border rounded ${
+                i === page ? "bg-blue-600 text-white" : ""
+              }`}
               onClick={() => handleSearch(i)}
             >
               {i + 1}
@@ -214,7 +253,7 @@ const ProductListPage = () => {
   );
 };
 
-// 공통 토글 로직
+// 공통 토글 함수
 const toggleItem = (item, list, setList) => {
   setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
 };

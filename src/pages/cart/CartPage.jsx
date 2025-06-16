@@ -86,7 +86,7 @@ const CartPage = () => {
       setSelectedItems([]);
     } else {
       const allIds = cartItems
-        .filter((item) => item.product.status !== 'OUT_OF_STOCK')
+        .filter((item) => item.product.status === 'ON_SALE')
         .map((item) => item.id);
       setSelectedItems(allIds);
     }
@@ -94,13 +94,21 @@ const CartPage = () => {
   };
 
   const handleOrderSelected = () => {
-    const itemsToOrder = cartItems.filter((item) => selectedItems.includes(item.id));
+    const itemsToOrder = cartItems.filter(
+      (item) => selectedItems.includes(item.id) && item.product.status === 'ON_SALE'
+    );
     if (itemsToOrder.length === 0) {
       alert('주문할 상품을 선택해주세요.');
       return;
     }
     console.log('cart : ', itemsToOrder)
     navigate('/order', { state: itemsToOrder.map(item => ({...item.product, quantity: item.quantity}))  });
+  };
+
+  const calculateTotalPrice = () => {
+    return cartItems
+      .filter((item) => selectedItems.includes(item.id) && item.product.status === 'ON_SALE')
+      .reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   };
 
   useEffect(() => {
@@ -145,29 +153,29 @@ const CartPage = () => {
 
           <div className="space-y-4">
             {cartItems.map((item) => {
-              const isOutOfStock = item.product.status === 'OUT_OF_STOCK';
+              const status = item.product.status;
+              const isUnavailable = status === 'OUT_OF_STOCK' || status === 'DISCONTINUED';
               const isChecked = selectedItems.includes(item.id);
               return (
                 <div
                   key={item.id}
-                  className={`border p-4 rounded flex justify-between items-center ${
-                    isOutOfStock ? 'opacity-50' : ''
-                  }`}
+                  className={`border p-4 rounded flex justify-between items-center ${isUnavailable ? 'opacity-50' : ''}`}
                 >
                   <div className="flex items-center gap-4">
                     <input
                       type="checkbox"
                       checked={isChecked}
-                      disabled={isOutOfStock}
+                      disabled={isUnavailable}
                       onChange={() => handleSelectItem(item.id)}
                       className="mr-2"
                     />
                     <img
                       src={item.product.image}
                       alt={item.product.name}
-                      className="w-24 h-32 object-cover rounded"
+                      className="w-24 h-32 object-cover rounded cursor-pointer"
+                      onClick={() => navigate(`/products/${item.product.id}`)}
                     />
-                    <div>
+                    <div className="cursor-pointer" onClick={() => navigate(`/products/${item.product.id}`)}>
                       <p className="font-bold text-lg">{item.product.name}</p>
                       <p className="text-sm text-gray-600">
                         {item.product.author} / {item.product.publisher}
@@ -175,7 +183,8 @@ const CartPage = () => {
                       <p className="text-md text-blue-600">
                         {item.product.price.toLocaleString()}원
                       </p>
-                      {isOutOfStock && <p className="text-red-500">품절</p>}
+                      {status === 'OUT_OF_STOCK' && <p className="text-red-500">품절</p>}
+                      {status === 'DISCONTINUED' && <p className="text-gray-500">절판</p>}
                       <QuantitySelect
                         quantity={item.quantity}
                         onChange={(qty) => handleQuantityChange(item.id, qty)}
@@ -191,6 +200,11 @@ const CartPage = () => {
                 </div>
               );
             })}
+          </div>
+
+          {/* 선택 상품 총 금액 표시 */}
+          <div className="text-right text-lg font-semibold text-gray-700 mt-4">
+            선택된 상품 합계: <span className="text-blue-600">{calculateTotalPrice().toLocaleString()}원</span>
           </div>
 
           <div className="flex justify-between items-center mt-6 border-t pt-4">

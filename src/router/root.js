@@ -19,6 +19,8 @@ const ProductDetail = lazy(() => import("../pages/product/ProductDetailPage"));
 
 const CartPage = lazy(() => import("../pages/cart/CartPage"))
 
+const AdminProductPage = lazy(() => import("../pages/admin/AdminProductPage"))
+const AdminCategoryPage = lazy(() => import("../pages/admin/AdminCategoryPage"))
 
 const LoginPage = lazy(() => import("../pages/member/LayoutLoginPage"))
 
@@ -34,28 +36,28 @@ const MemberDetail = lazy(() => import("../components/Member/admin/GetMemberInfo
 
 const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
 // =========================== 주문 & 결제 ==========================
-const PaymentPage = lazy(()=>import("../pages/Order_Payment/PaymentPage"))
-const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
-const OrderCompletePage = lazy(()=>import("../pages/Order_Payment/OrderCompletePage"))
-const MemberOrdersPage = lazy(()=>import("../pages/Order_Payment/MemberOrdersPage"))
-const OrderDetailPage = lazy(()=>import("../pages/Order_Payment/OrderDetailPage"))
-const OrderManagementPage = lazy(()=>import('../pages/Order_Payment/admin/OrderManagementPage'))
+const PaymentPage = lazy(() => import("../pages/Order_Payment/PaymentPage"))
+const OrderPage = lazy(() => import("../pages/Order_Payment/OrderPage"))
+const OrderCompletePage = lazy(() => import("../pages/Order_Payment/OrderCompletePage"))
+const MemberOrdersPage = lazy(() => import("../pages/Order_Payment/MemberOrdersPage"))
+const OrderDetailPage = lazy(() => import("../pages/Order_Payment/OrderDetailPage"))
+const OrderManagementPage = lazy(() => import('../pages/Order_Payment/admin/OrderManagementPage'))
 
 
 const SalesStatsChart = lazy(() => import("../components/stats/SalesChart"))
 
 const AdminLoginPage = lazy(() => import("../pages/member/admin/AdminLoginPage"))
 
-const AdminReviewReport =lazy(() => import("../pages/review/AdminReviewReportPage"))
+const AdminReviewReport = lazy(() => import("../pages/review/AdminReviewReportPage"))
 
-const AdminReviewDetail =lazy(() => import("../components/review/AdminReviewDetail"))
+const AdminReviewDetail = lazy(() => import("../components/review/AdminReviewDetail"))
 
 
 
 const root = createBrowserRouter([
   {
     path: "/",
-    element: <Suspense fallback={Loading}><Main/></Suspense>
+    element: <Suspense fallback={Loading}><Main /></Suspense>
   },
   {
     path: "/admin",
@@ -93,41 +95,50 @@ const root = createBrowserRouter([
         path: "stats",
         element: <Suspense fallback={Loading}><SalesStatsChart /></Suspense>
       },
+      ,
+      {
+        path: "products",
+        element: <Suspense fallback={Loading}><AdminProductPage /></Suspense>
+      },
+      {
+        path: "categories",
+        element: <Suspense fallback={Loading}><AdminCategoryPage /></Suspense>
+      }
       // ...필요시 추가
     ]
   },
   {
     path: "about",
-    element: <Suspense fallback={Loading}><About/></Suspense>
+    element: <Suspense fallback={Loading}><About /></Suspense>
   },
   {
     path: "login",
-    element: <Suspense fallback={Loading}><LoginPage/></Suspense>
+    element: <Suspense fallback={Loading}><LoginPage /></Suspense>
   },
   {
     path: "signup",
-    element: <Suspense fallback={Loading}><SignupPage/></Suspense>
+    element: <Suspense fallback={Loading}><SignupPage /></Suspense>
   },
   {
     path: "admin/signup",
-    element: <Suspense fallback={Loading}><SignupPage/></Suspense>
+    element: <Suspense fallback={Loading}><SignupPage /></Suspense>
   },
   {
     path: "mypage",
-    element: <Suspense fallback={Loading}><MyPage/></Suspense>
+    element: <Suspense fallback={Loading}><MyPage /></Suspense>
   },
   {
     path: "forgot",
-    element: <Suspense fallback={Loading}><ForgotPwdPage/></Suspense>
+    element: <Suspense fallback={Loading}><ForgotPwdPage /></Suspense>
   },
   {
     path: "todo",
-    element: <Suspense fallback={Loading}><TodoIndex/></Suspense>,
+    element: <Suspense fallback={Loading}><TodoIndex /></Suspense>,
     children: todoRouter()
   },
   {
-  path: "products",
-  element: <Suspense fallback={Loading}><ProductList /></Suspense>
+    path: "products",
+    element: <Suspense fallback={Loading}><ProductList /></Suspense>
   },
   {
     path: "products/:id",
@@ -139,23 +150,23 @@ const root = createBrowserRouter([
   },
   {
     path: "/payment",
-    element: <Suspense fallback={Loading}><PaymentPage/></Suspense>
+    element: <Suspense fallback={Loading}><PaymentPage /></Suspense>
   },
   {
     path: "/order",
-    element: <Suspense fallback={Loading}><OrderPage/></Suspense>
+    element: <Suspense fallback={Loading}><OrderPage /></Suspense>
   },
   {
     path: "/order/complete",
-    element: <Suspense fallback={Loading}><OrderCompletePage/></Suspense>
+    element: <Suspense fallback={Loading}><OrderCompletePage /></Suspense>
   },
-    {
+  {
     path: "/order/member",
-    element: <Suspense fallback={Loading}><MemberOrdersPage/></Suspense>
+    element: <Suspense fallback={Loading}><MemberOrdersPage /></Suspense>
   },
   {
     path: "/order/member/:id",
-    element: <Suspense fallback={Loading}><OrderDetailPage/></Suspense>
+    element: <Suspense fallback={Loading}><OrderDetailPage /></Suspense>
   },
   {
     path: "/admin/login",

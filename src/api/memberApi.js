@@ -8,6 +8,7 @@ export const SendVerificationEmail = async(email) => {
   const response = await axios.post(
       `${MEMBER_SERVICE_URL}/signup/email/send`, { email }
   );
+  console.log("email : ", email)
   return response.data;
 };
 
