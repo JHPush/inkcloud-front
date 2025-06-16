@@ -1,12 +1,14 @@
 import { Suspense, lazy } from "react";
 import todoRouter from "./todoRouter";
+import AdminLayout from "../layouts/AdminLayout";
+import AdminRoute from "./AdminRoute";
 
 
 const { createBrowserRouter } = require("react-router-dom");
 
 const Loading = <div>Loading....</div>
 const Main = lazy(() => import("../pages/MainPage"))
-const Admin = lazy(() => import("../layouts/AdminLayout"))
+// const Admin = lazy(() => import("../layouts/AdminLayout"))
 const About = lazy(() => import("../pages/AboutPage"))
 
 const TodoIndex = lazy(() => import("../pages/todo/IndexPage"))
@@ -18,23 +20,17 @@ const ProductDetail = lazy(() => import("../pages/product/ProductDetailPage"));
 const CartPage = lazy(() => import("../pages/cart/CartPage"))
 
 
-const LoginPage = lazy(() => import("../components/menus/LoginPage"))
+const LoginPage = lazy(() => import("../pages/member/LayoutLoginPage"))
 
 const SignupPage = lazy(() => import("../components/menus/SignupPage"))
 
 const MyPage = lazy(() => import("../pages/member/MyPage"))
-
-// const MyInfoPage = lazy(() => import("../pages/member/MyInfoPage"))
 
 const ForgotPwdPage = lazy(() => import("../pages/member/ForgotPwdPage"))
 
 const MemberByAdmin = lazy(() => import("../pages/member/admin/MemberByAdmin"))
 
 const MemberDetail = lazy(() => import("../components/Member/admin/GetMemberInfo"))
-
-const AddShipping = lazy(() => import("../components/Member/shipping/AddShipping"))
-
-const ModifyShipping = lazy(() => import("../components/Member/shipping/ModifyShipping"))
 
 const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
 // =========================== 주문 & 결제 ==========================
@@ -46,19 +42,59 @@ const OrderDetailPage = lazy(()=>import("../pages/Order_Payment/OrderDetailPage"
 const OrderManagementPage = lazy(()=>import('../pages/Order_Payment/admin/OrderManagementPage'))
 
 
-const SalesStatsChart = lazy(() => import("../components/stats/SalesStatsChart"))
+const SalesStatsChart = lazy(() => import("../components/stats/SalesChart"))
+
+const AdminLoginPage = lazy(() => import("../pages/member/admin/AdminLoginPage"))
+
+const AdminReviewReport =lazy(() => import("../pages/review/AdminReviewReportPage"))
+
+const AdminReviewDetail =lazy(() => import("../components/review/AdminReviewDetail"))
 
 
 
 const root = createBrowserRouter([
-
   {
     path: "/",
     element: <Suspense fallback={Loading}><Main/></Suspense>
   },
   {
     path: "/admin",
-    element: <Suspense fallback={Loading}><Admin/></Suspense>
+    element: (
+      <AdminRoute>
+        <Suspense fallback={Loading}><AdminLayout /></Suspense>
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "member",
+        element: <Suspense fallback={Loading}><MemberByAdmin /></Suspense>
+      },
+      {
+        path: "member/:email",
+        element: <Suspense fallback={Loading}><MemberDetail /></Suspense>
+      },
+      {
+        path: "orders",
+        element: <Suspense fallback={Loading}><OrderManagementPage /></Suspense>
+      },
+      {
+        path: "reviews",
+        element: <Suspense fallback={Loading}><AdminReviewPage /></Suspense>
+      },
+      {
+        path: "reviews/:id",
+        element: <Suspense fallback={Loading}><AdminReviewDetail /></Suspense>
+      },
+      {
+        path: "reviews/reports",
+        element: <Suspense fallback={Loading}><AdminReviewReport /></Suspense>
+      },
+      {
+        path: "stats",
+        element: <Suspense fallback={Loading}><SalesStatsChart /></Suspense>
+      },
+      // ...필요시 추가
+    ]
   },
   {
     path: "about",
@@ -81,28 +117,8 @@ const root = createBrowserRouter([
     element: <Suspense fallback={Loading}><MyPage/></Suspense>
   },
   {
-    path: "mypage/add-shipping",
-    element: <Suspense fallback={Loading}><AddShipping/></Suspense>
-  },
-  {
-    path: "mypage/modify/:id",
-    element: <Suspense fallback={Loading}><ModifyShipping/></Suspense>
-  },
-  // {
-  //   path: "my-info",
-  //   element: <Suspense fallback={Loading}><MyInfoPage/></Suspense>
-  // },
-  {
     path: "forgot",
     element: <Suspense fallback={Loading}><ForgotPwdPage/></Suspense>
-  },
-  {
-    path: "admin/member",
-    element: <Suspense fallback={Loading}><MemberByAdmin/></Suspense>
-  },
-  {
-    path: "admin/member/:email",
-    element: <Suspense fallback={Loading}><MemberDetail/></Suspense>
   },
   {
     path: "todo",
@@ -116,10 +132,6 @@ const root = createBrowserRouter([
   {
     path: "products/:id",
     element: <Suspense fallback={Loading}><ProductDetail /></Suspense>
-  },
-  {
-    path: "admin/reviews",
-    element: <Suspense fallback={Loading}><AdminReviewPage /></Suspense>
   },
   {
     path: "/carts",
@@ -146,14 +158,9 @@ const root = createBrowserRouter([
     element: <Suspense fallback={Loading}><OrderDetailPage/></Suspense>
   },
   {
-    path: "/admin/orders",
-    element: <Suspense fallback={Loading}><OrderManagementPage/></Suspense>
-  },
-  {
-    path: "/admin/stats",
-    element: <Suspense fallback={Loading}><SalesStatsChart/></Suspense>
+    path: "/admin/login",
+    element: <Suspense fallback={Loading}><AdminLoginPage /></Suspense>
   }
-
 ])
 
 export default root;

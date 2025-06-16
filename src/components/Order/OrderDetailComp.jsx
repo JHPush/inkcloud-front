@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOrderInfo, patchOrdersWithState, patchUpdateOrdersWithState, putCancelOrder } from "../../api/paymentOrderApi";
 import { getMyInfo } from "../../api/memberApi";
+import { getReviewsByMember } from "../../api/reviewApi";
+import WriteReview from "../review/WriteReview";
 
 const statusMapping = {
   PREPARE: "상품준비중",
@@ -15,25 +17,54 @@ const statusMapping = {
 const OrderDetailComp = () => {
   const [user, setUser] = useState(null);
   const [order, setOrder] = useState();
+  const [reviewedItemIds, setReviewedItemIds] = useState([]);
   const { id } = useParams();
   const [stateType, setStateType] = useState("PREPARE");
 
-  useEffect(() => {
+
+  const refreshOrder = async () => {
     if (!id) return;
 
-    getMyInfo().then(data => {
-      setUser(data)
-    }).catch(e => {
-      console.error('내 정보 조회 실패')
-    })
+    const myInfoRes = await getMyInfo();
+    const myOrderRes = await getOrderInfo(id);
+    const myReviewRes = await getReviewsByMember();
+    if (!myInfoRes) {
+      alert('내 정보 조회 실패')
+      return;
+    }
+    if (!myOrderRes) {
+      alert('내 주문 조회 실패')
+      return;
+    }
+    if (!myReviewRes) {
+      alert('내 리뷰 조회 실패')
+      return;
+    }
+    setUser(myInfoRes);
+    setOrder(myOrderRes);
+    setReviewedItemIds(myReviewRes.map(r => String(r.productId)));
+  }
 
 
-    getOrderInfo(id).then(data => {
-      setOrder(data);
-    }).catch(e => {
-      console.error('데이터 조회 실패 : ', e)
-    })
-  }, [id])
+
+  useEffect(() => {
+    refreshOrder()
+  }, [id]);
+
+
+  // 내 리뷰 목록 조회
+  useEffect(() => {
+    const fetchMyReviews = async () => {
+      try {
+        const myReviews = await getReviewsByMember();
+        setReviewedItemIds(myReviews.map(r => String(r.productId)));
+      } catch (e) {
+        console.error("내 리뷰 목록 조회 실패:", e);
+      }
+    };
+    fetchMyReviews();
+  }, []);
+
 
 
   const handleCancelOrder = () => {
@@ -129,21 +160,36 @@ const OrderDetailComp = () => {
         <div>
           <h2 className="text-lg font-semibold mb-2">주문 상품</h2>
           <div className="space-y-3 text-sm">
-            {order?.orderItems.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex justify-between border-b pb-2"
-              >
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-gray-500">저자: {item.author}</p>
+            {order?.orderItems.map((item, idx) => {
+              // 주문일로부터 6개월(약 183일) 이내인지 계산
+              const orderDate = new Date(order.createdAt);
+              const now = new Date();
+              //테스트용 코드 (1분 뒤 계산)
+              // const diffSeconds = (now - orderDate) / 1000; // 초 단위 차이
+              // console.log("diffSeconds:", diffSeconds, "orderDate:", orderDate, "now:", now);
+              const diffMonth = (now.getFullYear() - orderDate.getFullYear()) * 12 + (now.getMonth() - orderDate.getMonth());
+
+
+              return (
+                <div key={idx} className="flex justify-between items-end border-b pb-2">
+                  <div>
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-gray-500">저자: {item.author}</p>
+                  </div>
+                  <div className="text-right">
+                    <p>수량: {item.quantity}</p>
+                    <p>{(item.price * item.quantity).toLocaleString()}원</p>
+                    {/* SHIPPED 상태이고 6개월 이내이고 리뷰 작성 하지 않은 경우에만 리뷰작성 버튼 노출 */}
+                    {order.state === "SHIPPED" && diffMonth < 60 && !reviewedItemIds.includes(String(item.itemId)) && (
+                      <WriteReview
+                        orderItem={item}
+                        onSuccess={refreshOrder}
+                      />
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p>수량: {item.quantity}</p>
-                  <p>{(item.price * item.quantity).toLocaleString()}원</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

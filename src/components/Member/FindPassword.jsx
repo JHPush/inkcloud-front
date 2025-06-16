@@ -22,28 +22,26 @@ const FindPassword = ({ onSuccess }) => {
     e.preventDefault();
 
     if (!form.lastName.trim() || !form.firstName.trim() || !form.email.trim()) {
-      window.alert("성, 이름, 이메일을 모두 입력해주세요.");
+      setError("성, 이름, 이메일을 모두 입력해주세요.");
       return;
     }
     if (!isValidEmail(form.email)) {
-      window.alert("올바른 이메일 형식이 아닙니다.");
+      setError("올바른 이메일 형식이 아닙니다.");
       return;
     }
 
     try {
-        const cleanEmail = form.email.trim();
-        const cleanFirstName = form.firstName.trim();
-        const cleanLastName = form.lastName.trim();
+      const cleanEmail = form.email.trim();
+      const cleanFirstName = form.firstName.trim();
+      const cleanLastName = form.lastName.trim();
       await requestPwdCode({
         email: cleanEmail,
         firstName: cleanFirstName,
         lastName: cleanLastName
       });
-      window.alert("메일로 비밀번호 재설정 인증번호가 발송되었습니다. 인증번호를 입력해주세요.");
       setEmailSent(true);
       setError("");
       setTimerKey(prev => prev + 1); // 타이머 리셋
-
     } catch (err) {
       if (err.response && err.response.status === 403) {
         setError("탈퇴한 회원입니다.");
@@ -68,8 +66,7 @@ const FindPassword = ({ onSuccess }) => {
         code
       });
       setVerified(true);
-    if (onSuccess) onSuccess(form.email);
-    //   window.alert("인증이 완료되었습니다. 비밀번호를 재설정하세요.");
+      if (onSuccess) onSuccess(form.email);
     } catch (err) {
       setError("인증번호가 올바르지 않습니다.");
     }
@@ -78,10 +75,10 @@ const FindPassword = ({ onSuccess }) => {
   // 타이머 렌더러
   const timerRenderer = ({ minutes, seconds, completed }) => {
     if (completed) {
-      return <span style={{ color: "red", fontWeight: "bold" }}>00:00</span>;
+      return <span className="text-red-500 font-bold">00:00</span>;
     } else {
       return (
-        <span style={{ color: "red", fontWeight: "bold" }}>
+        <span className="text-red-500 font-bold">
           {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
         </span>
       );
@@ -89,88 +86,110 @@ const FindPassword = ({ onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSendCode} className="p-4 bg-white rounded shadow max-w-md mx-auto">
-      <div className="mb-2 font-bold text-lg">비밀번호 찾기</div>
-      <input
-        type="text"
-        placeholder="성"
-        value={form.lastName}
-        onChange={e => setForm({ ...form, lastName: e.target.value })}
-        className="w-full input input-bordered mb-2"
-        disabled={emailSent && !verified}
-      />
-      <input
-        type="text"
-        placeholder="이름"
-        value={form.firstName}
-        onChange={e => setForm({ ...form, firstName: e.target.value })}
-        className="w-full input input-bordered mb-2"
-        disabled={emailSent && !verified}
-      />
-      <input
-        type="email"
-        placeholder="이메일"
-        value={form.email}
-        onChange={e => setForm({ ...form, email: e.target.value })}
-        className="w-full input input-bordered mb-2"
-        disabled={emailSent && !verified}
-      />
-      <button
-        type="submit"
-        className="w-full btn btn-primary"
-        style={{ display: emailSent && !verified ? "none" : "block" }}
-        disabled={emailSent && !verified}
+    <div className="flex flex-col items-center justify-center min-h-[70vh] w-full">
+      <form
+        onSubmit={handleSendCode}
+        className="w-full max-w-2xl bg-white rounded-2xl p-12 flex flex-col gap-4"
+        style={{ boxShadow: "none" }}
       >
-        확인
-      </button>
-      {/* 이메일 전송 성공 & 인증 전이면 재전송 버튼 노출 */}
-      {emailSent && !verified && (
-        <button
-          type="button"
-          className="w-full btn btn-outline mt-2"
-          onClick={e => {
-            setError("");
-            setCode("");
-            setEmailSent(true);
-            setVerified(false);
-            handleSendCode(e);
-          }}
-        >
-          인증메일 재전송
-        </button>
-      )}
-      {emailSent && !verified && (
-        <div style={{ marginTop: 10 }}>
-          {/* 타이머 */}
-          <div style={{ marginBottom: 8 }}>
-            <Countdown
-              key={timerKey}
-              date={Date.now() + 5 * 60 * 1000}
-              renderer={timerRenderer}
+        <div className="flex flex-col gap-0 mb-2">
+          <div className="mb-3 flex items-center min-h-[48px]">
+            <span className="font-semibold text-gray-600 w-28">성</span>
+            <input
+              type="text"
+              placeholder="성을 입력하세요"
+              value={form.lastName}
+              onChange={e => setForm({ ...form, lastName: e.target.value })}
+              className="border rounded px-2 py-1 flex-1"
+              disabled={emailSent && !verified}
             />
           </div>
-          <input
-            type="text"
-            value={code}
-            onChange={e => setCode(e.target.value)}
-            placeholder="인증번호 입력"
-            className="input input-bordered mb-2"
-          />
+          <div className="border-b border-gray-200" />
+          <div className="mb-3 flex items-center min-h-[48px]">
+            <span className="font-semibold text-gray-600 w-28">이름</span>
+            <input
+              type="text"
+              placeholder="이름을 입력하세요"
+              value={form.firstName}
+              onChange={e => setForm({ ...form, firstName: e.target.value })}
+              className="border rounded px-2 py-1 flex-1"
+              disabled={emailSent && !verified}
+            />
+          </div>
+          <div className="border-b border-gray-200" />
+          <div className="mb-3 flex items-center min-h-[48px]">
+            <span className="font-semibold text-gray-600 w-28">이메일</span>
+            <input
+              type="email"
+              placeholder="이메일을 입력하세요"
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              className="border rounded px-2 py-1 flex-1"
+              disabled={emailSent && !verified}
+            />
+          </div>
+          <div className="border-b border-gray-200" />
+        </div>
+        {!emailSent || verified ? (
           <button
-            type="button"
-            onClick={handleVerifyCode}
-            className="btn btn-secondary ml-2">
+            type="submit"
+            className="w-full px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold text-base hover:bg-blue-700 transition"
+            disabled={emailSent && !verified}
+          >
             확인
           </button>
-        </div>
-      )}
-      {verified && (
-        <div style={{ color: "blue", marginTop: 10 }}>
-          
-        </div>
-      )}
-      {error && <div className="text-red-600 mt-2">{error}</div>}
-    </form>
+        ) : null}
+        {/* 이메일 전송 성공 & 인증 전이면 재전송 버튼 노출 */}
+        {emailSent && !verified && (
+          <button
+            type="button"
+            className="w-full px-5 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold text-base hover:bg-blue-200 transition mt-2"
+            onClick={e => {
+              setError("");
+              setCode("");
+              setEmailSent(true);
+              setVerified(false);
+              handleSendCode(e);
+            }}
+          >
+            인증메일 재전송
+          </button>
+        )}
+        {emailSent && !verified && (
+          <div className="mt-4 flex flex-col items-center">
+            <div className="mb-2">
+              <Countdown
+                key={timerKey}
+                date={Date.now() + 5 * 60 * 1000}
+                renderer={timerRenderer}
+              />
+            </div>
+            <div className="flex items-center gap-2 w-full">
+              <input
+                type="text"
+                value={code}
+                onChange={e => setCode(e.target.value)}
+                placeholder="인증번호 입력"
+                className="border rounded px-2 py-1 flex-1"
+              />
+              <button
+                type="button"
+                onClick={handleVerifyCode}
+                className="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold text-base hover:bg-blue-700 transition"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        )}
+        {verified && (
+          <div className="text-blue-600 mt-4 text-center font-semibold">
+            인증이 완료되었습니다. 비밀번호를 재설정하세요.
+          </div>
+        )}
+        {error && <div className="text-red-600 mt-2 text-center">{error}</div>}
+      </form>
+    </div>
   );
 };
 

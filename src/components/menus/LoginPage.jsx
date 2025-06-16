@@ -6,7 +6,7 @@ import { setLogin } from '../../store/loginSlice';
 import { setAccessToken, setRefreshToken} from '../../utils/cookieUtils';
 import { jwtDecode } from "jwt-decode";
 
-const LoginPage = () => {
+const LoginPage = ({ onSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,12 +14,10 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
     setIsLoading(true);
-    console.log(`email : ${email}, password : ${password}`)
-    
+    setError('');
     try {
       const tokenData = await login(email, password);
       setAccessToken(tokenData.access_token);
@@ -58,6 +56,9 @@ const LoginPage = () => {
         // 권한 없음 또는 기타 처리
         setError('권한이 없습니다.');
       }
+
+      // 로그인 성공 시 콜백 호출
+      if (onSuccess) onSuccess();
     } catch (err) {
       setError('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     } finally {
@@ -66,7 +67,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex flex-col justify-center min-h-fit px-0 py-10 rounded-lg">
+    <div className="bg-white-100 flex flex-col justify-center min-h-fit px-0 py-10 rounded-lg">
       <div className="sm:mx-auto sm:w-full sm:max-w-xs mt-4">
         <div className="bg-white rounded-lg px-5 py-4 shadow">
           <h2 className="text-center text-2xl font-bold text-gray-800 mb-2">InkCloud</h2>
@@ -75,7 +76,7 @@ const LoginPage = () => {
             <p className="text-gray-600 text-sm font-medium">로그인</p>
             <div className="h-0.5 w-6 bg-gray-400"></div>
           </div>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 이메일

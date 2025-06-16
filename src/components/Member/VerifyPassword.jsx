@@ -27,7 +27,6 @@ const VerifyPassword = ({ onSuccess }) => {
       return;
     }
     try {
-      console.log("email:", email)
       await login(email, password);
       if (onSuccess) onSuccess();
     } catch {
@@ -36,20 +35,35 @@ const VerifyPassword = ({ onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white rounded shadow max-w-md mx-auto">
-      <div className="mb-2 font-bold text-lg">비밀번호 재확인</div>
-      <h2>회원정보 수정 전 보안을 위해 비밀번호를 재확인합니다.</h2>
-      <div className="mb-2">이메일: {email}</div>
-      <input
-        type="password"
-        placeholder="비밀번호 입력"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        className="w-full input input-bordered mb-2"
-      />
-      <button type="submit" className="w-full btn btn-primary">확인</button>
-      {error && <div className="text-red-600 mt-2">{error}</div>}
-    </form>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-10 flex flex-col items-center"
+      >
+        <div className="text-2xl font-bold mb-6 text-blue-700">비밀번호 재확인</div>
+        <div className="mb-4 text-gray-600 text-center">
+          회원정보 수정 전 보안을 위해<br />비밀번호를 재확인합니다.
+        </div>
+        <div className="mb-4 w-full flex items-center justify-center">
+          <span className="text-gray-500 text-sm">이메일:&nbsp;</span>
+          <span className="font-semibold text-gray-800">{email}</span>
+        </div>
+        <input
+          type="password"
+          placeholder="비밀번호 입력"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="w-full border border-gray-300 rounded px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        />
+        <button
+          type="submit"
+          className="w-full py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+        >
+          확인
+        </button>
+        {error && <div className="text-red-600 mt-3">{error}</div>}
+      </form>
+    </div>
   );
 };
 

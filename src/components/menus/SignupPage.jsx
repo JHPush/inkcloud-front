@@ -280,10 +280,10 @@ const SignupPage = () => {
                 </p>
                 {isAdmin ? (
       <Link
-        to="/admin"
+        to="/login"
         className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        관리자 페이지로 이동
+        로그인 페이지로 이동
       </Link>
     ) : (
       <Link
@@ -297,17 +297,19 @@ const SignupPage = () => {
             )}
           </div>
           {/* 하단 링크 */}
-          <div className="bg-gray-50 px-6 py-4 flex justify-center border-t border-gray-200">
-            <div className="text-sm">
-              <span className="text-gray-600">이미 계정이 있으신가요?</span>
-              <Link
-                to="/login"
-                className="ml-1 font-medium text-blue-600 hover:text-blue-500"
-              >
-                로그인
-              </Link>
+          {step === 1 && (
+            <div className="bg-gray-50 px-6 py-4 flex justify-center border-t border-gray-200">
+              <div className="text-sm">
+                <span className="text-gray-600">이미 계정이 있으신가요?</span>
+                <Link
+                  to="/login"
+                  className="ml-1 font-medium text-blue-600 hover:text-blue-500"
+                >
+                  로그인
+                </Link>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         {/* 북 아이콘 */}
         <div className="mt-8 text-center">

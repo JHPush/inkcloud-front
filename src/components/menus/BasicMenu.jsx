@@ -67,9 +67,11 @@ const BasicMenu = () => {
         )}
     </div>
     <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
+       {!isLoggedIn && (
           <Link to="/signup" className="text-white text-sm m-1 rounded">
             회원가입
           </Link>
+       )}
     </div>
 
     {/* 로그인 모달 */}
@@ -88,7 +90,7 @@ const BasicMenu = () => {
         }}
       >
         <button onClick={() => setIsOpen(false)} className="absolute top-3 right-5 text-xl">✕</button>
-        <LoginPage />
+        <LoginPage onSuccess={() => setIsOpen(false)} />
       </Modal>
   </nav>
   );

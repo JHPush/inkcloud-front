@@ -1,9 +1,7 @@
-
-import { useNavigate } from "react-router-dom";
 import { registerShip } from "../../../api/shipApi";
 import ShippingForm from "./ShippingForm";
 
-const AddShipping = () => {
+const AddShipping = ({ onSuccess }) => {
   const initialForm = {
     name: "",
     receiver: "",
@@ -12,23 +10,20 @@ const AddShipping = () => {
     addressSub: "",
     contact: "",
   };
-  const navigate = useNavigate();
 
   // 배송지 등록
   const handleSubmit = async (form) => {
     try {
       await registerShip(form);
-      console.log("배송지 등록 성공");
-      navigate('/mypage',{state: {tab: 'address'}})
+      window.alert("배송지가 저장되었습니다.");
+      if (onSuccess) onSuccess(); // ShippingList로 돌아가기
     } catch (err) {
-      console.log("배송지 등록 실패:", err);
+      window.alert("배송지 등록 실패");
     }
   };
 
   return (
-    <>
-      <ShippingForm initialForm={initialForm} onSubmit={handleSubmit} submitLabel="배송지 등록" />
-    </>
+    <ShippingForm initialForm={initialForm} onSubmit={handleSubmit} submitLabel="배송지 등록" />
   );
 };
 

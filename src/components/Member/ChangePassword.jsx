@@ -56,31 +56,52 @@ const ChangePassword = ({ onSuccess, email }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white rounded shadow max-w-md mx-auto">
-      <div className="mb-2 font-bold text-lg">{email ? "비밀번호 재설정" : "비밀번호 변경"}</div>
-      <div className="text-xs text-gray-500 mb-2">
-        비밀번호는 <span className="font-semibold">8자 이상</span>이며, <span className="font-semibold">대소문자</span>, <span className="font-semibold">숫자</span>, <span className="font-semibold">특수문자</span>를 모두 포함해야 합니다.
+    <form
+      onSubmit={handleSubmit}
+      className="w-full h-full bg-white rounded-2xl p-0 flex flex-col"
+      style={{ boxShadow: "none" }}
+    >
+      {/* <div className="text-2xl font-bold text-blue-700 mb-6 text-center pt-10">
+        {email ? "비밀번호 재설정" : ""}
+      </div> */}
+      <div className="flex flex-col gap-0 mb-2 px-10">
+        <div className="mb-3 flex items-center min-h-[48px]">
+          <span className="font-semibold text-gray-600 w-32">새 비밀번호</span>
+          <input
+            type="password"
+            placeholder="새 비밀번호"
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+            className="border rounded px-2 py-1 w-80" 
+          />
+        </div>
+        <div className="border-b border-gray-200" />
+        <div className="mb-3 flex items-center min-h-[48px]">
+          <span className="font-semibold text-gray-600 w-32">비밀번호 확인</span>
+          <input
+            type="password"
+            placeholder="새 비밀번호 확인"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            className="border rounded px-2 py-1 w-80" 
+          />
+        </div>
+        <div className="border-b border-gray-200" />
+        <div className="text-xs text-gray-500 mt-2 mb-2 pl-1">
+          비밀번호는 <span className="font-semibold">8자 이상</span>이며, <span className="font-semibold">대소문자</span>, <span className="font-semibold">숫자</span>, <span className="font-semibold">특수문자</span>를 모두 포함해야 합니다.
+        </div>
       </div>
-      <input
-        type="password"
-        placeholder="새 비밀번호"
-        value={newPassword}
-        onChange={e => setNewPassword(e.target.value)}
-        className="w-full input input-bordered mb-2"
-
-      />
-      <input
-        type="password"
-        placeholder="새 비밀번호 확인"
-        value={confirmPassword}
-        onChange={e => setConfirmPassword(e.target.value)}
-        className="w-full input input-bordered mb-2"
-
-      />
-      <button type="submit" className="w-full btn btn-primary">확인</button>
-      {error && <div className="text-xs text-red-600 mt-2">{error}</div>}
+      <div className="flex justify-end px-10 pb-10">
+        <button
+          type="submit"
+          className="px-5 py-2 rounded-lg bg-blue-600 text-white font-semibold text-base hover:bg-blue-700 transition"
+        >
+          확인
+        </button>
+      </div>
+      {error && <div className="text-red-600 mt-2 text-center">{error}</div>}
     </form>
   );
-};
+}
 
 export default ChangePassword;

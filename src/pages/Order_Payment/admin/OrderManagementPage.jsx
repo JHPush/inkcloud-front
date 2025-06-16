@@ -3,9 +3,7 @@ import AdminLayout from "../../../layouts/AdminLayout"
 
 const OrderManagementPage =  ()=>{
     return(
-    <AdminLayout>
         <OrderManagementComp/>
-    </AdminLayout>
     )
 }
 

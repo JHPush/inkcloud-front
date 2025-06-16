@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getMemberOrders } from "../../api/orderApi1";
-import { writeReview, updateReview } from "../../api/reviewApi";
-import ReviewForm from "./ReviewForm";
+import WriteReview from "./WriteReview";
 
 const GetOrderItemList = () => {
   const [items, setItems] = useState([]);
-  const [openForm, setOpenForm] = useState(null); // {item, mode, review}
   const user = useSelector((state) => state.login.user);
 
   const refreshOrderItems = async () => {
     try {
       const data = await getMemberOrders();
-      console.log('data : ', data)
+      console.log(data)
       const allOrderItems = data?.content
         .flatMap((order) => order.orderItems || []);
       // itemId 기준 중복 제거
@@ -31,7 +29,6 @@ const GetOrderItemList = () => {
       );
 
       setItems(filteredItems);
-      // console.log(items)
     } catch (e) {
       console.error("error:", e);
     }
@@ -41,103 +38,61 @@ const GetOrderItemList = () => {
     if (user?.email) refreshOrderItems();
   }, [user]);
 
-  // 리뷰 작성/수정 완료 시
-  const handleReviewSubmit = async ({ rating, comment }) => {
-    if (!openForm) return;
-    const { item, mode } = openForm;
-    try {
-      await writeReview({
-        productId: item.itemId,
-        productName: item.name,
-        rating,
-        comment,
-      });
-      alert("리뷰가 등록되었습니다.");
-      setOpenForm(null);
-      refreshOrderItems();
-    } catch (e) {
-      // // 409: 이미 리뷰가 있음
-      // if (e?.response?.status === 409) {
-      //   const reviewId = e.response.data.reviewId
-      //   console.log("reviewId:", reviewId)
-      //   if (window.confirm("이미 작성한 리뷰가 있습니다. 이 내용으로 리뷰를 수정하시겠습니까?")) {
-      //     // 기존 리뷰 정보 없이 바로 덮어쓰기(수정)
-      //     // 서버에서 productId로 리뷰를 찾아서 수정한다고 가정
-      //     try {
-      //       await updateReview(
-      //         reviewId, // 기존 리뷰 id를 모를 때, 서버에서 productId로 처리하도록 구현 필요
-      //         { rating, comment }
-      //       );
-      //       alert("리뷰가 수정되었습니다.");
-      //       setOpenForm(null);
-      //       refreshOrderItems();
-      //     } catch (err) {
-      //       alert("리뷰 수정에 실패했습니다.");
-      //       setOpenForm(null);
-      //     }
-      //   } else {
-      //     setOpenForm(null);
-      //   }
-      // } else {
-      //   alert("리뷰 등록에 실패했습니다.");
-      //   setOpenForm(null);
-      // }
-      console.error(e);
-    }
-  };
-
   return (
-    <>
-  
     <div>
-    {items.length === 0 ? (
-      <div>작성 가능한 리뷰가 없습니다.</div>
-    ) : (
-      <ul>
-        {items.map((item) => (
-          <li
-            key={item.itemId}
-            className="mb-6 pb-4 border-b flex gap-4 items-center"
+      {items.length === 0 ? (
+        <div className="w-full py-16 flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm min-h-[30vh]">
+          <svg
+            className="w-16 h-16 mb-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
           >
-            <img
-              src={item.thumbnailUrl}
-              alt={item.name}
-              className="w-20 h-28 object-cover rounded border"
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.364 17.364A9 9 0 1 1 17.364 15.364M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"
             />
-            <div className="flex-1">
-              <div className="flex justify-between items-center">
-                <span className="text-xl font-semibold">{item.name}</span>
-                <span className="text-base font-bold text-blue-700">{item.price}원</span>
-              </div>
-              <div className="text-sm text-gray-500 mt-1 mb-2">
-                저자: {item.author} | 출판사: {item.publisher}
-              </div>
-              <div className="text-xs text-gray-400 mb-2">
-                수량: {item.quantity}
-              </div>
-              <button
-                className="text-blue-600 border border-blue-400 px-3 py-1 rounded hover:bg-blue-50 text-sm"
-                onClick={() => setOpenForm({ item, mode: "write" })}
-              >
-                리뷰작성
-              </button>
-            </div>
-            {openForm && openForm.item.itemId === item.itemId && (
-              <ReviewForm
-                open={!!openForm}
-                onClose={() => setOpenForm(null)}
-                productName={item.name}
-                initialRating={openForm.mode === "edit" ? openForm.review?.rating : 0}
-                initialComment={openForm.mode === "edit" ? openForm.review?.comment : ""}
-                onSubmit={handleReviewSubmit}
+          </svg>
+          <div className="text-lg text-gray-500 font-semibold mb-2">
+            작성 가능한 리뷰가 없습니다.
+          </div>
+          <div className="text-sm text-gray-400">
+            주문 후 배송 완료된 상품만 리뷰를 작성할 수 있습니다.
+          </div>
+        </div>
+      ) : (
+        <ul>
+          {items.map((item) => (
+            <li
+              key={item.itemId}
+              className="mb-6 pb-4 border-b flex gap-4 items-center"
+            >
+              <img
+                src={item.thumbnailUrl}
+                alt={item.name}
+                className="w-20 h-28 object-cover rounded border"
               />
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-    </>
+              <div className="flex-1">
+                <div className="flex justify-between items-center">
+                  <span className="text-xl font-semibold">{item.name}</span>
+                  <span className="text-base font-bold text-blue-700">{item.price}원</span>
+                </div>
+                <div className="text-sm text-gray-500 mt-1 mb-2">
+                  저자: {item.author} | 출판사: {item.publisher}
+                </div>
+                <div className="text-xs text-gray-400 mb-2">
+                  수량: {item.quantity}
+                </div>
+                {/* WriteReview 컴포넌트 사용 */}
+                <WriteReview orderItem={item} onSuccess={refreshOrderItems} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

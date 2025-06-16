@@ -4,9 +4,9 @@ import AdminLayout from "../../../layouts/AdminLayout";
 const MemberByAdmin = ()=> {
 
     return(
-        <AdminLayout>
+  
             <GetMemberList/>
-        </AdminLayout>
+  
     )
 }
 export default MemberByAdmin;
