@@ -3,20 +3,23 @@ import axios from 'axios';
 //const BACKEND_LOGIN_URL = "http://localhost:25000/api/v1/members/login";
 
 // Keycloak OIDC 토큰 발급 함수
-const KEYCLOAK_TOKEN_URL = 'http://localhost:8080/realms/inkcloud/protocol/openid-connect/token';
+const KEYCLOAK_TOKEN_URL = process.env.REACT_APP_KEYCLOAK_TOKEN_URL;
 
 const KEYCLOAK_CLIENT_ID = process.env.REACT_APP_KEYCLOAK_CLIENT_ID;
 const KEYCLOAK_CLIENT_SECRET = process.env.REACT_APP_KEYCLOAK_CLIENT_SECRET;
 
+
+
 // 함수 이름을 login으로 변경
 export const login = async (username, password) => {
+  console.log(`token url : ${KEYCLOAK_TOKEN_URL}, client_id : ${KEYCLOAK_CLIENT_ID}, , client_secret : ${KEYCLOAK_CLIENT_SECRET}`)
   const params = new URLSearchParams();
   params.append('grant_type', 'password');
-  params.append('client_id', 'react-app');
+  params.append('client_id', KEYCLOAK_CLIENT_ID);
     // params.append('client_id', KEYCLOAK_CLIENT_ID);
   params.append('username', username); 
   params.append('password', password);
-  params.append('client_secret', '' );
+  params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
     // params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
 
 
@@ -24,7 +27,7 @@ export const login = async (username, password) => {
     const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-    console.log("response: ", response)
+    // console.log("response: ", response)
     return response.data; // access_token, refresh_token 등 포함
     
   } catch (error) {
@@ -34,8 +37,8 @@ export const login = async (username, password) => {
 
 //Refresh Token 요청
 export const refreshToken = async (refreshToken) => {
-    console.log("refreshToken", refreshToken)
-  console.log("리프레시토큰 발급 요청")
+  //   console.log("refreshToken", refreshToken)
+  // console.log("리프레시토큰 발급 요청")
   const params = new URLSearchParams();
   params.append('grant_type', 'refresh_token');
   params.append('client_id', KEYCLOAK_CLIENT_ID);
@@ -46,7 +49,7 @@ export const refreshToken = async (refreshToken) => {
     const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
-      console.log("리프레시토큰 발급 요청 키클록 응답", response.data)
+      // console.log("리프레시토큰 발급 요청 키클록 응답", response.data)
     return response.data;
     
   } catch (error) {

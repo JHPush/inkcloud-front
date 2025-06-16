@@ -17,6 +17,8 @@ const ProductDetail = lazy(() => import("../pages/product/ProductDetailPage"));
 
 const CartPage = lazy(() => import("../pages/cart/CartPage"))
 
+const AdminProductPage = lazy(() => import("../pages/admin/AdminProductPage"))
+const AdminCategoryPage = lazy(() => import("../pages/admin/AdminCategoryPage"))
 
 const LoginPage = lazy(() => import("../components/menus/LoginPage"))
 
@@ -36,13 +38,17 @@ const AddShipping = lazy(() => import("../components/Member/shipping/AddShipping
 
 const ModifyShipping = lazy(() => import("../components/Member/shipping/ModifyShipping"))
 
+const AdminReviewPage = lazy(() => import("../pages/review/AdminReviewPage"))
 // =========================== 주문 & 결제 ==========================
 const PaymentPage = lazy(()=>import("../pages/Order_Payment/PaymentPage"))
 const OrderPage = lazy(()=>import("../pages/Order_Payment/OrderPage"))
 const OrderCompletePage = lazy(()=>import("../pages/Order_Payment/OrderCompletePage"))
 const MemberOrdersPage = lazy(()=>import("../pages/Order_Payment/MemberOrdersPage"))
 const OrderDetailPage = lazy(()=>import("../pages/Order_Payment/OrderDetailPage"))
+const OrderManagementPage = lazy(()=>import('../pages/Order_Payment/admin/OrderManagementPage'))
 
+
+const SalesStatsChart = lazy(() => import("../components/stats/SalesStatsChart"))
 
 
 
@@ -114,6 +120,10 @@ const root = createBrowserRouter([
     element: <Suspense fallback={Loading}><ProductDetail /></Suspense>
   },
   {
+    path: "admin/reviews",
+    element: <Suspense fallback={Loading}><AdminReviewPage /></Suspense>
+  },
+  {
     path: "/carts",
     element: <Suspense fallback={Loading}><CartPage /></Suspense>
   },
@@ -136,6 +146,22 @@ const root = createBrowserRouter([
   {
     path: "/order/member/:id",
     element: <Suspense fallback={Loading}><OrderDetailPage/></Suspense>
+  },
+  {
+    path: "/admin/orders",
+    element: <Suspense fallback={Loading}><OrderManagementPage/></Suspense>
+  },
+  {
+    path: "/admin/stats",
+    element: <Suspense fallback={Loading}><SalesStatsChart/></Suspense>
+  },
+  {
+    path: "/admin/products",
+    element: <Suspense fallback={Loading}><AdminProductPage /></Suspense>
+  },
+  {
+    path: "/admin/categories",
+    element: <Suspense fallback={Loading}><AdminCategoryPage /></Suspense>
   }
 
 ])

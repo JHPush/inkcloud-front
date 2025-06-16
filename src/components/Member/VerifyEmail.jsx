@@ -2,7 +2,14 @@ import { useState } from "react";
 import { SendVerificationEmail, VerifyCode } from "../../api/memberApi";
 import Countdown from "react-countdown";
 
-const VerifyEmail = ({ email, setEmail, onVerified, onTrySend }) => {
+const VerifyEmail = ({
+  email,
+  setEmail,
+  onVerified,
+  onTrySend,
+  inputClassName = "",
+  buttonClassName = ""
+}) => {
     const [code, setCode] = useState("");
     const [success, setSuccess] = useState(false);
     const [verified, setVerified] = useState(false);
@@ -62,56 +69,59 @@ const VerifyEmail = ({ email, setEmail, onVerified, onTrySend }) => {
     };
 
     return (
-        <div>
-            <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="이메일을 입력하세요"
-                disabled={success && !verified}
-            />
-            {/* 인증하기 버튼: 인증메일 전송 전 또는 인증 성공 후에만 노출 */}
-            {!success && (
-                <button
-                    onClick={handleSendCode}
-                >
-                    인증하기
-                </button>
-            )}
-            {/* 인증메일 전송 후(성공) & 인증 전(verified=false)면 재전송 버튼만 노출 */}
-            {success && !verified && (
-                <>
+        <div className="flex flex-col gap-2">
+            <div className="flex">
+                <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="이메일을 입력하세요"
+                    disabled={success && !verified}
+                    className={`flex-1 ${inputClassName}`}
+                />
+                {!success && (
                     <button
                         type="button"
-                        className="btn btn-outline ml-2"
                         onClick={handleSendCode}
+                        className={buttonClassName}
                     >
-                        인증메일 재전송
+                        인증하기
                     </button>
-                    <div style={{ marginTop: 10 }}>
-                        <div style={{ marginBottom: 8 }}>
-                            {expireTime && (
-                                <Countdown
-                                    date={expireTime}
-                                    renderer={timerRenderer}
-                                />
-                            )}
-                        </div>
+                )}
+            </div>
+            {/* 인증메일 전송 후 인증번호 입력 */}
+            {success && !verified && (
+                <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            className="ml-1 px-2 py-2 text-xs bg-gray-400 text-white rounded transition"
+                            onClick={handleSendCode}
+                        >
+                            인증메일 재전송
+                        </button>
+                        {expireTime && (
+                            <Countdown
+                                date={expireTime}
+                                renderer={timerRenderer}
+                            />
+                        )}
+                    </div>
+                    <div className="flex gap-2">
                         <input
                             type="text"
                             value={code}
                             onChange={e => setCode(e.target.value)}
                             placeholder="인증번호 입력"
-                            className="input input-bordered mb-2"
+                            className={`flex-1 ${inputClassName}`}
                         />
                         <button
                             type="button"
                             onClick={handleVerifyCode}
-                            className="btn btn-secondary ml-2"
-                        >확인
-                        </button>
+                            className={buttonClassName}
+                        >확인</button>
                     </div>
-                </>
+                </div>
             )}
             {error && <div className="text-red-600 mt-2">{error}</div>}
         </div>

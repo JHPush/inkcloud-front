@@ -1,5 +1,3 @@
-
-
 const KakaoAddress = ({ onComplete }) => {
   const handleSearch = () => {
     new window.daum.Postcode({
@@ -14,8 +12,12 @@ const KakaoAddress = ({ onComplete }) => {
   };
 
   return (
-    <button type="button" onClick={handleSearch} className="btn btn-secondary">
-      주소 검색
+    <button
+      type="button"
+      onClick={handleSearch}
+      className="px-2 py-1 rounded-md border border-gray-300 bg-white text-gray-700  transition"
+    >
+    검색
     </button>
   );
 };

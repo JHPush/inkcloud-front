@@ -4,6 +4,8 @@ import WithdrawMember from "../../components/Member/WithdrawMember";
 import { useLocation } from "react-router-dom";
 import ShippingList from "../../components/Member/shipping/ShippingList";
 import MemberLayout from "../../layouts/MemberLayout";
+import MemberReviewPage from "../review/MemberReviewPage";
+
 
 const MyPage = () => {
   const [tab, setTab] = useState("info");
@@ -16,15 +18,22 @@ const MyPage = () => {
     }
   },[location.state])
 
+
   return (
     <MemberLayout tab={tab} setTab={setTab}>
-      <div className="text-3xl mb-4">마이페이지</div>
+      {/* <div className="text-3xl mb-4">마이페이지</div> */}
       <div className="flex gap-4 mb-6">
         <button
           className={`btn btn-outline ${tab === "info" ? "btn-active" : ""}`}
           onClick={() => setTab("info")}
         >
           {/* 내 정보 */}
+        </button>
+        <button
+          className={`btn btn-outline ${tab === "review" ? "btn-active" : ""}`}
+          onClick={() => setTab("review")}
+        >
+          {/* 리뷰관리 */}
         </button>
         <button
           className={`btn btn-outline ${tab === "address" ? "btn-active" : ""}`}
@@ -40,6 +49,7 @@ const MyPage = () => {
         </button>
       </div>
       {tab === "info" && <MyInfoPage />}
+      {tab === "review" && <MemberReviewPage />}
       {tab === "address" && <ShippingList />}
       {tab === "withdraw" && <WithdrawMember />}
     </MemberLayout>

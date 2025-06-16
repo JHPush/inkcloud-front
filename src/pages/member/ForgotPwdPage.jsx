@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import FindPassword from "../../components/Member/FindPassword";
 import ChangePassword from "../../components/Member/ChangePassword";
-import MemberLayout from "../../layouts/MemberLayout";
+import BasicLayout from "../../layouts/BasicLayout";
 
 const ForgotPwdPage = () => {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
 
   return (
-    <MemberLayout>
+    <BasicLayout>
       <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
           {/* 로고 및 제목 */}
@@ -182,7 +182,7 @@ const ForgotPwdPage = () => {
           </div>
         </div>
       </div>
-    </MemberLayout>
+     </BasicLayout>
   );
 };
 
