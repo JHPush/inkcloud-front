@@ -1,6 +1,7 @@
 import { BookOpenIcon, UsersIcon, ClipboardListIcon, StarIcon, LineChartIcon } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import { logoutUtil } from '../utils/logoutUtils';
 
@@ -11,13 +12,14 @@ const sideMenu = [
   { name: '매출현황', icon: <LineChartIcon className="w-5 h-5" />, path: '/admin/stats' },
 ];
 
-export default function AdminLayout({ children }) {
+export default function AdminLayout() {
   const dispatch = useDispatch();
-    const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const navigate = useNavigate();
 
-    const handleLogout = () => {
-      logoutUtil(dispatch)
-    }
+  const handleLogout = () => {
+    logoutUtil(dispatch)
+  }
 
 
   return (
@@ -52,18 +54,18 @@ export default function AdminLayout({ children }) {
             </span>
           ) : (
             <>
-              <Link
+              {/* <Link
                 to="/login"
                 className="text-s text-gray-500 border-b border-gray-300 w-fit hover:text-gray-700 hover:border-gray-500 transition"
               >
                 Login
-              </Link>
-              <Link
+              </Link> */}
+              {/* <Link
                 to="/admin/signup"
                 className="text-s text-gray-500 border-b border-gray-200 w-fit hover:text-gray-600 hover:border-gray-400 transition"
               >
                 회원가입
-              </Link>
+              </Link> */}
             </>
           )}
         </div>
@@ -72,15 +74,7 @@ export default function AdminLayout({ children }) {
 
       {/* Main Content Area */}
       <main className="flex-1 p-6 overflow-auto">
-        {/* 여기에 내부 페이지 콘텐츠 들어감 */}
-        {children || (
-          <div className="text-gray-500 text-center mt-20">
-            {/* 예시: 내부 페이지 컴포넌트 */}
-            {/* <OrderManagement /> */}
-            {/* <InquiriesPage /> */}
-            내부 페이지 내용이 여기에 들어갑니다.
-          </div>
-        )}
+        <Outlet />
       </main>
     </div>
   );

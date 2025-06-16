@@ -12,7 +12,7 @@ const KEYCLOAK_CLIENT_SECRET = process.env.REACT_APP_KEYCLOAK_CLIENT_SECRET;
 
 // 함수 이름을 login으로 변경
 export const login = async (username, password) => {
-  console.log(`token url : ${KEYCLOAK_TOKEN_URL}, client_id : ${KEYCLOAK_CLIENT_ID}, , client_secret : ${KEYCLOAK_CLIENT_SECRET}`)
+  // console.log(`token url : ${KEYCLOAK_TOKEN_URL}, client_id : ${KEYCLOAK_CLIENT_ID}, , client_secret : ${KEYCLOAK_CLIENT_SECRET}`)
   const params = new URLSearchParams();
   params.append('grant_type', 'password');
   params.append('client_id', KEYCLOAK_CLIENT_ID);

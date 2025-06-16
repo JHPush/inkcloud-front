@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { getShipDetail, modifyShip } from "../../../api/shipApi";
 import ShippingForm from "./ShippingForm";
-import { useNavigate, useParams } from "react-router-dom";
 
-const ModifyShipping = () => {
+const ModifyShipping = ({ id, onSuccess }) => {
   const [initialForm, setInitialForm] = useState(null);
-  const {id} =useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -20,16 +17,14 @@ const ModifyShipping = () => {
     fetchDetail();
   }, [id]);
 
-
-
   // 수정 제출
   const handleModify = async (form) => {
-    try{
+    try {
       await modifyShip(form);
-      window.alert("배송지 수정이 완료되었습니다.")
-      navigate('/mypage',{state: {tab: 'address'}})
-    }catch (err){
-      console.log("수정 실패:", err)
+      window.alert("배송지 수정이 완료되었습니다.");
+      if (onSuccess) onSuccess(); // ShippingList로 돌아가기
+    } catch (err) {
+      console.log("수정 실패:", err);
     }
   };
 

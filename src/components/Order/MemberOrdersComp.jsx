@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getOrdersByMember } from "../../api/paymentOrderApi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import WriteReview from "../review/WriteReview";
 
 const statusMapping = {
   PREPARE: "상품준비중",
@@ -80,6 +81,7 @@ const MemberOrdersComp = () => {
         console.error("주문 데이터 요청 실패:", err);
       }
     };
+
 
     fetchOrders();
   }, [startDate, endDate, sortDir, currentPage, filterState]);
@@ -165,33 +167,48 @@ const MemberOrdersComp = () => {
           <p className="text-center text-gray-500 py-10">주문 내역이 없습니다.</p>
         ) : (
           orders?.map((order) => (
-            <Link
-              to={`/order/member/${order.id}`}
+            <div
               key={order.id}
-              className="block border rounded-xl hover:shadow-md transition bg-white p-6"
+              className="border rounded-xl bg-white p-6 hover:shadow-md transition"
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">
-                    주문일시: {new Date(order.createdAt).toLocaleString()}
-                  </p>
-                  <p className="text-lg font-semibold mt-1">
-                    주문번호: {order.id}
-                  </p>
-                  <p className="text-sm mt-1 text-gray-700">
-                    주문자: {order.orderName}
-                  </p>
+              {/* 주문 카드 내용 전체를 div로 감쌈 */}
+              <Link
+                to={`/order/member/${order.id}`}
+                className="block"
+              >
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">
+                      주문일시: {new Date(order.createdAt).toLocaleString()}
+                    </p>
+                    <p className="text-lg font-semibold mt-1">
+                      주문번호: {order.id}
+                    </p>
+                    <p className="text-sm mt-1 text-gray-700">
+                      주문자: {order.orderName}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-base font-medium">
+                      총액: {order.price?.toLocaleString()}원 / 수량: {order.quantity}
+                    </p>
+                    <span className="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                      {statusMapping[order.state] || order.state}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-base font-medium">
-                    총액: {order.price?.toLocaleString()}원 / 수량: {order.quantity}
-                  </p>
-                  <span className="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                    {statusMapping[order.state] || order.state}
-                  </span>
+              </Link>
+              {/* SHIPPED 상태일 때 리뷰작성 버튼 - 카드 하단 오른쪽 정렬
+              {order.state === "SHIPPED" && (
+                <div className="flex justify-end mt-4">
+                  <WriteReview
+                    productId={order.productId}
+                    productName={order.productName}
+                    onSuccess={fetchOrders}
+                  />
                 </div>
-              </div>
-            </Link>
+              )} */}
+            </div>
           ))
         )}
       </div>

@@ -48,7 +48,7 @@ export const getMyInfo = async() => {
 
 //회원 정보 상세 조회 - 관리자
 export const getUserInfo = async({email}) => {
-  const response = await jwtAxios.get(`${MEMBER_SERVICE_URL}/detail/admin`, {email});
+  const response = await jwtAxios.post(`${MEMBER_SERVICE_URL}/detail/admin`,{email});
   return response.data;
 };
 

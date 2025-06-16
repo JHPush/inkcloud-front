@@ -24,8 +24,7 @@ const MemberReviewList = () => {
     try {
       const data = await getReviewsByMember(selectedPeriod);
       setReviews(data);
-      console.log(period)
-      console.log(data)
+  
     } catch (e) {
       console.error("error:", e);
     }
@@ -41,19 +40,45 @@ const MemberReviewList = () => {
 
   // 리뷰 수정 완료 시
   const handleEditSubmit = async ({ rating, comment }) => {
-    try{
-        await updateReview(editReview.id, { rating, comment });
-        closeEdit();
-        refreshReviews();
-    }catch (e) {
-        console.error("error:",e)
+    try {
+      await updateReview(editReview.id, { rating, comment });
+      alert("리뷰가 성공적으로 수정되었습니다.");
+      closeEdit();
+      refreshReviews();
+    } catch (e) {
+      alert("리뷰 수정에 실패했습니다.");
+      console.error("error:", e);
     }
   };
 
   return (
     <div>
-      <h2 className="text-lg font-bold mb-4">내 리뷰 목록</h2>
-      <div className="mb-4 flex justify-end">
+      {reviews.length === 0 ? (
+        <div className="w-full py-16 flex flex-col items-center justify-center bg-white rounded-2xl shadow-sm min-h-[30vh]">
+          <svg
+            className="w-16 h-16 mb-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.364 17.364A9 9 0 1 1 17.364 15.364M9 10h.01M15 10h.01M9.5 15a3.5 3.5 0 0 0 5 0"
+            />
+          </svg>
+          <div className="text-lg text-gray-500 font-semibold mb-2">
+            작성한 리뷰가 없습니다.
+          </div>
+          <div className="text-sm text-gray-400">
+            상품을 구매하고 리뷰를 작성해보세요.
+          </div>
+        </div>
+      ) : (
+        
+        <ul>
+                <div className="mb-4 flex justify-end">
         <select
           value={period}
           onChange={e => setPeriod(e.target.value)}
@@ -64,10 +89,6 @@ const MemberReviewList = () => {
           ))}
         </select>
       </div>
-      {reviews.length === 0 ? (
-        <div>작성한 리뷰가 없습니다.</div>
-      ) : (
-        <ul>
           {reviews
             .slice() // 원본 배열 복사
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // 최신순 정렬

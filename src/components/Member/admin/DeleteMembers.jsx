@@ -2,7 +2,6 @@ import { useState } from "react";
 import { deleteMember } from "../../../api/memberApi";
 
 const DeleteMembers = ({ selectedEmails = [], onSuccess }) => {
-  
   const [error, setError] = useState("");
 
   const handleDelete = async () => {
@@ -19,18 +18,25 @@ const DeleteMembers = ({ selectedEmails = [], onSuccess }) => {
       if (onSuccess) onSuccess();
     } catch (err) {
       setError("회원 삭제에 실패했습니다.");
-    } 
+    }
   };
 
   return (
-    <div className="my-4">
-      <button
-        className="btn btn-error"
-        onClick={handleDelete}
-        disabled={selectedEmails.length === 0}
-      >탈퇴
-      </button>
+    <div className="my-4 w-full">
+      <div className="flex justify-end">
+        <button
+          onClick={handleDelete}
+          disabled={selectedEmails.length === 0}
+          className="px-2 py-1 rounded bg-red-500 text-white font-semibold hover:bg-red-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+        >
+          회원 탈퇴
+        </button>
+      </div>
       {error && <div className="text-red-600 mt-2">{error}</div>}
+
+      <div className="flex justify-end mt-3 text-xs text-gray-500">
+        ※ 관리자 강제 회원 탈퇴는 복구가 불가능합니다. 탈퇴된 회원은 동일 이메일로 재가입이 일주일간 제한됩니다.
+      </div>
     </div>
   );
 };

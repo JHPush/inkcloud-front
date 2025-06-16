@@ -25,6 +25,7 @@ const GetMemberList = () => {
         name: (params.search ?? search) || undefined,
       });
       setMembers(data.content || []);
+      console.log(data)
       setTotalPages(data.totalPages || 1); // totalPages 갱신
     } catch (err) {
       console.error("error:", err);
@@ -53,7 +54,8 @@ const GetMemberList = () => {
 
   // 회원 상세로 이동
   const handleRowClick = (member) => {
-    navigate(`/admin/member/${member.email}`, { state: { member } });
+    navigate(`/admin/member/${encodeURIComponent(member.email)}`);
+    console.log("member,", member);
   };
 
   // 일괄 삭제 후 목록 새로고침
