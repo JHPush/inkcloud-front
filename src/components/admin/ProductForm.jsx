@@ -34,11 +34,13 @@ const ProductForm = ({ product, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const { id, ...payload } = form;
+
       if (isEdit) {
-        await updateProduct(form.id, form);
+        await updateProduct(id, payload);
         alert("상품이 수정되었습니다.");
       } else {
-        await createProduct(form);
+        await createProduct(payload);
         alert("상품이 등록되었습니다.");
       }
       onClose();
