@@ -17,6 +17,8 @@ const ProductDetail = lazy(() => import("../pages/product/ProductDetailPage"));
 
 const CartPage = lazy(() => import("../pages/cart/CartPage"))
 
+const AdminProductPage = lazy(() => import("../pages/admin/AdminProductPage"))
+const AdminCategoryPage = lazy(() => import("../pages/admin/AdminCategoryPage"))
 
 const LoginPage = lazy(() => import("../components/menus/LoginPage"))
 
@@ -152,6 +154,14 @@ const root = createBrowserRouter([
   {
     path: "/admin/stats",
     element: <Suspense fallback={Loading}><SalesStatsChart/></Suspense>
+  },
+  {
+    path: "/admin/products",
+    element: <Suspense fallback={Loading}><AdminProductPage /></Suspense>
+  },
+  {
+    path: "/admin/categories",
+    element: <Suspense fallback={Loading}><AdminCategoryPage /></Suspense>
   }
 
 ])
