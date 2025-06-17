@@ -10,7 +10,7 @@ const MEMBER_SERVICE_URL = process.env.REACT_APP_PREFIX_URL
 //회원가입시 인증번호 발송
 export const SendVerificationEmail = async(email) => {
   const response = await axios.post(
-      `${MEMBER_SERVICE_URL}/signup/email/send`, { email },  
+      `/api/v1/members/signup/email/send`, { email },  
     {
     timeout: 10000, // 5초
     }
