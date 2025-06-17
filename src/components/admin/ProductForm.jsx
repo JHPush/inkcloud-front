@@ -6,6 +6,7 @@ const ProductForm = ({ product, onClose }) => {
   const isEdit = !!product;
 
   const [form, setForm] = useState({
+    isbn: "",
     name: "",
     author: "",
     publisher: "",
@@ -14,6 +15,8 @@ const ProductForm = ({ product, onClose }) => {
     status: "ON_SALE",
     introduction: "",
     image: "",
+    categoryId: "",
+    publicationDate: "",
   });
 
   useEffect(() => {
@@ -21,10 +24,10 @@ const ProductForm = ({ product, onClose }) => {
       setForm({
         ...product,
         status: product.status?.toUpperCase() || "ON_SALE",
+        publicationDate: product.publicationDate || "",
       });
     }
   }, [product]);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +38,14 @@ const ProductForm = ({ product, onClose }) => {
     e.preventDefault();
     try {
       const { id, ...payload } = form;
+
+      // 문자열 → 숫자 또는 날짜로 변환 처리
+      payload.price = Number(payload.price);
+      payload.quantity = Number(payload.quantity);
+      payload.categoryId = Number(payload.categoryId);
+      payload.publicationDate = payload.publicationDate; // yyyy-MM-dd 형식
+
+      console.log("등록 요청 payload", payload);
 
       if (isEdit) {
         await updateProduct(id, payload);
@@ -59,6 +70,15 @@ const ProductForm = ({ product, onClose }) => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="isbn"
+              placeholder="ISBN"
+              value={form.isbn}
+              onChange={handleChange}
+              required
+              className="border px-3 py-2 rounded w-full"
+            />
             <input
               type="text"
               name="name"
@@ -100,6 +120,24 @@ const ProductForm = ({ product, onClose }) => {
               placeholder="재고 수량"
               value={form.quantity}
               onChange={handleChange}
+              className="border px-3 py-2 rounded w-full"
+            />
+            <input
+              type="number"
+              name="categoryId"
+              placeholder="카테고리 ID"
+              value={form.categoryId}
+              onChange={handleChange}
+              required
+              className="border px-3 py-2 rounded w-full"
+            />
+            <input
+              type="date"
+              name="publicationDate"
+              placeholder="출간일"
+              value={form.publicationDate}
+              onChange={handleChange}
+              required
               className="border px-3 py-2 rounded w-full"
             />
             <select
