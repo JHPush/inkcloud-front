@@ -1,6 +1,6 @@
 import jwtAxios from './jwtAxios';
 
-const MEMBER_SERVICE_URL = "http://localhost:25000/api/v1/members";
+const MEMBER_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/members";
 const SHIP_SERVICE_URL = `${MEMBER_SERVICE_URL}/ship`
 
 //배송지 등록

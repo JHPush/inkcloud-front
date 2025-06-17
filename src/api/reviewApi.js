@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwtAxios from './jwtAxios';
 
-const REVIEW_SERVICE_URL = "http://localhost:25000/api/v1/reviews";
+const REVIEW_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/reviews";
 
 // 관리자 리뷰 조회, 검색
 export const getReviewsByAdmin = async({

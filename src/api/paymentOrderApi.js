@@ -112,3 +112,11 @@ export const patchOrdersWithState = async (orderId, state) => {
         ,headers:{"Content-Type":"application/json"}
     })).data;
 }
+
+//회원주문조회 
+export const getMemberOrders = async() => {
+  const response = await jwtAxios.get(
+      `${PREFIX_URL + ORDER_BASE_URI}/member/ship`
+  );
+  return response.data;
+};

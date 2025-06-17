@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getMemberOrders } from "../../api/orderApi1";
+import { getMemberOrders } from "../../api/paymentOrderApi";
 import WriteReview from "./WriteReview";
 
 const GetOrderItemList = () => {
