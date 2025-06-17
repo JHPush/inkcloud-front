@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getReviewDetailByAdmin } from "../../api/reviewApi";
 import DeleteReview from "./DeleteReview";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const AdminReviewDetail = () => {
   const { id } = useParams();
@@ -34,6 +40,9 @@ const AdminReviewDetail = () => {
     );
   }
 
+  // review.createdAt이 UTC라면 KST로 변환해서 표시
+  const kstTime = dayjs.utc(review.createdAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm");
+
   return (
     <div className="w-full min-h-[60vh] bg-gray-50 flex flex-col justify-center">
       <div className="flex items-center justify-between px-16 mt-8 mb-2">
@@ -47,7 +56,7 @@ const AdminReviewDetail = () => {
             )
           }
         >
-          <span className="px-4 py-2 rounded bg-red-500 text-white font-semibold text-sm hover:bg-red-600 transition">
+          <span className="px-1 py-1 rounded bg-gray-400 text-white font-semibold text-sm hover:bg-red-600 transition">
             리뷰 삭제
           </span>
         </DeleteReview>
@@ -63,9 +72,17 @@ const AdminReviewDetail = () => {
               <th className="text-right py-4 px-6 bg-gray-50 text-gray-700 font-semibold border-b">작성자</th>
               <td className="py-4 px-6 border-b">{review.email}</td>
             </tr>
-            <tr className="hover:bg-gray-100">
-              <th className="text-right py-4 px-6 bg-gray-50 text-gray-700 font-semibold border-b">상품명</th>
-              <td className="py-4 px-6 border-b">{review.productName}</td>
+            <tr
+              className="hover:bg-blue-50 cursor-pointer"
+              onClick={() => navigate(`/products/${review.productId}`)}
+              title="상품 상세로 이동"
+            >
+              <th className="text-right py-4 px-6 bg-gray-50 text-gray-700 font-semibold border-b">
+                상품명
+              </th>
+              <td className="py-4 px-6 border-b">
+                {review.productName}
+              </td>
             </tr>
             <tr className="hover:bg-gray-100">
               <th className="text-right py-4 px-6 bg-gray-50 text-gray-700 font-semibold border-b">평점</th>
@@ -77,7 +94,7 @@ const AdminReviewDetail = () => {
             </tr>
             <tr className="hover:bg-gray-100">
               <th className="text-right py-4 px-6 bg-gray-50 text-gray-700 font-semibold border-b">작성일</th>
-              <td className="py-4 px-6 border-b">{review.createdAt ? review.createdAt.slice(0, 16).replace("T", " ") : ""}</td>
+              <td className="py-4 px-6 border-b">{kstTime}</td>
             </tr>
           </tbody>
         </table>

@@ -54,19 +54,14 @@ const SignupPage = () => {
       const phoneNumber = `${form.phoneArea}${form.phoneMid}${form.phoneLast}`;
       await registerMember({ ...form, phoneNumber });
       window.alert(`${isAdmin ? "관리자" : ""} 회원가입이 완료되었습니다!`);
-      if (isAdmin) {
-        setStep(3)
-      } else {
-        setStep(3)
-        // navigate("/");
-      }
+      setStep(3);
     } catch (err) {
       alert("회원가입에 실패했습니다");
     }
   };
 
-  return (
-    <BasicLayout>
+  // 메인 컨텐츠
+  const content = (
     <div className="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-xl">
         {/* 로고 및 제목 */}
@@ -279,20 +274,20 @@ const SignupPage = () => {
                   로그인 후 서비스를 이용해 주세요.
                 </p>
                 {isAdmin ? (
-      <Link
-        to="/login"
-        className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-      >
-        로그인 페이지로 이동
-      </Link>
-    ) : (
-      <Link
-        to="/"
-        className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-      >
-        메인 페이지로 이동
-      </Link>
-    )}
+                  <Link
+                    to="/login"
+                    className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    로그인 페이지로 이동
+                  </Link>
+                ) : (
+                  <Link
+                    to="/"
+                    className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    메인 페이지로 이동
+                  </Link>
+                )}
               </div>
             )}
           </div>
@@ -333,8 +328,10 @@ const SignupPage = () => {
         </div>
       </div>
     </div>
-    </BasicLayout>
   );
+
+  // 관리자 회원가입이면 BasicLayout 없이, 일반 회원가입이면 BasicLayout으로 감싸기
+  return isAdmin ? content : <BasicLayout>{content}</BasicLayout>;
 };
 
 export default SignupPage;

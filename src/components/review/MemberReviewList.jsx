@@ -3,6 +3,11 @@ import { getReviewsByMember, updateReview } from "../../api/reviewApi";
 import DeleteReview from "./DeleteReview";
 import ReviewForm from "./ReviewForm";
 import StarRating from "./StarRating";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // 기간 옵션
 const PERIOD_OPTIONS = [
@@ -111,7 +116,7 @@ const MemberReviewList = () => {
                       <StarRating rating={review.rating} />
                     </div>
                     <div className="text-xs text-gray-400 mt-1 mb-2">
-                      {review.createdAt?.slice(0, 19).replace("T", " ")}
+                      {dayjs.utc(review.createdAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")}
                     </div>
                     <div className="mb-2">{review.comment}</div>
                     <div className="flex gap-2">

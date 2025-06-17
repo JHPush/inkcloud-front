@@ -24,7 +24,7 @@ const AdminLoginPage = () => {
     <h2 className="text-2xl font-bold text-gray-800 mb-3 mt-4">관리자 로그인</h2>
     <p className="text-base text-gray-500 mb-8">InkCloud 관리자 전용 페이지입니다.</p>
     <div className="w-full max-w-md">
-      <LoginPage />
+      <LoginPage isAdmin={true}/>
     </div>
   </div>
   )

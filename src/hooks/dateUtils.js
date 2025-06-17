@@ -42,3 +42,10 @@ export function formatYearMonth(dateStr) {
 export function formatNumber(num) {
   return new Intl.NumberFormat('ko-KR').format(num || 0);
 }
+
+export function formatNumberAndUnit(value) {
+  if (value >= 100000000) return new Intl.NumberFormat('ko-KR').format((value / 100000000).toFixed(1)) + "억";
+  if (value >= 10000) return new Intl.NumberFormat('ko-KR').format((value / 10000).toFixed(1)) + "만";
+  if (value >= 1000) return new Intl.NumberFormat('ko-KR').format((value / 1000).toFixed(1)) + "천";
+  return new Intl.NumberFormat('ko-KR').format(value || 0);
+}

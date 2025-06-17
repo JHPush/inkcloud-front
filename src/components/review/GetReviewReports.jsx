@@ -87,7 +87,7 @@ const GetReviewReports = () => {
       window.alert("신고 삭제에 실패했습니다.");
     }
   };
-
+  
   return (
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4">리뷰 신고 내역</h2>
@@ -180,38 +180,41 @@ const GetReviewReports = () => {
                 </td>
               </tr>
             ) : (
-              reports.map((report) => (
-                <tr
-                  key={report.id}
-                  className="cursor-pointer hover:bg-blue-50 transition"
-                  onClick={() => navigate(`/admin/reviews/${report.reviewId}`)}
-                  title="리뷰 상세보기"
-                >
-                  <td className="border px-4 py-2" onClick={e => e.stopPropagation()}>
-                    <input
-                      type="checkbox"
-                      checked={checked.includes(report.id)}
-                      onChange={() => handleCheck(report.id)}
-                    />
-                  </td>
-                  <td className="border px-2 py-1">{report.id}</td>
-                  <td className="border px-2 py-1">{report.reviewId}</td>
-                  <td className="border px-2 py-1">
-                    {
-                      REPORT_TYPE_OPTIONS.find(
-                        (opt) => opt.value === report.type
-                      )?.label || report.type
-                    }
-                  </td>
-                  <td className="border px-2 py-1">{report.reason}</td>
-                  <td className="border px-2 py-1">{report.reporterEmail}</td>
-                  <td className="border px-2 py-1">
-                    {report.reportedAt
-                      ? dayjs(report.reportedAt).add(9, "hour").format("YYYY-MM-DD HH:mm")
-                      : ""}
-                  </td>
-                </tr>
-              ))
+              reports.map((report) => {
+                // UTC → KST 변환
+                const kstTime = report.reportedAt
+                  ? dayjs.utc(report.reportedAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
+                  : "";
+
+                return (
+                  <tr
+                    key={report.id}
+                    className="cursor-pointer hover:bg-blue-50 transition"
+                    onClick={() => navigate(`/admin/reviews/${report.reviewId}`)}
+                    title="리뷰 상세보기"
+                  >
+                    <td className="border px-4 py-2" onClick={e => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={checked.includes(report.id)}
+                        onChange={() => handleCheck(report.id)}
+                      />
+                    </td>
+                    <td className="border px-2 py-1">{report.id}</td>
+                    <td className="border px-2 py-1">{report.reviewId}</td>
+                    <td className="border px-2 py-1">
+                      {
+                        REPORT_TYPE_OPTIONS.find(
+                          (opt) => opt.value === report.type
+                        )?.label || report.type
+                      }
+                    </td>
+                    <td className="border px-2 py-1">{report.reason}</td>
+                    <td className="border px-2 py-1">{report.reporterEmail}</td>
+                    <td className="border px-2 py-1">{kstTime}</td>
+                  </tr>
+                );
+              })
             )
             }
           </tbody>

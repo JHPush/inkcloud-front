@@ -43,7 +43,7 @@ jwtAxios.interceptors.response.use(
         return jwtAxios(originalRequest); // 재요청
       } catch (e) {
         // refresh token 만료
-        window.location.href = "/login";
+        // window.location.href = "/login";
         return Promise.reject(e);
       }
     }

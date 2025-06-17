@@ -367,9 +367,9 @@ const AdminReviewPage = () => {
                   <td className="border px-2 py-1">{review.comment}</td>
                   <td className="border px-2 py-1">
                     {review.updatedAt
-                      ? review.updatedAt.slice(0, 19).replace("T", " ")
+                      ? dayjs.utc(review.updatedAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
                       : review.createdAt
-                      ? review.createdAt.slice(0, 19).replace("T", " ")
+                      ? dayjs.utc(review.createdAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
                       : ""}
                   </td>
                   <td className="border px-2 py-1">{review.likeCount ?? 0}</td>

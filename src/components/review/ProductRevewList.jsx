@@ -10,6 +10,11 @@ import { useSelector } from "react-redux";
 import StarRating from "./StarRating";
 import { getSortedReviews } from "../../hooks/SortingReview";
 import ReportReview from "./ReportReview";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const ProductReviewList = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
@@ -135,7 +140,7 @@ const ProductReviewList = ({ productId }) => {
                 </div>
                 <div className="text-xs text-gray-400 mt-1 mb-2 flex justify-between items-end">
                   <div>
-                    {review.createdAt?.slice(0, 19).replace("T", " ")}
+                    {dayjs.utc(review.createdAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")}
                     <span className="ml-2 text-gray-500">
                       작성자: {maskEmail(review.email)}
                     </span>

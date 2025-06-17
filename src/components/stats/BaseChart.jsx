@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Legend } from "recharts";
-import { formatNumber } from "../../hooks/dateUtils"; 
+import { formatNumber, formatNumberAndUnit, formatYAxis } from "../../hooks/dateUtils"; 
 
 const BaseChart = ({
   data,
@@ -164,14 +164,14 @@ const BaseChart = ({
 
       <div style={{ width: "100%", height: 350 }}>
         <ResponsiveContainer>
-          <LineChart data={data}>
+          <LineChart data={data} margin={{ left: 40, right: 20, top: 20, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="dateKey" 
               tickFormatter={formatXAxis}
             />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
+            <YAxis yAxisId="left" tickFormatter={formatNumberAndUnit} tick={{ fontSize: 12 }}/>
+            <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
             <Tooltip formatter={customTooltipFormatter} />
             <Legend />
             <Line

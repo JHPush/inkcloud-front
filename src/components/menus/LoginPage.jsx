@@ -6,7 +6,7 @@ import { setLogin } from '../../store/loginSlice';
 import { setAccessToken, setRefreshToken} from '../../utils/cookieUtils';
 import { jwtDecode } from "jwt-decode";
 
-const LoginPage = ({ onSuccess }) => {
+const LoginPage = ({ onSuccess, isAdmin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -165,9 +165,14 @@ const LoginPage = ({ onSuccess }) => {
             <div className="mt-6 flex items-center justify-center">
               <div className="text-sm">
                 <span className="text-gray-500">계정이 없으신가요?</span>
-                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500 ml-1">
-                  회원가입
+                {isAdmin?                
+                 <Link to="/admin/signup" className="font-medium text-blue-600 hover:text-blue-500 ml-1">
+                  관리자 회원가입
                 </Link>
+                :<Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500 ml-1">
+                  회원가입
+                </Link>}
+
               </div>
             </div>
           </div>
