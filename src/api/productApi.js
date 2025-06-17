@@ -72,3 +72,16 @@ export const updateCategory = async ({ id, name, parentId }) => {
   const response = await jwtAxios.put(`${CATEGORY_API_URL}/${id}`, { name, parentId });
   return response.data;
 };
+
+// Presigned URL 발급 함수
+export const getPresignedUrl = async (filename) => {
+  try {
+    const response = await axios.get(`${PRODUCT_API_URL}/image/upload-url`, {
+      params: { filename },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Presigned URL 요청 실패:", error);
+    throw error;
+  }
+};

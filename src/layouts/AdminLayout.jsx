@@ -1,4 +1,4 @@
-import { BookOpenIcon, UsersIcon, ClipboardListIcon, StarIcon, LineChartIcon } from 'lucide-react';
+import { BookOpenIcon, UsersIcon, ClipboardListIcon, StarIcon, LineChartIcon, Boxes, FolderKanban } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -10,6 +10,8 @@ const sideMenu = [
   { name: '주문내역', icon: <ClipboardListIcon className="w-5 h-5" />, path: '/admin/orders' },
   { name: '리뷰관리', icon: <StarIcon className="w-5 h-5" />, path: '/admin/reviews' },
   { name: '매출현황', icon: <LineChartIcon className="w-5 h-5" />, path: '/admin/stats' },
+  { name: '상품관리', icon: <Boxes className="w-5 h-5" />, path: '/admin/products' },
+  { name: '카테고리', icon: <FolderKanban className="w-5 h-5" />, path: '/admin/categories' },
 ];
 
 export default function AdminLayout() {
