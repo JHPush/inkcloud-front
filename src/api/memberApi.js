@@ -1,7 +1,8 @@
 import axios from 'axios';
 import jwtAxios from './jwtAxios';
 
-const MEMBER_SERVICE_URL = "http://api-gateway-service.inkcloud.svc.cluster.local/api/v1/members"
+const MEMBER_SERVICE_URL = "https://www.inkcloud.click/api/v1/members"
+// const MEMBER_SERVICE_URL = "http://api-gateway-service.inkcloud.svc.cluster.local/api/v1/members"
 // const MEMBER_SERVICE_URL = process.env.REACT_APP_PREFIX_URL +"/members";
 // const MEMBER_SERVICE_URL = "http://localhost:25000/api/v1/members";
 
