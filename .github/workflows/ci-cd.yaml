@@ -5,9 +5,11 @@ name: Build, Push, and Update Deployment
 # 이 워크플로우는 main 브랜치에 대한 푸시 이벤트 또는 main 브랜치로의 풀 리퀘스트 이벤트가 발생할 때마다 트리거된다.
 on:  
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
       
 env:
   GITOPS_PATH: dev/inkcloud-front
@@ -23,13 +25,13 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
       - name: Set up Node.js           # 2단계
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build React app
-        run: CI='' npm run build
+        run: CI=false npm run build
 
       # AWS 자격 증명 설정
       - name: Configure AWS credentials
