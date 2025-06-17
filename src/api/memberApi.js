@@ -9,7 +9,10 @@ const MEMBER_SERVICE_URL = "https://www.inkcloud.click/api/v1/members"
 //회원가입시 인증번호 발송
 export const SendVerificationEmail = async(email) => {
   const response = await axios.post(
-      `${MEMBER_SERVICE_URL}/signup/email/send`, { email }
+      `${MEMBER_SERVICE_URL}/signup/email/send`, { email },  
+    {
+    timeout: 10000, // 5초
+    }
   );
   console.log("email : ", email)
   return response.data;
