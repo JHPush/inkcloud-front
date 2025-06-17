@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwtAxios from './jwtAxios';
 
-// const MEMBER_SERVICE_URL = "https://www.inkcloud.click/api/v1/members"
+const MEMBER_SERVICE_URL = process.env.REACT_APP_PREFIX_URL
 
 // const MEMBER_SERVICE_URL = "http://api-gateway-service.inkcloud.svc.cluster.local/api/v1/members"
 // const MEMBER_SERVICE_URL = process.env.REACT_APP_PREFIX_URL +"/members";
@@ -10,7 +10,7 @@ import jwtAxios from './jwtAxios';
 //회원가입시 인증번호 발송
 export const SendVerificationEmail = async(email) => {
   const response = await axios.post(
-      `/api/v1/members/signup/email/send`, { email },  
+      `${MEMBER_SERVICE_URL}/signup/email/send`, { email },  
     {
     timeout: 10000, // 5초
     }
