@@ -1,7 +1,8 @@
 // src/components/admin/ProductForm.jsx
 import React, { useEffect, useState } from "react";
 import { createProduct, updateProduct, getPresignedUrl } from "../../api/productApi";
-import axios from "axios";
+import publicApi from "../../api/publicApi";
+
 
 const ProductForm = ({ product, onClose }) => {
   const isEdit = !!product;
@@ -54,9 +55,10 @@ const ProductForm = ({ product, onClose }) => {
     const filename = `${Date.now()}_${imageFile.name}`;
     const presignedUrl = await getPresignedUrl(filename);
 
-    await axios.put(presignedUrl, imageFile, {
+    await publicApi.put(presignedUrl, imageFile, {
       headers: {
         "Content-Type": imageFile.type,
+        //'x-amz-acl': 'bucket-owner-full-control',
       },
     });
 
