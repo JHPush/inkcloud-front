@@ -58,6 +58,7 @@ const ProductForm = ({ product, onClose }) => {
     await publicApi.put(presignedUrl, imageFile, {
       headers: {
         "Content-Type": imageFile.type,
+        'x-amz-acl': 'bucket-owner-full-control',
       },
     });
 
