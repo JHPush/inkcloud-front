@@ -4,7 +4,7 @@ import { refreshToken as refreshTokenApi } from "./keycloakApi";
 
 // // axios 인스턴스 생성
 const jwtAxios = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:25000/api/v1",
+  baseURL: process.env.REACT_APP_PREFIX_URL,
   withCredentials: true, // 필요시
 });
 
