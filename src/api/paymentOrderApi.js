@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwtAxios from "./jwtAxios";
 import qs from 'qs'
+import publicApi from "./publicApi";
 
 // const PREFIX_URL = process.env.REACT_APP_PREFIX_URL;
 
