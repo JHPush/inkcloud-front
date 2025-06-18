@@ -1,8 +1,9 @@
 import axios from 'axios';
 import jwtAxios from './jwtAxios';
+import publicApi from './publicApi';
 
 // const REVIEW_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/reviews";
-const REVIEW_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/reviews";
+const REVIEW_SERVICE_URL =  "/reviews";
 
 // 관리자 리뷰 조회, 검색
 export const getReviewsByAdmin = async({
@@ -81,7 +82,7 @@ export const updateReview = async (id, {rating, comment}) => {
 
 //상품별 리뷰 조회 
 export const getReviewsByProduct = async (productId) => {
-  const response = await axios.get(
+  const response = await publicApi.get(
     `${REVIEW_SERVICE_URL}/products/${productId}`
   );
   return response.data;

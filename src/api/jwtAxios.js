@@ -2,6 +2,7 @@ import axios from "axios";
 import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken } from "../utils/cookieUtils";
 import { refreshToken as refreshTokenApi } from "./keycloakApi";
 
+
 // // axios 인스턴스 생성
 const jwtAxios = axios.create({
   baseURL: process.env.REACT_APP_PREFIX_URL,

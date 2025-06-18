@@ -1,11 +1,12 @@
 import axios from 'axios';
 import jwtAxios from './jwtAxios';
+import publicApi from './publicApi';
 
-const MEMBER_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/members";
+const MEMBER_SERVICE_URL = "/members";
 
 //회원가입시 인증번호 발송
 export const SendVerificationEmail = async(email) => {
-  const response = await axios.post(
+  const response = await publicApi.post(
       `${MEMBER_SERVICE_URL}/signup/email/send`, { email },  
     {
     timeout: 10000, // 5초
@@ -17,7 +18,7 @@ export const SendVerificationEmail = async(email) => {
 
 //회원가입시 인증번호 검증 
 export const VerifyCode = async(email, code) => {
-  const response = await axios.post(
+  const response = await publicApi.post(
       `${MEMBER_SERVICE_URL}/signup/email/verify`, { email, code}
   );
   console.log("response:", response)
@@ -27,7 +28,7 @@ export const VerifyCode = async(email, code) => {
 
 //회원가입
 export const registerMember = async(form) => {
-  const response = await axios.post(
+  const response = await publicApi.post(
       `${MEMBER_SERVICE_URL}/signup`,
       {
         firstName: form.firstName,
@@ -84,19 +85,19 @@ export const changePassword = async({newPassword}) => {
 
 //비밀번호 찾기- 이메일 발송
 export const requestPwdCode = async({email, firstName, lastName}) => {
-  const response = await axios.post(`${MEMBER_SERVICE_URL}/password/request`, {email, firstName, lastName} );
+  const response = await publicApi.post(`${MEMBER_SERVICE_URL}/password/request`, {email, firstName, lastName} );
   return response.data;
 };
 
 //비밀번호 찾기- 인증번호 검증
 export const verifyPwdCode = async({email, code}) => {
-  const response = await axios.post(`${MEMBER_SERVICE_URL}/password/verify`, {email, code} );
+  const response = await publicApi.post(`${MEMBER_SERVICE_URL}/password/verify`, {email, code} );
   return response.data;
 };
 
 //비밀번호 찾기- 재설정
 export const resetPassword = async({email, password}) => {
-  const response = await axios.post(`${MEMBER_SERVICE_URL}/password/reset`, {email, password} );
+  const response = await publicApi.post(`${MEMBER_SERVICE_URL}/password/reset`, {email, password} );
   return response.data;
 };
 
