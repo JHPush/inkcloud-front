@@ -1,7 +1,7 @@
 // src/components/admin/ProductForm.jsx
 import React, { useEffect, useState } from "react";
 import { createProduct, updateProduct, getPresignedUrl } from "../../api/productApi";
-import publicApi from "../../api/publicApi";
+import jwtAxios from "../../api/jwtAxios";
 
 const ProductForm = ({ product, onClose }) => {
   const isEdit = !!product;
@@ -54,7 +54,7 @@ const ProductForm = ({ product, onClose }) => {
     const filename = `${Date.now()}_${imageFile.name}`;
     const presignedUrl = await getPresignedUrl(filename);
 
-    await publicApi.put(presignedUrl, imageFile, {
+    await jwtAxios.put(presignedUrl, imageFile, {
       headers: {
         "Content-Type": imageFile.type,
       },
