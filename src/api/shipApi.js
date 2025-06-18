@@ -1,6 +1,6 @@
 import jwtAxios from './jwtAxios';
 
-const SHIP_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/ship";
+const SHIP_SERVICE_URL = "/ship";
 
 //배송지 등록
 export const registerShip = async(form) => {

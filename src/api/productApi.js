@@ -2,14 +2,15 @@
 import axios from "axios";
 import jwtAxios from "./jwtAxios";
 import qs from "qs";
+import publicApi from "./publicApi";
 
 const PREFIX_URL = process.env.REACT_APP_PREFIX_URL;
-const PRODUCT_API_URL = `${PREFIX_URL}/products`;
-const CATEGORY_API_URL = `${PREFIX_URL}/categories`;
+const PRODUCT_API_URL = `/products`;
+const CATEGORY_API_URL = `/categories`;
 
 // 상품 검색 (필터 포함)
 export const fetchProducts = async (params) => {
-  const response = await axios.get(`${PRODUCT_API_URL}/search`, {
+  const response = await publicApi.get(`${PRODUCT_API_URL}/search`, {
     params,
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
     withCredentials: true,
@@ -19,25 +20,25 @@ export const fetchProducts = async (params) => {
 
 // 단일 상품 조회
 export const fetchProductById = async (id) => {
-  const res = await axios.get(`${PRODUCT_API_URL}/${id}`);
+  const res = await publicApi.get(`${PRODUCT_API_URL}/${id}`);
   return res.data;
 };
 
 // 신작 도서
 export const getNewBooks = async () => {
-  const response = await axios.get(`${PRODUCT_API_URL}/new`);
+  const response = await publicApi.get(`${PRODUCT_API_URL}/new`);
   return response.data;
 };
 
 // 추천 도서
 export const getRecommendedBooks = async () => {
-  const response = await axios.get(`${PRODUCT_API_URL}/recommended`);
+  const response = await publicApi.get(`${PRODUCT_API_URL}/recommended`);
   return response.data;
 };
 
 // 조건별 조회
 export const getProductsByCondition = async ({ category }) => {
-  const response = await axios.get(`${PRODUCT_API_URL}/search`, {
+  const response = await publicApi.get(`${PRODUCT_API_URL}/search`, {
     params: { categories: category },
   });
   return response.data;
@@ -57,7 +58,7 @@ export const updateProduct = async (id, form) => {
 
 // 모든 카테고리 조회
 export const fetchAllCategories = async () => {
-  const response = await axios.get(`${CATEGORY_API_URL}`);
+  const response = await publicApi.get(`${CATEGORY_API_URL}`);
   return response.data;
 };
 
@@ -76,7 +77,7 @@ export const updateCategory = async ({ id, name, parentId }) => {
 // Presigned URL 발급 함수
 export const getPresignedUrl = async (filename) => {
   try {
-    const response = await axios.get(`${PRODUCT_API_URL}/image/upload-url`, {
+    const response = await publicApi.get(`${PRODUCT_API_URL}/image/upload-url`, {
       params: { filename },
     });
     return response.data;

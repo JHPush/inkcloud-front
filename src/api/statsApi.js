@@ -1,6 +1,6 @@
 import jwtAxios from './jwtAxios';
 
-const STATS_SERVICE_URL = process.env.REACT_APP_PREFIX_URL + "/stats";
+const STATS_SERVICE_URL = "/stats";
 
 //매출 및 주문건 조회 
 export const getSalesStat = async(type, start, end) => {

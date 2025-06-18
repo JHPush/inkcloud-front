@@ -2,7 +2,7 @@ import axios from "axios";
 import jwtAxios from "./jwtAxios";
 import qs from 'qs'
 
-const PREFIX_URL = process.env.REACT_APP_PREFIX_URL;
+// const PREFIX_URL = process.env.REACT_APP_PREFIX_URL;
 
 const ORDER_BASE_URI = '/orders'
 const PRODUCT_BASE_URI = '/products'
@@ -19,13 +19,13 @@ const MEMBER_ORDERS = '/member'
 // }
 
 export const postOrderStart = async (form) => {
-    return (await jwtAxios.post(`${PREFIX_URL + ORDER_BASE_URI}`,
+    return (await jwtAxios.post(`${ORDER_BASE_URI}`,
         form,
         { headers: { 'Content-Type': 'application/json' } })).data;
 }
 
 export const getOrderInfo = async (orderId) => {
-    return (await jwtAxios.get(`${PREFIX_URL + ORDER_BASE_URI}`
+    return (await jwtAxios.get(`${ORDER_BASE_URI}`
         , { params: { order_id: orderId }, headers: { 'Content-Type': 'application/json' } })).data
 }
 export const getOrdersByMember = async (state, startDate, endDate, sortBy, sortDir, page, size) => {
@@ -45,7 +45,7 @@ export const getOrdersByMember = async (state, startDate, endDate, sortBy, sortD
     }
 
 
-    return (await jwtAxios.get(`${PREFIX_URL + ORDER_BASE_URI + MEMBER_ORDERS}`
+    return (await jwtAxios.get(`${ORDER_BASE_URI + MEMBER_ORDERS}`
         , { params, headers: { 'Content-Type': 'application/json' } })).data
 }
 
@@ -53,7 +53,7 @@ export const getProductInven = async (prodList) => {
     console.log('items : ', prodList)
     const formattedParams = { product_id: prodList.map(item => item.product_id) };
 
-    return (await axios.get(`${PREFIX_URL + PRODUCT_BASE_URI + PRODUCT_INVEN}`, {
+    return (await publicApi.get(`${PRODUCT_BASE_URI + PRODUCT_INVEN}`, {
         params: formattedParams,
         headers: { 'Content-Type': 'application/json' },
         paramsSerializer: (params) => qs.stringify(params, { arrayFormat: 'repeat' }) // key=value&key=value 형식으로 변환
@@ -61,7 +61,7 @@ export const getProductInven = async (prodList) => {
 };
 
 export const putCancelOrder = async (id) => {
-    return (await jwtAxios.put(`${PREFIX_URL + ORDER_BASE_URI}`, null, {
+    return (await jwtAxios.put(`${ORDER_BASE_URI}`, null, {
         params: { order_id: id }, headers: { 'Content-Type': 'application/json' }
     })).data;
 }
@@ -87,7 +87,7 @@ export const getAllOrders = async (keywordCategory, keyword, state, paymentMetho
         params.size = size;
     }
     console.log('params : ', params)
-    return (await jwtAxios.get(`${PREFIX_URL + ORDER_BASE_URI + '/all'}`, { params, headers: { 'Content-Type': 'application/json' } })).data;
+    return (await jwtAxios.get(`${ORDER_BASE_URI + '/all'}`, { params, headers: { 'Content-Type': 'application/json' } })).data;
 }
 
 // 주문 상태 일괄 업데이트 (다음 단계로)
@@ -100,14 +100,14 @@ export const getAllOrders = async (keywordCategory, keyword, state, paymentMetho
 
 // 주문 상태를 특정 상태로 일괄 변경
 export const patchUpdateOrdersWithState = async (orderIds, state) => {
-    return (await jwtAxios.patch(`${PREFIX_URL + ORDER_BASE_URI}/all`, {
+    return (await jwtAxios.patch(`${ORDER_BASE_URI}/all`, {
         orderIds: orderIds,
         state: state
     })).data;
 }
 
 export const patchOrdersWithState = async (orderId, state) => {
-    return (await jwtAxios.patch(`${PREFIX_URL + ORDER_BASE_URI}`, null, {
+    return (await jwtAxios.patch(`${ORDER_BASE_URI}`, null, {
         params:{order_id: orderId, state:state}
         ,headers:{"Content-Type":"application/json"}
     })).data;
@@ -116,7 +116,7 @@ export const patchOrdersWithState = async (orderId, state) => {
 //회원주문조회 
 export const getMemberOrders = async() => {
   const response = await jwtAxios.get(
-      `${PREFIX_URL + ORDER_BASE_URI}/member/ship`
+      `${ORDER_BASE_URI}/member/ship`
   );
   return response.data;
 };
