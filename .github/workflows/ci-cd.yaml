@@ -59,10 +59,27 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: inkcloud-front                      
-          IMAGE_TAG: ${{ github.sha }}                               
+          ECR_REPOSITORY: inkcloud-front
+          IMAGE_TAG: ${{ github.sha }}
+          REACT_APP_KEYCLOAK_TOKEN_URL: ${{ env.REACT_APP_KEYCLOAK_TOKEN_URL }}
+          REACT_APP_KEYCLOAK_CLIENT_ID: ${{ env.REACT_APP_KEYCLOAK_CLIENT_ID }}
+          REACT_APP_STORE_ID: ${{ env.REACT_APP_STORE_ID }}
+          REACT_APP_CHANNEL_ID: ${{ env.REACT_APP_CHANNEL_ID }}
+          REACT_APP_PREFIX_URL: ${{ env.REACT_APP_PREFIX_URL }}
+          REACT_APP_KEYCLOAK_CLIENT_SECRET: ${{ secrets.REACT_APP_KEYCLOAK_CLIENT_SECRET }}
+          REACT_APP_V2_API_SECRET: ${{ secrets.REACT_APP_V2_API_SECRET }}
+          REACT_APP_V2_WEBHOOK_SECRET: ${{ secrets.REACT_APP_V2_WEBHOOK_SECRET }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build \
+            --build-arg REACT_APP_KEYCLOAK_TOKEN_URL=$REACT_APP_KEYCLOAK_TOKEN_URL \
+            --build-arg REACT_APP_KEYCLOAK_CLIENT_ID=$REACT_APP_KEYCLOAK_CLIENT_ID \
+            --build-arg REACT_APP_STORE_ID=$REACT_APP_STORE_ID \
+            --build-arg REACT_APP_CHANNEL_ID=$REACT_APP_CHANNEL_ID \
+            --build-arg REACT_APP_PREFIX_URL=$REACT_APP_PREFIX_URL \
+            --build-arg REACT_APP_KEYCLOAK_CLIENT_SECRET=$REACT_APP_KEYCLOAK_CLIENT_SECRET \
+            --build-arg REACT_APP_V2_API_SECRET=$REACT_APP_V2_API_SECRET \
+            --build-arg REACT_APP_V2_WEBHOOK_SECRET=$REACT_APP_V2_WEBHOOK_SECRET \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # ---------------------------------------------------------------------------------------------------------------------
@@ -100,3 +117,12 @@ jobs:      # 여러개의 작업을 정의할 수 있다.
           git add .
           git commit -m "Update image tag to $IMAGE_TAG"
           git push origin main
+          
+      - name: Extract env from values.yaml
+        id: envs
+        run: |
+          echo "REACT_APP_KEYCLOAK_TOKEN_URL=$(yq '.env.REACT_APP_KEYCLOAK_TOKEN_URL' gitops-repo/$GITOPS_PATH/values.yaml)" >> $GITHUB_ENV
+          echo "REACT_APP_KEYCLOAK_CLIENT_ID=$(yq '.env.REACT_APP_KEYCLOAK_CLIENT_ID' gitops-repo/$GITOPS_PATH/values.yaml)" >> $GITHUB_ENV
+          echo "REACT_APP_STORE_ID=$(yq '.env.REACT_APP_STORE_ID' gitops-repo/$GITOPS_PATH/values.yaml)" >> $GITHUB_ENV
+          echo "REACT_APP_CHANNEL_ID=$(yq '.env.REACT_APP_CHANNEL_ID' gitops-repo/$GITOPS_PATH/values.yaml)" >> $GITHUB_ENV
+          echo "REACT_APP_PREFIX_URL=$(yq '.env.REACT_APP_PREFIX_URL' gitops-repo/$GITOPS_PATH/values.yaml)" >> $GITHUB_ENV
