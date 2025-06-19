@@ -246,9 +246,9 @@ const OrderComp = () => {
         if (!check)
             return;
         console.log('items : ', cartItems.map(({ id, ...rest }) => ({
-                ...rest,
-                itemId: id
-            })))
+            ...rest,
+            itemId: id
+        })))
 
         const orderStartResult = await postOrderStart({
             price: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -333,7 +333,9 @@ const OrderComp = () => {
                                 <>
 
                                     <div key={item.id} className="flex items-center border-b pb-4">
-                                        <div className="w-24 h-32 bg-gray-200 rounded-lg" />
+                                        <img
+                                            src={item.image}
+                                            alt={item.name} className="w-24 h-32 bg-gray-200 rounded-lg" />
                                         <div className="ml-4 flex-1">
                                             <p className="text-base font-medium text-gray-700">{item.name}</p>
                                             <p className="text-sm text-gray-500">저자: {item.author}</p>

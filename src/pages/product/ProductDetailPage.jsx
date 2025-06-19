@@ -50,7 +50,8 @@ const ProductDetailPage = () => {
       author: product.author,
       publisher: product.publisher,
       price: product.price,
-      quantity,
+      quantity: quantity,
+      image: product.image
     };
     navigate("/order", { state });
   };
