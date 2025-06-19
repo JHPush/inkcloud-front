@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import LoginPage from "../../components/menus/LoginPage";
 import { Box, Button, Container, Typography, useTheme } from "@mui/material";
-import { Home } from 'lucide-react';
-import logo from "../../assets/logo.png"; // 로고 경로 확인 필요
+import { BookOpenIcon, Home } from 'lucide-react';
+
 
 const LayoutLoginPage = () => {
   const theme = useTheme();
@@ -50,7 +50,11 @@ const LayoutLoginPage = () => {
           borderBottom: `1px solid ${theme.palette.divider}`
         }}
       >
-        <Box component="img" src={logo} alt="InkCloud Logo" sx={{ height: 40 }} />
+        <BookOpenIcon 
+          size={40} 
+          color={theme.palette.primary.main} 
+          strokeWidth={1.5}
+        />
         <Button
           variant="outlined"
           color="primary"
