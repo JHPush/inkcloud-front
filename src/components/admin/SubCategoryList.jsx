@@ -12,12 +12,14 @@ import {
 } from "react-beautiful-dnd";
 
 const SubCategoryList = ({ categories, parentId, onReload }) => {
+  const [items, setItems] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
   const [newName, setNewName] = useState("");
 
   useEffect(() => {
-    // 현재는 서버에서 받아온 categories를 직접 사용함 (items 상태 제거)
+    setItems(categories);
   }, [categories]);
 
   const handleEditClick = (cat) => {
@@ -45,6 +47,7 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
     if (!newName.trim() || !parentId) return;
     try {
       await createCategory({ name: newName, parentId });
+      setIsAdding(false);
       setNewName("");
       onReload();
     } catch (e) {
@@ -63,11 +66,11 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
   };
 
   const handleDragEnd = async (result) => {
-    if (!result.destination) return;
-
-    const reordered = [...categories];
+    if (!result.destination || !parentId) return;
+    const reordered = [...items];
     const [moved] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, moved);
+    setItems(reordered);
 
     try {
       await reorderCategories(
@@ -85,7 +88,7 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
         <Droppable droppableId="subcategory-list">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {categories.map((cat, index) => (
+              {items.map((cat, index) => (
                 <Draggable
                   key={cat.id}
                   draggableId={String(cat.id)}
@@ -149,21 +152,29 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
         </Droppable>
       </DragDropContext>
 
-      <div className="flex gap-2 mt-3">
-        <input
-          type="text"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          placeholder="하위 카테고리 이름"
-          className="border rounded px-2 py-1 w-full"
-        />
+      {isAdding ? (
+        <div className="flex items-center gap-2 mt-2">
+          <input
+            type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+            className="border rounded px-2 py-1 w-full"
+            placeholder="카테고리 이름"
+            autoFocus
+          />
+          <button onClick={handleAdd} className="text-blue-600 font-semibold">
+            추가
+          </button>
+        </div>
+      ) : (
         <button
-          onClick={handleAdd}
-          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          onClick={() => setIsAdding(true)}
+          className="text-sm text-blue-600 mt-2 hover:underline"
         >
-          추가
+          ➕ 하위 카테고리 추가
         </button>
-      </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,16 @@
+// src/components/admin/CategoryList.jsx
 import React, { useState, useEffect } from "react";
-import { createCategory, updateCategory, deleteCategory, reorderCategories } from "../../api/productApi";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import {
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  reorderCategories,
+} from "../../api/productApi";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+} from "react-beautiful-dnd";
 
 const CategoryList = ({ categories, selectedId, onSelect, onReload }) => {
   const [items, setItems] = useState([]);
@@ -58,16 +68,16 @@ const CategoryList = ({ categories, selectedId, onSelect, onReload }) => {
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-
     const reordered = [...items];
     const [moved] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, moved);
+    setItems(reordered);
 
     try {
       await reorderCategories(
         reordered.map((c, idx) => ({ id: c.id, order: idx }))
       );
-      onReload();
+      await onReload();
     } catch (e) {
       alert("정렬 저장 실패");
     }
@@ -76,15 +86,11 @@ const CategoryList = ({ categories, selectedId, onSelect, onReload }) => {
   return (
     <div className="border rounded p-2 bg-white max-h-[500px] overflow-y-auto">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="category-list">
+        <Droppable droppableId="parent-category-list">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {items.map((cat, index) => (
-                <Draggable
-                  key={cat.id}
-                  draggableId={String(cat.id)}
-                  index={index}
-                >
+                <Draggable key={cat.id} draggableId={String(cat.id)} index={index}>
                   {(provided) => (
                     <div
                       ref={provided.innerRef}
