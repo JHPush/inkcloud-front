@@ -1,4 +1,5 @@
 // components/product/ProductPagination.jsx
+// ProductListPage
 import React from "react";
 
 const ProductPagination = ({ page, totalPages, onPageChange }) => (

@@ -1,4 +1,5 @@
 // components/product/ProductSortBar.jsx
+// ProductListPage
 import React from "react";
 
 const ProductSortBar = ({ sortType, setSortType }) => (

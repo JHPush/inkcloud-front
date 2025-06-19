@@ -1,4 +1,5 @@
 // components/product/ProductItem.jsx
+// ProductListPage
 import React from "react";
 
 const ProductItem = ({ product, onClick, onAddToCart, onBuyNow }) => (

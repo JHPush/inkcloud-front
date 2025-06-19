@@ -1,4 +1,5 @@
 // components/product/ProductSearchBar.jsx
+// ProductListPage
 import React from "react";
 import { Search } from "lucide-react"; // 아이콘 라이브러리 사용
 
