@@ -8,22 +8,8 @@ import {
 } from '../../api/cartApi';
 import { fetchProductById } from '../../api/productApi';
 import { ShoppingCart } from 'lucide-react';
+import CartItemCard from '../../components/Cart/CartItemCard';
 
-const QuantitySelect = ({ quantity, onChange }) => {
-  return (
-    <select
-      value={quantity}
-      onChange={(e) => onChange(parseInt(e.target.value))}
-      className="mt-2 border rounded px-2 py-1"
-    >
-      {[...Array(10)].map((_, i) => (
-        <option key={i + 1} value={i + 1}>
-          {i + 1}
-        </option>
-      ))}
-    </select>
-  );
-};
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -95,19 +81,27 @@ const CartPage = () => {
 
   const handleOrderSelected = () => {
     const itemsToOrder = cartItems.filter(
-      (item) => selectedItems.includes(item.id) && item.product.status === 'ON_SALE'
+      (item) =>
+        selectedItems.includes(item.id) && item.product.status === 'ON_SALE'
     );
     if (itemsToOrder.length === 0) {
       alert('주문할 상품을 선택해주세요.');
       return;
     }
-    console.log('cart : ', itemsToOrder)
-    navigate('/order', { state: itemsToOrder.map(item => ({...item.product, quantity: item.quantity}))  });
+    navigate('/order', {
+      state: itemsToOrder.map((item) => ({
+        ...item.product,
+        quantity: item.quantity,
+      })),
+    });
   };
 
   const calculateTotalPrice = () => {
     return cartItems
-      .filter((item) => selectedItems.includes(item.id) && item.product.status === 'ON_SALE')
+      .filter(
+        (item) =>
+          selectedItems.includes(item.id) && item.product.status === 'ON_SALE'
+      )
       .reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   };
 
@@ -136,7 +130,12 @@ const CartPage = () => {
       ) : (
         <>
           <div className="mb-2">
-            <input type="checkbox" checked={selectAll} onChange={handleSelectAll} className="mr-2" />
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAll}
+              className="mr-2"
+            />
             전체 선택
             <button
               onClick={async () => {
@@ -145,66 +144,34 @@ const CartPage = () => {
                 fetchCart();
               }}
               disabled={selectedItems.length === 0}
-              className={`ml-4 text-sm underline ${selectedItems.length === 0 ? 'text-gray-400' : 'text-gray-600'}`}
+              className={`ml-4 text-sm underline ${
+                selectedItems.length === 0
+                  ? 'text-gray-400'
+                  : 'text-gray-600'
+              }`}
             >
               선택 삭제
             </button>
           </div>
 
           <div className="space-y-4">
-            {cartItems.map((item) => {
-              const status = item.product.status;
-              const isUnavailable = status === 'OUT_OF_STOCK' || status === 'DISCONTINUED';
-              const isChecked = selectedItems.includes(item.id);
-              return (
-                <div
-                  key={item.id}
-                  className={`border p-4 rounded flex justify-between items-center ${isUnavailable ? 'opacity-50' : ''}`}
-                >
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={isUnavailable}
-                      onChange={() => handleSelectItem(item.id)}
-                      className="mr-2"
-                    />
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="w-24 h-32 object-cover rounded cursor-pointer"
-                      onClick={() => navigate(`/products/${item.product.id}`)}
-                    />
-                    <div className="cursor-pointer" onClick={() => navigate(`/products/${item.product.id}`)}>
-                      <p className="font-bold text-lg">{item.product.name}</p>
-                      <p className="text-sm text-gray-600">
-                        {item.product.author} / {item.product.publisher}
-                      </p>
-                      <p className="text-md text-blue-600">
-                        {item.product.price.toLocaleString()}원
-                      </p>
-                      {status === 'OUT_OF_STOCK' && <p className="text-red-500">품절</p>}
-                      {status === 'DISCONTINUED' && <p className="text-gray-500">절판</p>}
-                      <QuantitySelect
-                        quantity={item.quantity}
-                        onChange={(qty) => handleQuantityChange(item.id, qty)}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    className="px-3 py-1 bg-red-500 text-white rounded"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    삭제
-                  </button>
-                </div>
-              );
-            })}
+            {cartItems.map((item) => (
+              <CartItemCard
+                key={item.id}
+                item={item}
+                isChecked={selectedItems.includes(item.id)}
+                onSelect={() => handleSelectItem(item.id)}
+                onQuantityChange={handleQuantityChange}
+                onDelete={handleDelete}
+              />
+            ))}
           </div>
 
-          {/* 선택 상품 총 금액 표시 */}
           <div className="text-right text-lg font-semibold text-gray-700 mt-4">
-            선택된 상품 합계: <span className="text-blue-600">{calculateTotalPrice().toLocaleString()}원</span>
+            선택된 상품 합계:{' '}
+            <span className="text-blue-600">
+              {calculateTotalPrice().toLocaleString()}원
+            </span>
           </div>
 
           <div className="flex justify-between items-center mt-6 border-t pt-4">

@@ -1,14 +1,17 @@
 // src/pages/admin/AdminCategoryPage.jsx
 import React, { useEffect, useState } from "react";
-import { fetchAllCategories, createCategory, updateCategory } from "../../api/productApi";
+import {
+  fetchAllCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "../../api/productApi";
 import CategoryForm from "../../components/admin/CategoryForm";
 import CategoryTable from "../../components/admin/CategoryTable";
 
 const AdminCategoryPage = () => {
   const [categories, setCategories] = useState([]);
-  const [formValues, setFormValues] = useState({ name: "", parentId: null });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const loadCategories = async () => {
     try {
@@ -23,24 +26,17 @@ const AdminCategoryPage = () => {
     loadCategories();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
   const handleSubmit = async (form) => {
     try {
-      if (isEditing) {
-        await updateCategory(editingId, form);
+      if (editingCategory) {
+        await updateCategory(editingCategory.id, form);
         alert("카테고리 수정 완료");
       } else {
         await createCategory(form);
         alert("카테고리 등록 완료");
       }
-      setFormValues({ name: "", parentId: null });
-      setIsEditing(false);
-      setEditingId(null);
-      loadCategories();
+      setEditingCategory(null);
+      await loadCategories();
     } catch (error) {
       console.error("카테고리 저장 실패", error);
       alert("작업 실패: " + error.message);
@@ -48,9 +44,24 @@ const AdminCategoryPage = () => {
   };
 
   const handleEdit = (cat) => {
-    setFormValues({ name: cat.name, parentId: cat.parentId });
-    setIsEditing(true);
-    setEditingId(cat.id);
+    setEditingCategory(cat);
+  };
+
+  const handleCancel = () => {
+    setEditingCategory(null);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      try {
+        await deleteCategory(id);
+        alert("삭제 완료");
+        loadCategories();
+      } catch (error) {
+        console.error("삭제 실패", error);
+        alert("삭제 실패: " + error.message);
+      }
+    }
   };
 
   return (
@@ -58,17 +69,19 @@ const AdminCategoryPage = () => {
       <h2 className="text-2xl font-bold mb-6">카테고리 관리</h2>
 
       <CategoryForm
-        mode={isEditing ? "edit" : "create"}
-        values={formValues}
-        onChange={handleChange}
+        category={editingCategory}
         onSubmit={handleSubmit}
+        onCancel={handleCancel}
         categories={categories}
       />
 
-      <CategoryTable categories={categories} onStartEdit={handleEdit} />
+      <CategoryTable
+        categories={categories}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </div>
   );
 };
-
 
 export default AdminCategoryPage;
