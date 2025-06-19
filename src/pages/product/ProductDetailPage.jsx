@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { fetchProductById } from "../../api/productApi";
 import ProductDetailInfo from "../../components/product/ProductDetailInfo";
 import ProductReviewSection from "../../components/product/ProductReviewSection";
+import BasicLayout from "../../layouts/BasicLayout";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -24,10 +25,12 @@ const ProductDetailPage = () => {
   if (!product) return <div className="text-center py-10">로딩 중...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <ProductDetailInfo product={product} />
-      <ProductReviewSection product={product} />
-    </div>
+    <BasicLayout>
+      <div className="max-w-6xl mx-auto p-6">
+        <ProductDetailInfo product={product} />
+        <ProductReviewSection product={product} />
+      </div>
+    </BasicLayout>
   );
 };
 

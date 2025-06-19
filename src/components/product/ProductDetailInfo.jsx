@@ -48,60 +48,85 @@ const ProductDetailInfo = ({ product }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-auto rounded-lg shadow-md"
-      />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-16">
+      {/* 이미지 */}
+      <div className="flex justify-center">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-64 max-h-[400px] object-contain rounded-lg shadow-md"
+        />
+      </div>
+
+      {/* 정보 */}
       <div>
-        <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-        <p className="text-gray-700 mb-1">저자: {product.author}</p>
-        <p className="text-gray-700 mb-1">출판사: {product.publisher}</p>
-        <p className="text-gray-700 mb-1">출간일: {product.publicationDate}</p>
-        <p className="text-xl text-red-600 font-semibold mt-4">
-          {product.price.toLocaleString()}원
-        </p>
-        <div className="mt-6 text-gray-600 whitespace-pre-line leading-relaxed">
-          {product.introduction}
+        {/* 상품명 */}
+        <h1 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+          {product.name}
+        </h1>
+
+        {/* 메타 정보 */}
+        <div className="space-y-1 text-sm text-gray-700 mb-6">
+          <p>
+            <span className="font-semibold text-gray-800">저자</span>: {product.author}
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">출판사</span>: {product.publisher}
+          </p>
+          <p>
+            <span className="font-semibold text-gray-800">출간일</span>: {product.publicationDate}
+          </p>
         </div>
 
-        {/* 수량 */}
+        {/* 가격 */}
+        <p className="text-2xl font-bold text-red-600 mb-6">
+          {product.price.toLocaleString()}
+          <span className="text-base text-gray-500 ml-1">원</span>
+        </p>
+
+        {/* 한줄 소개 */}
+        <p className="text-gray-500 italic text-sm mb-8">
+          {product.introduction}
+        </p>
+
+        {/* 수량 선택 */}
         {isSale && (
-          <div className="flex items-center gap-4 mt-6">
-            <span className="font-medium">수량</span>
+          <div className="flex items-center gap-3 mb-6">
+            <span className="font-medium text-gray-800">수량</span>
             <button
-              className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
+              className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 text-lg"
               onClick={handleDecrease}
               disabled={quantity === 1}
             >
               −
             </button>
-            <span className="w-8 text-center">{quantity}</span>
+            <span className="w-6 text-center">{quantity}</span>
             <button
-              className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
+              className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 text-lg"
               onClick={handleIncrease}
               disabled={quantity >= product.quantity}
             >
               ＋
             </button>
-            <span className="text-sm text-gray-500">({product.quantity}개 남음)</span>
+            <span className="text-sm text-gray-500">
+              ({product.quantity}개 남음)
+            </span>
           </div>
         )}
 
-        {/* 버튼 */}
-        <div className="flex gap-4 mt-6">
+        {/* 액션 버튼 */}
+        <div className="flex gap-3">
           {isSale ? (
             <>
               <button
-                className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800"
                 onClick={handleAddToCart}
+                className="bg-black text-white px-6 py-2 rounded-full hover:bg-gray-800 transition"
               >
                 장바구니
               </button>
               <button
-                className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700"
                 onClick={handleBuyNow}
+                className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
               >
                 바로 구매
               </button>
