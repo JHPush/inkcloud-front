@@ -4,9 +4,9 @@ import BookRankCard from './BookRankCard';
 
 const BookRankingSection = ({ weeklyBooks = [] }) => {
   return (
-    <div className="mt-10 space-y-4">
-      <h2 className="text-xl font-bold">이 주의 베스트셀러</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-center">🏆 주간 베스트셀러 Top 10</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 px-4">
         {weeklyBooks.slice(0, 10).map((book, index) => (
           <BookRankCard key={book.id} book={book} rank={index + 1} />
         ))}

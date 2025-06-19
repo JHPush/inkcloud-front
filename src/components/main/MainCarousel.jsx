@@ -21,15 +21,13 @@ const MainCarousel = ({ bestsellers = [], newBooks = [], recommendedBooks = [] }
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-6">
       {/* 탭 */}
-      <div className="flex space-x-4 border-b pb-2">
+      <div className="tabs justify-center">
         {TABS.map((tab, idx) => (
           <button
             key={idx}
-            className={`px-4 py-2 font-semibold ${
-              activeTab === idx ? 'border-b-2 border-black text-black' : 'text-gray-500'
-            }`}
+            className={`tab tab-lg tab-bordered ${activeTab === idx ? 'tab-active' : ''}`}
             onClick={() => setActiveTab(idx)}
           >
             {tab}
@@ -38,9 +36,9 @@ const MainCarousel = ({ bestsellers = [], newBooks = [], recommendedBooks = [] }
       </div>
 
       {/* 캐러셀 */}
-      <div className="overflow-x-auto whitespace-nowrap space-x-4 flex pb-2">
+      <div className="carousel carousel-center p-4 space-x-4 bg-base-100 rounded-box">
         {getCurrentBooks().map((book) => (
-          <div key={book.id} className="inline-block">
+          <div key={book.id} className="carousel-item">
             <BookCard book={book} />
           </div>
         ))}

@@ -7,55 +7,24 @@ import { getDailyBestsellers, getWeeklyBestsellers } from "../api/bestsellerApi"
 import { getNewBooks, getRecommendedBooks } from "../api/productApi";
 import MainSearchBar from "../components/product/MainSearchBar";
 
-// 임시 목업 데이터 (실제 API로 교체 가능)
-const mockDailyBooks = [
-  { id: 1, title: "자바의 정석", author: "남궁성", image: "https://via.placeholder.com/150" },
-  { id: 2, title: "토비의 스프링", author: "이일민", image: "https://via.placeholder.com/150" },
-  { id: 3, title: "Effective Java", author: "Joshua Bloch", image: "https://via.placeholder.com/150" },
-  { id: 4, title: "클린 코드", author: "Robert C. Martin", image: "https://via.placeholder.com/150" },
-];
-
-const mockWeeklyBooks = [
-  { id: 5, title: "리팩토링", author: "Martin Fowler", image: "https://via.placeholder.com/150" },
-  { id: 6, title: "오브젝트", author: "조영호", image: "https://via.placeholder.com/150" },
-  { id: 7, title: "도메인 주도 설계", author: "Eric Evans", image: "https://via.placeholder.com/150" },
-  { id: 8, title: "모던 자바 인 액션", author: "Raoul-Gabriel Urma", image: "https://via.placeholder.com/150" },
-  { id: 9, title: "스프링 인 액션", author: "Craig Walls", image: "https://via.placeholder.com/150" },
-  { id: 10, title: "You Don't Know JS", author: "Kyle Simpson", image: "https://via.placeholder.com/150" },
-  { id: 11, title: "Clean Architecture", author: "Robert C. Martin", image: "https://via.placeholder.com/150" },
-  { id: 12, title: "The Pragmatic Programmer", author: "Andrew Hunt", image: "https://via.placeholder.com/150" },
-  { id: 13, title: "GoF 디자인 패턴", author: "Erich Gamma 외", image: "https://via.placeholder.com/150" },
-  { id: 14, title: "자바 ORM 표준 JPA 프로그래밍", author: "김영한", image: "https://via.placeholder.com/150" },
-];
-
-
 const MainPage = () => {
   const [dailyBooks, setDailyBooks] = useState([]);
   const [weeklyBooks, setWeeklyBooks] = useState([]);
   const [newBooks, setNewBooks] = useState([]);
   const [recommendedBooks, setRecommendedBooks] = useState([]);
 
-  // useEffect(() => {
-  //   // 추후 실제 API 호출로 대체
-  //   setDailyBooks(mockDailyBooks);
-  //   setWeeklyBooks(mockWeeklyBooks);
-  // }, []);
-  console.log('daily : ', dailyBooks)
-  console.log('week : ', weeklyBooks)
   useEffect(() => {
     const fetchMainPageData = async () => {
       try {
-        // const [daily, weekly, newReleases, recommended] = await Promise.all([
         const [daily, weekly] = await Promise.all([
           getDailyBestsellers(),
           getWeeklyBestsellers(),
-          // getNewBooks(),
-          // getRecommendedBooks(),
         ]);
         setDailyBooks(daily);
         setWeeklyBooks(weekly);
-        // setNewBooks(newReleases);
-        // setRecommendedBooks(recommended);
+        // 추후 추가 가능
+        // setNewBooks(await getNewBooks());
+        // setRecommendedBooks(await getRecommendedBooks());
       } catch (error) {
         console.error("메인 페이지 데이터 로딩 실패:", error);
       }
@@ -66,13 +35,32 @@ const MainPage = () => {
 
   return (
     <BasicLayout>
-      <MainSearchBar />
-      <MainCarousel
-        bestsellers={dailyBooks}
-        newBooks={newBooks}
-        recommendedBooks={recommendedBooks}
-      />
-      <BookRankingSection weeklyBooks={weeklyBooks} />
+      {/* HERO 영역 */}
+      <section className="hero min-h-[60vh] bg-base-200">
+        <div className="hero-content text-center">
+          <div className="max-w-2xl w-full">
+            <h1 className="text-5xl font-bold mb-4">📚 InkCloud</h1>
+            <p className="text-lg text-gray-600 mb-6">원하는 책을 지금 바로 검색해보세요!</p>
+            <MainSearchBar />
+          </div>
+        </div>
+      </section>
+
+      {/* 캐러셀 영역 */}
+      <section className="py-12 px-4 bg-white">
+        <h2 className="text-2xl font-bold mb-6 text-center">🔥 오늘의 인기 도서</h2>
+        <MainCarousel
+          bestsellers={dailyBooks}
+          newBooks={newBooks}
+          recommendedBooks={recommendedBooks}
+        />
+      </section>
+
+      {/* 주간 랭킹 영역 */}
+      <section className="py-12 px-4 bg-base-100">
+        <h2 className="text-2xl font-bold mb-6 text-center">🏆 주간 베스트셀러 Top 10</h2>
+        <BookRankingSection weeklyBooks={weeklyBooks} />
+      </section>
     </BasicLayout>
   );
 };
