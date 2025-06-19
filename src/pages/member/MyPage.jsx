@@ -6,7 +6,6 @@ import ShippingList from "../../components/Member/shipping/ShippingList";
 import MemberLayout from "../../layouts/MemberLayout";
 import MemberReviewPage from "../review/MemberReviewPage";
 import { getAccessToken } from "../../utils/cookieUtils";
-import MemberOrdersPage from "../Order_Payment/MemberOrdersPage";
 import MemberOrdersComp from "../../components/Order/MemberOrdersComp";
 
 const MyPage = () => {
@@ -21,7 +20,7 @@ const MyPage = () => {
     const token = getAccessToken();
     if (!token && !alerted.current) {
       alerted.current = true;
-      window.alert("로그인이 필요합니다.");
+      // window.alert("로그인이 필요합니다.");
       setBlocked(true);
       navigate("/login");
     }

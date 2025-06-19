@@ -88,13 +88,29 @@ const BasicMenu = () => {
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         style={{
+          overlay: {
+            zIndex: 1000,
+            backgroundColor: "rgba(0,0,0,0.3)",
+            position: "fixed",
+            top: 0, left: 0, right: 0, bottom: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          },
           content: {
-            maxWidth: 450,
+            width: "100%",
+            maxWidth: 400, // 원하는 최대 가로폭(px)로 조정
+            minWidth: 320, // 최소 가로폭(px) 추가
             margin: "auto",
             borderRadius: 12,
-            padding: 10, 
+            padding: 10,
             minHeight: "unset",
             height: "fit-content",
+            inset: "unset",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
           }
         }}
       >
