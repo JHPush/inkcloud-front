@@ -16,61 +16,109 @@ const BasicMenu = () => {
 
   return (
     <>
-      <div className="navbar bg-base-100 shadow-lg">
-        <div className="navbar-start">
-          <Link to="/" className="btn btn-ghost normal-case text-xl">InkCloud</Link>
-        </div>
-        
-        {/* 메뉴 */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-            <li><Link to="/products" className="text-base font-medium"><Package size={18} className="mr-1" /> 상품</Link></li>
-            <li><Link to="/order" className="text-base font-medium"><ClipboardList size={18} className="mr-1" /> 주문</Link></li>
-            <li><Link to="/carts" className="text-base font-medium"><ShoppingCart size={18} className="mr-1" /> 장바구니</Link></li>
-            <li><Link to="/order/member" className="text-base font-medium"><ClipboardList size={18} className="mr-1" /> 내 주문 내역</Link></li>
-            <li><Link to="/mypage" className="text-base font-medium"><User size={18} className="mr-1" /> 마이페이지</Link></li>
-          </ul>
-        </div>
-        
-        <div className="navbar-end">
-          {isLoggedIn ? (
-            <button 
-              onClick={handleLogout}
-              className="btn btn-outline btn-error"
+      {/* 상단 네비게이션 */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="container mx-auto px-4">
+          {/* 브랜드 및 메인 네비게이션 */}
+          <div className="flex items-center justify-between h-16">
+            {/* 로고 */}
+            <Link 
+              to="/" 
+              className="text-2xl font-bold text-primary flex items-center gap-2"
             >
-              <LogOut size={18} />
-              로그아웃
-            </button>
-          ) : (
-            <div className="flex gap-2">
-              <Link to="/signup" className="btn btn-outline btn-primary">
-                회원가입
-              </Link>
-              <button 
-                onClick={() => setIsOpen(true)}
-                className="btn btn-primary"
+              <Package strokeWidth={2} size={28} className="text-primary" />
+              InkCloud
+            </Link>
+            
+            {/* 메인 메뉴 */}
+            <div className="hidden md:flex space-x-1">
+              <Link 
+                to="/products" 
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors"
               >
-                <LogIn size={18} />
-                로그인
-              </button>
+                상품
+              </Link>
+              <Link 
+                to="/order" 
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors"
+              >
+                주문
+              </Link>
+              <Link 
+                to="/carts" 
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors flex items-center"
+              >
+                <ShoppingCart size={16} className="mr-1" />
+                장바구니
+              </Link>
+              <Link 
+                to="/order/member" 
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors"
+              >
+                주문내역
+              </Link>
+              <Link 
+                to="/mypage" 
+                className="px-3 py-2 rounded-md text-sm font-medium hover:bg-primary/10 hover:text-primary transition-colors flex items-center"
+              >
+                <User size={16} className="mr-1" />
+                마이페이지
+              </Link>
             </div>
-          )}
+            
+            {/* 사용자 계정 */}
+            <div className="flex items-center gap-2">
+              {isLoggedIn ? (
+                <button 
+                  onClick={handleLogout}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-rose-600 hover:bg-rose-700 focus:outline-none transition-colors duration-200"
+                >
+                  <LogOut size={16} className="mr-1" />
+                  로그아웃
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <Link 
+                    to="/signup" 
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-colors duration-200"
+                  >
+                    회원가입
+                  </Link>
+                  <button 
+                    onClick={() => setIsOpen(true)}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-focus focus:outline-none transition-colors duration-200"
+                  >
+                    <LogIn size={16} className="mr-1" />
+                    로그인
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* 로그인 모달 */}
       {isOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box relative max-w-md">
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="btn btn-sm btn-circle absolute right-2 top-2"
-            >
-              ✕
-            </button>
-            <LoginPage onSuccess={() => setIsOpen(false)} />
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setIsOpen(false)}></div>
+            <span className="hidden sm:inline-block sm:h-screen sm:align-middle">&#8203;</span>
+            <div className="relative inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-500"
+                >
+                  <span className="sr-only">닫기</span>
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                <LoginPage onSuccess={() => setIsOpen(false)} />
+              </div>
+            </div>
           </div>
-          <div className="modal-backdrop" onClick={() => setIsOpen(false)}></div>
         </div>
       )}
     </>
