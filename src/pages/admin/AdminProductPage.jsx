@@ -93,91 +93,123 @@ const AdminProductPage = () => {
       <h1 className="text-2xl font-bold mb-4">상품 관리</h1>
 
       {/* 검색 필터 */}
-      <div className="mb-6 p-4 bg-gray-50 border rounded grid grid-cols-4 gap-4 items-end">
-        <div>
-          <label className="block text-sm">제목</label>
-          <input
-            type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            className="w-full border rounded px-2 py-1"
-            placeholder="도서명 검색"
-          />
-        </div>
-        <div>
-          <label className="block text-sm">도서 상태</label>
-          <div className="flex gap-2 mt-1 text-sm">
-            {["ON_SALE", "OUT_OF_STOCK", "DISCONTINUED"].map((status) => (
-              <label key={status}>
-                <input
-                  type="checkbox"
-                  checked={statuses.includes(status)}
-                  onChange={() => handleStatusChange(status)}
-                />{" "}
-                {status === "ON_SALE"
-                  ? "판매중"
-                  : status === "OUT_OF_STOCK"
-                  ? "품절"
-                  : "절판"}
-              </label>
-            ))}
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm">출간일자</label>
-          <div className="flex gap-1">
+      <div className="mb-6 p-4 bg-white border rounded shadow-sm">
+        <h2 className="text-lg font-semibold mb-4">상품 검색</h2>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+
+          {/* 도서명 */}
+          <div className="flex items-center gap-2">
+            <label className="w-24 font-medium">도서명</label>
             <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="border px-2 py-1 rounded w-full"
-            />
-            <span className="px-1">~</span>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="border px-2 py-1 rounded w-full"
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              className="flex-1 border rounded px-2 py-1"
+              placeholder="검색어 입력"
             />
           </div>
-        </div>
-        <div>
-          <label className="block text-sm">검색 연산</label>
-          <select
-            value={operator}
-            onChange={(e) => setOperator(e.target.value)}
-            className="w-full border px-2 py-1 rounded"
-          >
-            <option value="AND">AND</option>
-            <option value="OR">OR</option>
-            <option value="NOT">NOT</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm">카테고리</label>
-          <div className="border rounded p-2 h-32 overflow-y-auto text-sm space-y-1">
-            {categories.map((cat) => (
-              <label key={cat.id} className="block">
-                <input
-                  type="checkbox"
-                  value={cat.id}
-                  checked={categoryIds.includes(cat.id)}
-                  onChange={() => handleCategoryChange(cat.id)}
-                />{" "}
-                {cat.name}
-              </label>
-            ))}
+
+          {/* 상태 */}
+          <div className="flex items-center gap-2">
+            <label className="w-24 font-medium">판매 상태</label>
+            <div className="flex flex-wrap gap-2">
+              {["ON_SALE", "OUT_OF_STOCK", "DISCONTINUED"].map((status) => (
+                <label key={status} className="flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    checked={statuses.includes(status)}
+                    onChange={() => handleStatusChange(status)}
+                  />
+                  <span>
+                    {status === "ON_SALE"
+                      ? "판매중"
+                      : status === "OUT_OF_STOCK"
+                      ? "품절"
+                      : "절판"}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* 카테고리 */}
+          <div className="flex items-start gap-2">
+            <label className="w-24 font-medium mt-1">카테고리</label>
+            <div className="flex-1 border rounded p-2 h-28 overflow-y-auto">
+              {categories.map((cat) => (
+                <label key={cat.id} className="block">
+                  <input
+                    type="checkbox"
+                    checked={categoryIds.includes(cat.id)}
+                    onChange={() => handleCategoryChange(cat.id)}
+                    className="mr-1"
+                  />
+                  {cat.name}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* 출간일자 */}
+          <div className="flex items-center gap-2">
+            <label className="w-24 font-medium">출간일자</label>
+            <div className="flex gap-1 items-center w-full">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="border rounded px-2 py-1 flex-1"
+              />
+              <span className="mx-1">~</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="border rounded px-2 py-1 flex-1"
+              />
+            </div>
+          </div>
+
+          {/* 연산자 */}
+          <div className="flex items-center gap-2">
+            <label className="w-24 font-medium">검색 연산</label>
+            <select
+              value={operator}
+              onChange={(e) => setOperator(e.target.value)}
+              className="border rounded px-2 py-1 w-full"
+            >
+              <option value="AND">AND</option>
+              <option value="OR">OR</option>
+              <option value="NOT">NOT</option>
+            </select>
           </div>
         </div>
-        <div className="col-span-4 text-right">
+
+        {/* 버튼 */}
+        <div className="mt-4 text-right">
           <button
             onClick={handleSearch}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mr-2"
           >
             검색
           </button>
+          <button
+            onClick={() => {
+              setKeyword("");
+              setStatuses([]);
+              setCategoryIds([]);
+              setStartDate("");
+              setEndDate("");
+              setOperator("AND");
+              fetchData(0);
+            }}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+          >
+            초기화
+          </button>
         </div>
       </div>
+
 
       {/* 상품 리스트 */}
       <div className="space-y-4">
