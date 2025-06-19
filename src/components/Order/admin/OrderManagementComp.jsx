@@ -61,7 +61,7 @@ const OrderManagementComp = () => {
         currentPage,
         pageSize
       );
-
+      console.log(response)
       setOrders(response.content || []);
       setTotalPages(response.totalPages || 0);
       setTotalElements(response.totalElements || 0);
@@ -189,6 +189,10 @@ const OrderManagementComp = () => {
   // 총 금액 계산
   const totalAmount = orders.reduce((sum, order) => sum + (order.price * order.quantity), 0);
 
+  const selectedOrdersAmount = orders
+    .filter(order => selectedOrders.includes(order.id))
+    .reduce((sum, order) => sum + (order.price * order.quantity), 0);
+
   const handleOnUpdateOrders = async () => {
     const res = await patchUpdateOrdersWithState(selectedOrders, stateType);
     if (res.length > 0) {
@@ -210,17 +214,17 @@ const OrderManagementComp = () => {
       alert('이미 주문이 취소되었습니다')
       return
     }
-
-    putCancelOrder(id).then(data => {
-      console.log('data : ', data)
-      setOrders(prev =>
-        prev.map(o => o.id === id ? data : o)
-      );
-      alert('주문이 취소되었습니다.')
-    })
-      .catch(e => {
-        console.log("취소 실패:", e);
-      });
+    if (window.confirm('주문을 취소하겠습니까?'))
+      putCancelOrder(id).then(data => {
+        console.log('data : ', data)
+        setOrders(prev =>
+          prev.map(o => o.id === id ? data : o)
+        );
+        alert('주문이 취소되었습니다.')
+      })
+        .catch(e => {
+          console.log("취소 실패:", e);
+        });
 
   }
 
@@ -445,8 +449,8 @@ const OrderManagementComp = () => {
 
           {/* 총합계 */}
           <div className="flex justify-end items-center p-4 text-sm border-t">
-            <span className="mr-4">총건수: {totalElements}건</span>
-            <span>합계: {formatPrice(totalAmount)}원</span>
+            <span className="mr-4">건수: {selectedOrders.length}건</span>
+            <span className="mr-4">금액: {formatPrice(selectedOrdersAmount)}원</span>
           </div>
         </div>
       )}
@@ -516,7 +520,7 @@ const OrderManagementComp = () => {
           Next &gt;
         </button>
 
-        <select
+        {/* <select
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
@@ -527,7 +531,7 @@ const OrderManagementComp = () => {
           <option value={20}>20개</option>
           <option value={50}>50개</option>
           <option value={100}>100개</option>
-        </select>
+        </select> */}
       </div>
     </div>
   );
