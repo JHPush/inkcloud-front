@@ -212,43 +212,61 @@ const AdminProductPage = () => {
 
 
       {/* 상품 리스트 */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-4 mt-6">
         {products.map((product) => (
           <div
             key={product.id}
-            className="flex border rounded p-4 shadow items-center justify-between"
+            className="flex justify-between border rounded-xl p-5 shadow-sm bg-white hover:shadow-md transition-all"
           >
             <div className="flex gap-4">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-24 h-32 object-cover border"
+                className="w-28 h-40 object-cover rounded border"
               />
-              <div className="text-sm">
-                <p><strong>상품 ID:</strong> {product.id}</p>
-                <p><strong>제목:</strong> {product.name}</p>
-                <p><strong>저자:</strong> {product.author}</p>
-                <p><strong>출판사:</strong> {product.publisher}</p>
-                <p><strong>가격:</strong> {product.price.toLocaleString()}원</p>
-                <p><strong>출간일:</strong> {product.publicationDate}</p>
-                <p><strong>상태:</strong> {
-                  product.status === "ON_SALE"
-                    ? "판매중"
-                    : product.status === "OUT_OF_STOCK"
-                    ? "품절"
-                    : "절판"
-                }</p>
+              <div className="space-y-1 text-sm">
+                <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                <p><span className="font-medium text-gray-600">저자:</span> {product.author}</p>
+                <p><span className="font-medium text-gray-600">출판사:</span> {product.publisher}</p>
+                <p><span className="font-medium text-gray-600">ISBN:</span> {product.isbn}</p>
+                <p><span className="font-medium text-gray-600">출간일:</span> {product.publicationDate}</p>
+                <p>
+                  <span className="font-medium text-gray-600">상태:</span>{" "}
+                  <span
+                    className={
+                      "inline-block px-2 py-1 text-xs rounded font-medium " +
+                      (product.status === "ON_SALE"
+                        ? "bg-green-100 text-green-800"
+                        : product.status === "OUT_OF_STOCK"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : "bg-red-100 text-red-800")
+                    }
+                  >
+                    {product.status === "ON_SALE"
+                      ? "판매중"
+                      : product.status === "OUT_OF_STOCK"
+                      ? "품절"
+                      : "절판"}
+                  </span>
+                </p>
               </div>
             </div>
-            <button
-              onClick={() => handleEdit(product)}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              수정
-            </button>
+
+            <div className="text-right flex flex-col justify-between">
+              <div className="text-lg font-semibold text-gray-900">
+                {product.price.toLocaleString()}원
+              </div>
+              <button
+                onClick={() => handleEdit(product)}
+                className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm mt-2"
+              >
+                수정
+              </button>
+            </div>
           </div>
         ))}
       </div>
+
 
       {/* 하단 버튼 및 페이지네이션 */}
       <div className="flex justify-between items-center mt-8">
