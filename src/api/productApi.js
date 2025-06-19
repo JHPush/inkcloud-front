@@ -80,6 +80,12 @@ export const deleteCategory = async (id) => {
   return response.data;
 };
 
+// 카테고리 재정렬 (관리자)
+export const reorderCategories = async (payload) => {
+  const response = await jwtAxios.put(`${CATEGORY_API_URL}/reorder`, payload);
+  return response.data;
+};
+
 // Presigned URL 발급 함수
 export const getPresignedUrl = async (filename) => {
   try {
