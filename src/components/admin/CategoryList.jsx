@@ -16,6 +16,7 @@ const CategoryList = ({ categories, selectedId, onSelect, onReload }) => {
   const [items, setItems] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [editParentId, setEditParentId] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newName, setNewName] = useState("");
 
@@ -26,13 +27,16 @@ const CategoryList = ({ categories, selectedId, onSelect, onReload }) => {
   const handleEditClick = (cat) => {
     setEditingId(cat.id);
     setEditValue(cat.name);
+    setEditParentId(cat.parentId);
   };
 
   const handleEditSubmit = async () => {
     if (!editValue.trim()) return;
     try {
-      await updateCategory({ id: editingId, name: editValue, parentId: cat.parentId });
+      await updateCategory({ id: editingId, name: editValue, parentId: editParentId });
       setEditingId(null);
+      setEditValue("");
+      setEditParentId(null);
       onReload();
     } catch (e) {
       alert("수정 실패");
