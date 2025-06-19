@@ -5,6 +5,7 @@ import MainCarousel from "../components/main/MainCarousel";
 import BookRankingSection from "../components/main/BookRankingSection";
 import { getDailyBestsellers, getWeeklyBestsellers } from "../api/bestsellerApi";
 import { getNewBooks, getRecommendedBooks } from "../api/productApi";
+import MainSearchBar from "../components/product/MainSearchBar";
 
 // 임시 목업 데이터 (실제 API로 교체 가능)
 const mockDailyBooks = [
@@ -65,6 +66,7 @@ const MainPage = () => {
 
   return (
     <BasicLayout>
+      <MainSearchBar />
       <MainCarousel
         bestsellers={dailyBooks}
         newBooks={newBooks}
