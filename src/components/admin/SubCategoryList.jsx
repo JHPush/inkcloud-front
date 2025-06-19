@@ -30,7 +30,7 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
   const handleEditSubmit = async () => {
     if (!editValue.trim()) return;
     try {
-      await updateCategory(editingId, { name: editValue });
+      await updateCategory({ id: editingId, name: editValue, parentId: cat.parentId });
       setEditingId(null);
       onReload();
     } catch (e) {
