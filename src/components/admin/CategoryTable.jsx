@@ -43,3 +43,5 @@ const CategoryTable = ({ categories, onEdit, onDelete }) => {
     </div>
   );
 };
+
+export default CategoryTable;
