@@ -59,10 +59,16 @@ const AdminCategoryPage = () => {
         loadCategories();
       } catch (error) {
         console.error("삭제 실패", error);
-        alert("삭제 실패: " + error.message);
+
+        const message =
+          error.response?.data?.message ||
+          error.response?.data ||
+          "삭제 실패: 서버 오류";
+        alert("삭제 실패: " + message);
       }
     }
   };
+
 
   return (
     <div className="max-w-4xl mx-auto py-8">
