@@ -21,9 +21,9 @@ const LayoutLoginPage = () =>{
   }, [isLoggedIn, user, navigate]);
 
     return(
-        <BasicLayout>
+   
             <LoginPage/>
-        </BasicLayout>
+    
     )
 } 
 export default LayoutLoginPage;

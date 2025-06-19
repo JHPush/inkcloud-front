@@ -21,6 +21,7 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     logoutUtil(dispatch)
+    window.alert("정상적으로 로그아웃 되었습니다.")
     navigate("/admin/login")
   }
 
