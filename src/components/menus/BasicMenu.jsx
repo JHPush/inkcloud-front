@@ -2,10 +2,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUtil } from "../../utils/logoutUtils";
 import { useState } from "react";
-import Modal from "react-modal";
 import LoginPage from "./LoginPage";
-
-Modal.setAppElement("#root"); // App의 루트 엘리먼트에 맞게 설정
+import { ShoppingCart, User, Package, ClipboardList, LogIn, LogOut } from 'lucide-react';
 
 const BasicMenu = () => {
   const dispatch = useDispatch();
@@ -16,83 +14,66 @@ const BasicMenu = () => {
     logoutUtil(dispatch)
   };
 
-  return (  
-  <nav id='navbar' className=" flex  bg-blue-300">
+  return (
+    <>
+      <div className="navbar bg-base-100 shadow-lg">
+        <div className="navbar-start">
+          <Link to="/" className="btn btn-ghost normal-case text-xl">InkCloud</Link>
+        </div>
+        
+        {/* 메뉴 */}
+        <div className="navbar-center">
+          <ul className="menu menu-horizontal px-1">
+            <li><Link to="/products" className="text-base font-medium"><Package size={18} className="mr-1" /> 상품</Link></li>
+            <li><Link to="/order" className="text-base font-medium"><ClipboardList size={18} className="mr-1" /> 주문</Link></li>
+            <li><Link to="/carts" className="text-base font-medium"><ShoppingCart size={18} className="mr-1" /> 장바구니</Link></li>
+            <li><Link to="/order/member" className="text-base font-medium"><ClipboardList size={18} className="mr-1" /> 내 주문 내역</Link></li>
+            <li><Link to="/mypage" className="text-base font-medium"><User size={18} className="mr-1" /> 마이페이지</Link></li>
+          </ul>
+        </div>
+        
+        <div className="navbar-end">
+          {isLoggedIn ? (
+            <button 
+              onClick={handleLogout}
+              className="btn btn-outline btn-error"
+            >
+              <LogOut size={18} />
+              로그아웃
+            </button>
+          ) : (
+            <div className="flex gap-2">
+              <Link to="/signup" className="btn btn-outline btn-primary">
+                회원가입
+              </Link>
+              <button 
+                onClick={() => setIsOpen(true)}
+                className="btn btn-primary"
+              >
+                <LogIn size={18} />
+                로그인
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
-    <div className="w-4/5 bg-gray-500" >
-      <ul className="flex p-4 text-white font-bold">
-        <li className="pr-6 text-2xl">
-          <Link to={'/'}>Main</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/about'}>About</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/todo/'}>Todo</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/order'}>주문</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/products'}>상품</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/carts'}>장바구니</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/order/member'}>내 주문 내역</Link>
-        </li>
-        <li className="pr-6 text-2xl">
-          <Link to={'/mypage'}>마이페이지</Link>
-        </li>
-     
-      </ul>
-    </div>
-
-    <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
-        {isLoggedIn ? (
-          <button
-            onClick={handleLogout}
-            className="text-white text-sm m-1 rounded bg-red-500 px-3 py-1"
-          >
-            Logout
-          </button>
-        ) : (
-          <button
-            onClick={() => setIsOpen(true)}
-            className="text-white text-sm m-1 rounded"
-          >
-            Login
-          </button>
-        )}
-    </div>
-    <div className="w-1/5 flex justify-end bg-orange-300 p-4 font-medium">
-       {!isLoggedIn && (
-          <Link to="/signup" className="text-white text-sm m-1 rounded">
-            회원가입
-          </Link>
-       )}
-    </div>
-
-    {/* 로그인 모달 */}
-    <Modal
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={{
-          content: {
-            maxWidth: 450,
-            margin: "auto",
-            borderRadius: 12,
-            padding: 10, 
-            minHeight: "unset",
-            height: "fit-content",
-          }
-        }}
-      >
-        <button onClick={() => setIsOpen(false)} className="absolute top-3 right-5 text-xl">✕</button>
-        <LoginPage onSuccess={() => setIsOpen(false)} />
-      </Modal>
-  </nav>
+      {/* 로그인 모달 */}
+      {isOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box relative max-w-md">
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+            >
+              ✕
+            </button>
+            <LoginPage onSuccess={() => setIsOpen(false)} />
+          </div>
+          <div className="modal-backdrop" onClick={() => setIsOpen(false)}></div>
+        </div>
+      )}
+    </>
   );
 }
  
