@@ -21,7 +21,7 @@ const VerifyEmail = ({
         setError("");
         setVerified(false);
         if (onTrySend && onTrySend() === false) return;
-        try {
+        try { 
             SendVerificationEmail(email);
             setSuccess(true);
             setExpireTime(Date.now() + 5 * 60 * 1000); // 타이머 시작 시점 고정

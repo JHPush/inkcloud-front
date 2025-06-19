@@ -21,6 +21,7 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     logoutUtil(dispatch)
+    navigate("/admin/login")
   }
 
 
@@ -62,12 +63,7 @@ export default function AdminLayout() {
               >
                 Login
               </Link> */}
-              {/* <Link
-                to="/admin/signup"
-                className="text-s text-gray-500 border-b border-gray-200 w-fit hover:text-gray-600 hover:border-gray-400 transition"
-              >
-                회원가입
-              </Link> */}
+
             </>
           )}
         </div>
