@@ -74,6 +74,12 @@ export const updateCategory = async ({ id, name, parentId }) => {
   return response.data;
 };
 
+// 카테고리 삭제 (관리자)
+export const deleteCategory = async (id) => {
+  const response = await jwtAxios.delete(`${CATEGORY_API_URL}/${id}`);
+  return response.data;
+};
+
 // Presigned URL 발급 함수
 export const getPresignedUrl = async (filename) => {
   try {
