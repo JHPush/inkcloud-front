@@ -6,6 +6,8 @@ import ShippingList from "../../components/Member/shipping/ShippingList";
 import MemberLayout from "../../layouts/MemberLayout";
 import MemberReviewPage from "../review/MemberReviewPage";
 import { getAccessToken } from "../../utils/cookieUtils";
+import MemberOrdersPage from "../Order_Payment/MemberOrdersPage";
+import MemberOrdersComp from "../../components/Order/MemberOrdersComp";
 
 const MyPage = () => {
   const [tab, setTab] = useState("info");
@@ -38,6 +40,7 @@ const MyPage = () => {
     <MemberLayout tab={tab} setTab={setTab}>
       {tab === "info" && <MyInfoPage />}
       {tab === "review" && <MemberReviewPage />}
+      {tab === "order" && <MemberOrdersComp />}
       {tab === "address" && <ShippingList />}
       {tab === "withdraw" && <WithdrawMember />}
     </MemberLayout>
