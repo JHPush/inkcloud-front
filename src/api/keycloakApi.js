@@ -15,7 +15,7 @@ export const login = async (username, password) => {
   params.append('client_id', KEYCLOAK_CLIENT_ID);
   params.append('username', username); 
   params.append('password', password);
-  // params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
+  params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
 
 
 
@@ -38,7 +38,7 @@ export const refreshToken = async (refreshToken) => {
   params.append('grant_type', 'refresh_token');
   params.append('client_id', KEYCLOAK_CLIENT_ID);
   params.append('refresh_token', refreshToken);
-  // params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
+  params.append('client_secret', KEYCLOAK_CLIENT_SECRET);
 
   try {
     const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {
