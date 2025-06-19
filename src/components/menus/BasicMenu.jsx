@@ -22,7 +22,7 @@ const BasicMenu = () => {
         </div>
         
         {/* 메뉴 */}
-        <div className="navbar-center">
+        <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li><Link to="/products" className="text-base font-medium"><Package size={18} className="mr-1" /> 상품</Link></li>
             <li><Link to="/order" className="text-base font-medium"><ClipboardList size={18} className="mr-1" /> 주문</Link></li>
