@@ -1,5 +1,4 @@
-// src/components/admin/SubCategoryList.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   createCategory,
   updateCategory,
@@ -13,22 +12,21 @@ import {
 } from "react-beautiful-dnd";
 
 const SubCategoryList = ({ categories, parentId, onReload }) => {
-  const [items, setItems] = useState(categories);
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [newName, setNewName] = useState("");
 
-  // 동기화
-  React.useEffect(() => {
-    setItems(categories);
+  useEffect(() => {
+    // 현재는 서버에서 받아온 categories를 직접 사용함 (items 상태 제거)
   }, [categories]);
 
-  const handleEdit = (cat) => {
+  const handleEditClick = (cat) => {
     setEditingId(cat.id);
     setEditValue(cat.name);
   };
 
   const handleEditSubmit = async () => {
+    if (!editValue.trim()) return;
     try {
       await updateCategory(editingId, { name: editValue });
       setEditingId(null);
@@ -38,8 +36,13 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
     }
   };
 
+  const handleEditCancel = () => {
+    setEditingId(null);
+    setEditValue("");
+  };
+
   const handleAdd = async () => {
-    if (!newName.trim()) return;
+    if (!newName.trim() || !parentId) return;
     try {
       await createCategory({ name: newName, parentId });
       setNewName("");
@@ -61,16 +64,15 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-    const reordered = [...items];
+
+    const reordered = [...categories];
     const [moved] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, moved);
-    setItems(reordered);
 
     try {
-      await reorderCategories(reordered.map((c, idx) => ({
-        id: c.id,
-        order: idx,
-      })));
+      await reorderCategories(
+        reordered.map((c, idx) => ({ id: c.id, order: idx }))
+      );
       onReload();
     } catch (e) {
       alert("정렬 저장 실패");
@@ -83,7 +85,7 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
         <Droppable droppableId="subcategory-list">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {items.map((cat, index) => (
+              {categories.map((cat, index) => (
                 <Draggable
                   key={cat.id}
                   draggableId={String(cat.id)}
@@ -97,29 +99,46 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
                       className="flex items-center justify-between px-2 py-1 mb-1 border rounded bg-gray-50"
                     >
                       {editingId === cat.id ? (
-                        <input
-                          type="text"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onBlur={handleEditSubmit}
-                          onKeyDown={(e) => e.key === "Enter" && handleEditSubmit()}
-                          className="border px-2 py-1 rounded w-full mr-2"
-                          autoFocus
-                        />
+                        <div className="flex items-center w-full gap-2">
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className="border px-2 py-1 rounded flex-1"
+                            autoFocus
+                          />
+                          <button
+                            onClick={handleEditSubmit}
+                            className="text-green-600 font-semibold"
+                          >
+                            ✔
+                          </button>
+                          <button
+                            onClick={handleEditCancel}
+                            className="text-gray-600 font-semibold"
+                          >
+                            ✖
+                          </button>
+                        </div>
                       ) : (
-                        <span
-                          onDoubleClick={() => handleEdit(cat)}
-                          className="flex-1"
-                        >
-                          {cat.name}
-                        </span>
+                        <>
+                          <span className="flex-1">{cat.name}</span>
+                          <div className="flex gap-2 items-center">
+                            <button
+                              onClick={() => handleEditClick(cat)}
+                              className="text-blue-500 hover:text-blue-700"
+                            >
+                              ✏
+                            </button>
+                            <button
+                              onClick={() => handleDelete(cat.id)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              ✖
+                            </button>
+                          </div>
+                        </>
                       )}
-                      <button
-                        onClick={() => handleDelete(cat.id)}
-                        className="text-red-500 hover:text-red-700 ml-2"
-                      >
-                        ✖
-                      </button>
                     </div>
                   )}
                 </Draggable>
@@ -135,7 +154,7 @@ const SubCategoryList = ({ categories, parentId, onReload }) => {
           type="text"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
-          placeholder="새 카테고리"
+          placeholder="하위 카테고리 이름"
           className="border rounded px-2 py-1 w-full"
         />
         <button

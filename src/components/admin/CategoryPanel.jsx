@@ -5,7 +5,10 @@ import SubCategoryList from "./SubCategoryList";
 
 const CategoryPanel = ({ categories, selectedParentId, onSelectParent, onReload }) => {
   const parents = categories.filter((cat) => cat.parentId === null);
-  const children = categories.filter((cat) => cat.parentId === selectedParentId);
+
+  const children = selectedParentId
+    ? categories.filter((cat) => cat.parentId === selectedParentId)
+    : [];
 
   return (
     <div className="flex gap-6">
