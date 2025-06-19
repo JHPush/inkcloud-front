@@ -36,13 +36,9 @@ const MainPage = () => {
   return (
     <BasicLayout>
       {/* HERO 영역 */}
-      <section className="hero min-h-[60vh] bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-2xl w-full">
-            <h1 className="text-5xl font-bold mb-4">📚 InkCloud</h1>
-            <p className="text-lg text-gray-600 mb-6">원하는 책을 지금 바로 검색해보세요!</p>
-            <MainSearchBar />
-          </div>
+      <section className="hero min-h-[50vh] bg-base-100">
+        <div className="flex flex-col items-center justify-center w-full h-full px-4">
+          <MainSearchBar />
         </div>
       </section>
 
@@ -58,7 +54,6 @@ const MainPage = () => {
 
       {/* 주간 랭킹 영역 */}
       <section className="py-12 px-4 bg-base-100">
-        <h2 className="text-2xl font-bold mb-6 text-center">🏆 주간 베스트셀러 Top 10</h2>
         <BookRankingSection weeklyBooks={weeklyBooks} />
       </section>
     </BasicLayout>
