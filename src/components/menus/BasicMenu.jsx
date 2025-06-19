@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUtil } from "../../utils/logoutUtils";
 import { useState } from "react";
 import LoginPage from "./LoginPage";
-import { ShoppingCart, User, Package, ClipboardList, LogIn, LogOut } from 'lucide-react';
+import Modal from "react-modal";
+import { ShoppingCart, User, Package, LogIn, LogOut } from 'lucide-react';
 
 const BasicMenu = () => {
   const dispatch = useDispatch();
@@ -98,29 +99,24 @@ const BasicMenu = () => {
         </div>
       </div>
 
-      {/* 로그인 모달 */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setIsOpen(false)}></div>
-            <span className="hidden sm:inline-block sm:h-screen sm:align-middle">&#8203;</span>
-            <div className="relative inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <button 
-                  onClick={() => setIsOpen(false)}
-                  className="absolute top-3 right-3 text-gray-400 hover:text-gray-500"
-                >
-                  <span className="sr-only">닫기</span>
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-                <LoginPage onSuccess={() => setIsOpen(false)} />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 로그인 모달 - 원래 react-modal 라이브러리 사용 */}
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+        style={{
+          content: {
+            maxWidth: 450,
+            margin: "auto",
+            borderRadius: 12,
+            padding: 10, 
+            minHeight: "unset",
+            height: "fit-content",
+          }
+        }}
+      >
+        <button onClick={() => setIsOpen(false)} className="absolute top-3 right-5 text-xl">✕</button>
+        <LoginPage onSuccess={() => setIsOpen(false)} />
+      </Modal>
     </>
   );
 }
