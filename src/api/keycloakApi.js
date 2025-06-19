@@ -24,7 +24,7 @@ export const login = async (username, password) => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
-    return response.data; // access_token, refresh_token 등 포함
+    return response.data; // access_token, refresh_token 등 포함  
     
   } catch (error) {
     throw new Error('Keycloak 인증 실패');
