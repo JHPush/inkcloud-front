@@ -101,33 +101,34 @@ const OrderDetailComp = () => {
                 {statusMapping[order?.state] || order?.state}
               </div>
             </div>
-            
-            {(order?.state === "PREPARE" || user?.role === "ADMIN") && (
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <select 
-                    value={stateType}
-                    onChange={(e) => setStateType(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="PREPARE">상품준비중</option>
-                    <option value="SHIPPING">배송중</option>
-                    <option value="SHIPPED">배송완료</option>
-                  </select>
-                  <button 
-                    onClick={() => handleOnUpdateOrders(order.id)} 
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
-                  >
-                    상태 변경
-                  </button>
-                </div>
-                <button
-                  onClick={handleCancelOrder}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
+
+            {user?.role === "ADMIN" && (
+              <div className="flex items-center gap-2">
+                <select
+                  value={stateType}
+                  onChange={(e) => setStateType(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  주문 취소
+                  <option value="PREPARE">상품준비중</option>
+                  <option value="SHIPPING">배송중</option>
+                  <option value="SHIPPED">배송완료</option>
+                </select>
+                <button
+                  onClick={() => handleOnUpdateOrders(order.id)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                  상태 변경
                 </button>
               </div>
+            )}
+
+            {order?.state === "PREPARE" && (
+              <button
+                onClick={handleCancelOrder}
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                주문 취소
+              </button>
             )}
           </div>
         </div>
@@ -153,8 +154,8 @@ const OrderDetailComp = () => {
                     <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
                       <div className="w-16 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
                         {item.thumbnailUrl ? (
-                          <img 
-                            src={item.thumbnailUrl} 
+                          <img
+                            src={item.thumbnailUrl}
                             alt={item.name}
                             className="w-full h-full object-cover"
                           />
