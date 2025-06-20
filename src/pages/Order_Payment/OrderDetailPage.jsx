@@ -9,13 +9,13 @@ const OrderDetailPage = () => {
 
     return (
         <>
-            {user?.role !== 'ADMIN' ? 
+            {user?.role !== 'ADMIN' ?( 
             <BasicLayout>
                 <OrderDetailComp />
-            </BasicLayout> : 
-            <AdminLayout>
+            </BasicLayout>) : 
+            (<AdminLayout>
                 <OrderDetailComp />
-            </AdminLayout>}
+            </AdminLayout>)}
         </>
     )
 }
