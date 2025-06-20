@@ -48,6 +48,7 @@ export const refreshToken = async (refreshToken) => {
     return response.data;
     
   } catch (error) {
+    console.log(error.response?.data || error.message);
     throw new Error('Keycloak 토큰 갱신 실패');
   }
 };
