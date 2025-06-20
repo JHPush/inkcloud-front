@@ -51,7 +51,7 @@ const ProductListPage = () => {
     }
   };
 
-  const handleBuyNow = () => {
+  const handleBuyNow = (product) => {
     navigate("/order", {
       state: {
         id: product.id,
@@ -59,7 +59,7 @@ const ProductListPage = () => {
         author: product.author,
         publisher: product.publisher,
         price: product.price,
-        quantity,
+        quantity: 1,
         image: product.image,
       },
     });
@@ -85,7 +85,7 @@ const ProductListPage = () => {
               product={product}
               onClick={() => navigate(`/products/${product.id}`)}
               onAddToCart={handleAddToCart}
-              onBuyNow={handleBuyNow}
+              onBuyNow={handleBuyNow(product)}
             />
           ))}
           <ProductPagination page={page} totalPages={totalPages} onPageChange={handleSearch} />

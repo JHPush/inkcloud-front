@@ -23,7 +23,7 @@ const ProductItem = ({ product, onClick, onAddToCart, onBuyNow }) => (
       <button
         className={`mt-1 w-full text-white text-sm px-2 py-1 rounded ${product.status !== "ON_SALE" ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
         disabled={product.status !== "ON_SALE"}
-        onClick={() => onBuyNow(product.id)}
+        onClick={() => onBuyNow(product)}
       >
         바로 구매
       </button>
