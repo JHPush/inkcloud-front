@@ -1,36 +1,68 @@
 // src/components/Main/CategoryMenu.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const categories = [
-  { id: 1, name: "소설" },
-  { id: 2, name: "에세이" },
-  { id: 3, name: "인문" },
-  { id: 4, name: "자기계발" },
-  { id: 5, name: "경제/경영" },
-  { id: 6, name: "IT/프로그래밍" },
-  { id: 7, name: "어린이" },
-  { id: 8, name: "학습서" },
-];
+import { fetchAllCategories } from "../../api/productApi";
 
 const CategoryMenu = () => {
+  const [topCategories, setTopCategories] = useState([]);
+  const [subCategoriesMap, setSubCategoriesMap] = useState({});
   const navigate = useNavigate();
 
-  const handleClick = (name) => {
-    navigate(`/products?category=${encodeURIComponent(name)}`);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await fetchAllCategories();
+
+        const tops = data.filter((cat) => cat.parentId === null);
+        const subs = data.filter((cat) => cat.parentId !== null);
+
+        const subMap = {};
+        subs.forEach((sub) => {
+          if (!subMap[sub.parentId]) subMap[sub.parentId] = [];
+          subMap[sub.parentId].push(sub);
+        });
+
+        setTopCategories(tops);
+        setSubCategoriesMap(subMap);
+      } catch (err) {
+        console.error("카테고리 목록 불러오기 실패", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleClick = (categoryId) => {
+    navigate(`/products?categoryIds=${categoryId}`);
   };
 
   return (
-    <div className="w-full bg-gray-100 border-b py-3 px-6">
-      <div className="flex flex-wrap justify-start gap-4 text-sm font-medium">
-        {categories.map((cat) => (
-          <button
-            key={cat.id}
-            className="px-3 py-1 bg-white hover:bg-blue-100 rounded shadow-sm"
-            onClick={() => handleClick(cat.name)}
-          >
-            {cat.name}
-          </button>
+    <div className="w-full bg-white border-b px-4 py-2">
+      <div className="flex flex-wrap gap-2 text-sm">
+        {topCategories.map((top) => (
+          <div key={top.id} className="relative group">
+            <button
+              onClick={() => handleClick(top.id)}
+              className="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800"
+            >
+              {top.name}
+            </button>
+
+            {/* 하위 카테고리 드롭다운 */}
+            {subCategoriesMap[top.id] && (
+              <div className="absolute z-10 hidden group-hover:block bg-white shadow-md rounded mt-1 min-w-[10rem]">
+                {subCategoriesMap[top.id].map((sub) => (
+                  <button
+                    key={sub.id}
+                    onClick={() => handleClick(sub.id)}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    {sub.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
