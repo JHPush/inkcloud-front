@@ -51,8 +51,20 @@ const ProductListPage = () => {
     }
   };
 
-  const handleBuyNow = (productId) => {
-    console.log("바로 구매 클릭:", productId);
+  const handleBuyNow = (product) => {
+    navigate("/order", {
+      state: [
+        {
+          id: product.id,
+          name: product.name,
+          author: product.author,
+          publisher: product.publisher,
+          price: product.price,
+          quantity: 1,
+          image: product.image,
+        },
+      ],
+    });
   };
 
   return (
@@ -75,7 +87,7 @@ const ProductListPage = () => {
               product={product}
               onClick={() => navigate(`/products/${product.id}`)}
               onAddToCart={handleAddToCart}
-              onBuyNow={handleBuyNow}
+              onBuyNow={() => handleBuyNow(product)}
             />
           ))}
           <ProductPagination page={page} totalPages={totalPages} onPageChange={handleSearch} />

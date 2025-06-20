@@ -24,8 +24,12 @@ const OrderComp = () => {
     useEffect(() => {
         if (user) return;
         const dataArr = Array.isArray(loc.state) ? loc.state : [loc.state];
-        console.log(dataArr)
-        setCartItems(dataArr)
+        const updatedDataArr = dataArr.map(({ image, ...rest }) => ({
+            ...rest,
+            thumbnailUrl: image
+        }));
+
+        setCartItems(updatedDataArr);
 
         const fetchMyInfo = async () => {
             const res = await getMyInfo();
@@ -347,7 +351,7 @@ const OrderComp = () => {
                                                 <div className="text-lg font-semibold w-24 text-right text-gray-700">
                                                     {(item.price).toLocaleString()}원
                                                 </div>
-                                                <button
+                                                {/* <button
                                                     className="px-2 py-1 rounded border text-sm"
                                                     onClick={() => decreaseQuantity(item.id)}
                                                 >
@@ -359,7 +363,7 @@ const OrderComp = () => {
                                                     onClick={() => increaseQuantity(item.id)}
                                                 >
                                                     +
-                                                </button>
+                                                </button> */}
                                                 {cartItems.length > 1 ? (
                                                     <button
                                                         className="ml-2 text-red-500 hover:text-red-700"
