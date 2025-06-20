@@ -12,7 +12,7 @@ const ProductItem = ({ product, onClick, onAddToCart, onBuyNow }) => (
       <p className="text-red-600 mt-2 font-semibold">{product.price.toLocaleString()}원</p>
     </div>
     <div className="text-center w-24">
-      <p className="text-sm text-gray-600">★ {product.rating.toFixed(1)} / 10</p>
+      <p className="text-sm text-gray-600">★ {product.rating.toFixed(1)} / 5</p>
       <button
         className={`mt-2 w-full text-sm px-2 py-1 rounded ${product.status !== "ON_SALE" ? "bg-gray-400 text-white cursor-not-allowed" : "bg-gray-300 hover:bg-gray-400"}`}
         disabled={product.status !== "ON_SALE"}
