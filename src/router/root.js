@@ -4,7 +4,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import AdminRoute from "./AdminRoute";
 
 
-const { createBrowserRouter } = require("react-router-dom");
+const { createBrowserRouter, Navigate } = require("react-router-dom");
 
 const Loading = <div>Loading....</div>
 const Main = lazy(() => import("../pages/MainPage"))
@@ -67,6 +67,10 @@ const root = createBrowserRouter([
       </AdminRoute>
     ),
     children: [
+      {
+        index: true, // /admin 경로에 대한 기본 라우트
+        element: <Navigate to="/admin/stats" replace />
+      },
       {
         path: "member",
         element: <Suspense fallback={Loading}><MemberByAdmin /></Suspense>

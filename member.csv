@@ -1,0 +1,101 @@
+email,address_main,address_sub,zipcode,created_at,first_name,last_name,password,phone_number,rejoined_at,role,status,withdrawn_at
+zi@example.org,광주광역시 영등포구 반포대51로,23 (성진김마을),00458,2024-01-01 00:23:00,주저,유,$2a$10$jO9dLVXo37uqxTF1CIUttJ,0163990787,NULL,USER,ACTIVE,NULL
+seoyun48@example.org,전라남도 공주시 영동대로,995 (영숙양김리),67748,2023-11-14 19:18:47,지미,권,$2a$10$I5xj3TsetLBC27d8uH9XRq,0554653768,NULL,USER,ACTIVE,NULL
+sunjasim@example.com,충청북도 안산시 단원구 반포대36로,730-50 (지원진황동),72216,2023-11-19 22:09:50,재하,전,$2a$10$igX4GbNK9nVVtg8urHkQpD,0440775587,NULL,USER,ACTIVE,NULL
+hayungim@example.net,대구광역시 중구 오금길,420-96,83298,2023-11-02 22:58:25,하언,김,$2a$10$H0MXgzAtwUDC8rE9YkFZwO,0535514885,NULL,USER,ACTIVE,NULL
+hyejin66@example.com,충청북도 삼척시 양재천로,601-43 (민준김박리),11979,2023-12-03 11:06:13,동평,서,$2a$10$h2m52UAug2av3HAQ7isw86,0634500803,NULL,USER,ACTIVE,NULL
+bagjihyeon@example.net,대구광역시 강동구 선릉거리 521 (영숙박동),\N,76324,2025-06-19 01:05:44,경용,정,$2a$10$9kPAFfgKbJNW8bVmcZAYf6,0312440525,NULL,USER,ACTIVE,NULL
+sna@example.com,세종특별자치시 광진구 백제고분로,720,36908,2023-10-25 13:51:17,종석,황,$2a$10$DcmhxyHxeta2YklPll5BYT,01032566598,NULL,USER,ACTIVE,NULL
+whwang@example.com,부산광역시 노원구 강남대가 682,\N,59895,2024-10-31 13:54:21,하서,최,$2a$10$ZaVVAvrxGORHLpfC0zZPoI,0324252971,2025-05-05 05:06:37,USER,ACTIVE,2025-03-22 18:32:10
+vseo@example.com,대전광역시 송파구 백제고분가 416 (정수김동),\N,30059,2025-05-04 02:54:26,과하,박,$2a$10$h05TDWNTRp8Gmz76qxzAx4,0517062098,NULL,USER,ACTIVE,NULL
+hyeonsug81@example.org,전라남도 평택시 봉은사06가 317,\N,42285,2023-07-29 18:48:32,상재,최,$2a$10$ZL7zFyiE0tjXxMO70t4K7H,0324180224,NULL,USER,ACTIVE,NULL
+jeongsu46@example.net,경상남도 평창군 반포대로,415-97,81846,2024-12-11 02:11:06,수연,국,$2a$10$Q3KVlsVms7y26ZeehDekoz,0542909654,NULL,USER,ACTIVE,NULL
+eunyeonggim@example.org,경상남도 청주시 서원구 압구정길,467 (시우최마을),82867,2024-08-03 20:57:14,세원,권,$2a$10$IRmrI8VimBvyuC7BHfhQA9,0647971374,NULL,USER,ACTIVE,NULL
+hyeonjun41@example.org,전라북도 평택시 개포1길,498,36978,2024-03-17 14:01:34,윤미,유,$2a$10$f3lVQRvpLnnACml1x8kVmU,0185686464,NULL,USER,ACTIVE,NULL
+jinhogim@example.com,세종특별자치시 용산구 논현97가 211 (영일오박면),\N,48659,2023-11-26 13:10:02,서저,이,$2a$10$mE0ct6Xk2lABaRsXO8V2zd,0525609891,NULL,USER,ACTIVE,NULL
+seongjin86@example.org,광주광역시 서구 개포길,828 (현숙장마을),87184,2024-03-24 15:05:00,슨미,박,$2a$10$VZTeqxKf4dykf6IdI5rwit,0446906200,NULL,USER,ACTIVE,NULL
+gimmisug@example.org,인천광역시 서구 반포대로,608,36748,2025-03-25 04:18:16,윤비,조,$2a$10$9PG8N1hdLuQ2BtGW6tzGyO,0555059142,NULL,USER,ACTIVE,NULL
+rcoe@example.org,충청남도 광주시 개포20길,909 (하윤하이읍),94340,2023-08-31 09:00:36,미연,김,$2a$10$5O7G30Sh62IXGvKEf0zEe0,0539805867,NULL,USER,ACTIVE,NULL
+eunseoyun@example.net,전라남도 남양주시 개포가 377,\N,29568,2024-10-03 17:50:59,지은,곽,$2a$10$v6I1oMSD6nMIKTvaY3FUKy,0334166855,NULL,USER,ACTIVE,NULL
+migyeongjang@example.net,대전광역시 성동구 서초대00가 지하38,\N,43284,2023-12-28 00:46:38,의연,설,$2a$10$MP1kSnxN0WdqC9uBXf1cZa,0322774324,NULL,USER,ACTIVE,NULL
+jeongsun51@example.net,경상북도 양평군 삼성530가 지하269 (상호김리),\N,22102,2025-04-01 09:54:10,미리,구,$2a$10$2IRoz68BTtHZBOXQBKvi6Y,0546785708,NULL,USER,ACTIVE,NULL
+sumin29@example.com,충청북도 철원군 석촌호수길,379,72087,2023-07-02 22:24:30,소연,박,$2a$10$1OqJmZHlA6lYwrpas1jpvr,0448870283,NULL,USER,ACTIVE,NULL
+myeongja18@example.com,강원도 포천시 영동대57거리 604,\N,65890,2023-10-20 11:20:29,재하,임,$2a$10$n4VKj1wU0ngBTu8fURIULt,0555074931,NULL,USER,WITHDRAWN,2025-01-27 10:49:43
+kan@example.org,대구광역시 성북구 영동대거리 827-33 (미영이마을),\N,56927,2023-10-29 19:15:22,영리,이,$2a$10$9DRtrqm8JC3i0HBnBCopHB,0118528586,NULL,USER,ACTIVE,NULL
+bbag@example.org,전라북도 화천군 영동대409거리 253 (유진이최리),\N,78950,2025-02-05 05:49:23,미주,임,$2a$10$iiOQNrM1bh2dVvv3ZD3X3G,0636170601,NULL,USER,ACTIVE,NULL
+ubaeg@example.net,경상남도 춘천시 강남대9거리 251,\N,31059,2023-10-19 21:14:29,혀시,김,$2a$10$nOj1juACgocu14zheaO2c6,0446073189,NULL,USER,ACTIVE,NULL
+gimsunja@example.net,인천광역시 구로,구 양재천08길 504,81441,2025-04-27 13:30:36,가은,박,$2a$10$Wc1wx1FugpZyatm54rSVjK,0525132587,NULL,USER,ACTIVE,NULL
+gimminji@example.org,대전광역시 강남구 백제고분길,669-17 (미숙허김마을),05991,2023-08-19 21:59:02,호몬,이,$2a$10$3p0fRXd3NTP2bgAe8HTNMo,07027817521,NULL,USER,ACTIVE,NULL
+coeyeongceol@example.net,부산광역시 금천구 영동대768로,715-99,42285,2025-02-26 13:50:15,이란,김,$2a$10$eF9bhMG88Y6E5jOP5L70Yl,0415471357,NULL,USER,ACTIVE,NULL
+hanhyeonu@example.net,경기도 이천시 도산대4거리 248 (정순김권마을),\N,69980,2024-04-28 19:42:07,시하,이,$2a$10$FylbUPtsvf8Y6jq1AQ7nbV,0555937899,NULL,USER,ACTIVE,NULL
+hson@example.net,전라남도 부천시 도산대가 346-82 (영철김황읍),\N,77148,2024-04-18 18:53:48,수비,김,$2a$10$q7YW3k5ibFIP7lCx9H23DK,01066116721,NULL,USER,ACTIVE,NULL
+xgim@example.com,전라북도 과천시 도산대528가 601 (지연하류리),\N,34260,2023-09-03 14:25:01,지서,장,$2a$10$Qw4N45UmUc83vMKghXElh5,0204834488,NULL,USER,ACTIVE,NULL
+minjungim@example.org,경기도 고양시 일산동구 오금길,770-96,85729,2024-08-21 09:27:27,희운,이,$2a$10$mCWffzQbi50PEVaAEWHuX2,0449179748,NULL,USER,ACTIVE,NULL
+siu30@example.org,제주특별자치도 홍천군 오금가 681-25 (서현장나읍),\N,85002,2025-04-26 16:55:55,태주,국,$2a$10$826WX1MGpuADq2kj9I5kmy,0439769442,NULL,USER,ACTIVE,NULL
+cgim@example.org,서울특별시 북구 서초중앙6로,11,33370,2024-06-28 15:18:08,재재,이,$2a$10$P3vJa326Ki4Y0lBdKdQ8Vl,0194978444,NULL,USER,ACTIVE,NULL
+rbae@example.net,전라남도 양양군 삼성길,406-69 (수빈이동),67070,2023-07-26 17:34:22,윤조,김,$2a$10$T3F5Rul60K5gL2LkxDF0jl,07098817182,NULL,USER,ACTIVE,NULL
+vbag@example.org,대전광역시 남구 언주로,233 (현숙박면),00701,2023-07-08 02:29:43,연은,이,$2a$10$0UhF26RJ5YkM8NbiOvTGU2,0271638862,NULL,USER,ACTIVE,NULL
+jeongjunyeong@example.net,인천광역시 양천구 오금로,165 (영희박배면),96912,2025-04-07 16:11:39,찬서,권,$2a$10$AW2qWTlCkvk1QAeHmi3frm,0434163897,NULL,USER,ACTIVE,NULL
+yeongjao@example.com,울산광역시 강서구 잠실길,727-40 (경희류면),82165,2024-07-15 01:29:33,성시,김,$2a$10$ic4jvbNo23y3Du3UrOtAJQ,0193622393,NULL,USER,ACTIVE,NULL
+sanghun12@example.net,서울특별시 금천구 강남대365거리 236 (우진이김동),\N,73180,2024-09-01 14:26:56,미하,이,$2a$10$1kmPExXXe0XNGE5DPA9NS2,07060644237,NULL,USER,ACTIVE,NULL
+jaehyeon60@example.org,제주특별자치도 삼척시 논현가 지하346,\N,00042,2024-07-05 16:46:31,동미,강,$2a$10$LxU2dCrvElZzYxbh4MIDA3,0313942655,NULL,USER,ACTIVE,NULL
+gweoneunjeong@example.net,전라북도 동해시 압구정로,650-19,21678,2023-09-20 08:13:24,상준,김,$2a$10$PLKtolJ42X1ATqnzELjjlY,0636641243,NULL,USER,ACTIVE,NULL
+cyun@example.net,제주특별자치도 음성군 논현702가 187-14 (지현윤읍),\N,65398,2023-09-10 16:22:21,요주,신,$2a$10$N0ZveMe22CUdznIYEL5ATF,07076085412,2025-01-14 16:49:04,USER,ACTIVE,2024-09-05 19:10:23
+yangyeongsu@example.com,서울특별시 노원구 선릉가 660 (경자송김리),\N,05589,2024-09-14 12:24:08,예경,김,$2a$10$GcSK1pHrI4F7doDnmteNtb,0555864855,NULL,USER,ACTIVE,NULL
+kgim@example.net,충청남도 고양시 덕양구 개포08로,701 (성현심면),23409,2024-07-18 13:01:00,소지,김,$2a$10$ugtETLHFEGc3va1gBRLgdR,0413863497,NULL,USER,ACTIVE,NULL
+seoyeon39@example.net,인천광역시 용산구 반포대2로,659,43577,2024-06-10 02:55:16,지연,신,$2a$10$Une3qFdyHX0xPdUEgel1If,0548196591,NULL,USER,ACTIVE,NULL
+wgim@example.com,대구광역시 동작구 오금가 508-89 (경수박면),\N,77129,2023-10-17 08:01:30,상성,이,$2a$10$D7sPYeGtyWBsuznXvsWiCq,0433598341,NULL,USER,ACTIVE,NULL
+gyeonghyi56@example.com,경상북도 천안시 서북구 삼성883가 349,\N,62600,2025-04-03 21:31:37,광영,손,$2a$10$AXUV7FyvQ9IriffyiJ61hU,0314263610,NULL,USER,ACTIVE,NULL
+yeonghyigim@example.com,광주광역시 송파구 언주길,890 (미숙김노읍),49167,2025-05-26 20:13:27,겅하,강,$2a$10$yk49zbuQa0AXesDcKn6VQs,0171739312,NULL,USER,ACTIVE,NULL
+yeongja05@example.org,대전광역시 서초구 석촌호수3로,178 (서윤이문마을),69620,2025-01-15 03:08:10,성하,민,$2a$10$EJzakqOah103gcny71jruF,0647191964,NULL,USER,ACTIVE,NULL
+gcoe@example.com,제주특별자치도 성남시 선릉길,361-72 (도윤박박마을),88149,2024-10-22 02:44:37,주원,심,$2a$10$UokT9O6ZP2h5nUHn4EniLF,0332155103,NULL,USER,ACTIVE,NULL
+dohyeon27@example.net,대전광역시 강서구 봉은사9길,지하616 (현숙안정마을),47913,2024-10-24 03:49:38,하원,조,$2a$10$qNBkYtoKsiIu7f6wrCFhh0,0313315105,NULL,USER,ACTIVE,NULL
+qgim@example.org,제주특별자치도 부여군 서초중앙5거리 889 (지민장이마을),\N,93301,2025-04-23 15:59:40,미지,조,$2a$10$fy7gU4ltvJMB7Kytyh1P2z,0199948244,NULL,USER,ACTIVE,NULL
+jeonsanghun@example.com,광주광역시 마포구 학동거리 491-26,\N,28235,2023-07-15 14:20:57,유연,송,$2a$10$hBOJZkbgQY5rZVu6eW4Qdn,0437526742,NULL,USER,ACTIVE,NULL
+cgim@example.com,대구광역시 서대문구 석촌호수639길,674,55197,2024-12-11 22:48:31,미석,신,$2a$10$TchGpIzUpZtT861pRdO08m,0612411808,NULL,USER,ACTIVE,NULL
+caeweon69@example.com,경기도 평창군 논현9거리 16,\N,45683,2024-02-03 16:51:33,혀덩,김,$2a$10$B7ulVGXyCLMTbYMwyzz5Do,0528996876,NULL,USER,ACTIVE,NULL
+gimcunja@example.com,세종특별자치시 성동구 백제고분로,674,71222,2024-03-21 19:24:52,지준,김,$2a$10$rI2abXEg6D9RfFaT2UScKY,0631624807,NULL,USER,ACTIVE,NULL
+seonghoi@example.net,전라남도 용인시 기흥구 선릉가 지하776,\N,13911,2024-10-08 03:06:04,예나,황,$2a$10$50BVrbzG61MEs5TYi0jV06,0434597366,NULL,USER,ACTIVE,NULL
+yeweon38@example.net,부산광역시 관악구 학동로,787 (숙자김읍),55454,2024-08-22 22:24:21,미연,신,$2a$10$3IADVDX47neFPfz1aGFxnT,0550656691,NULL,USER,ACTIVE,NULL
+yunjongsu@example.org,제주특별자치도 아산시 석촌호수8길,393-17,67436,2024-12-05 11:02:09,지주,박,$2a$10$i8f4aQrjPzaeJRqrdzJJb0,07096210190,NULL,USER,ACTIVE,NULL
+doyuncoe@example.org,제주특별자치도 용인시 백제고분가 484-96,\N,42741,2024-01-30 07:34:19,미라,안,$2a$10$Go1IQTXpP8GdEeM5IY2tOo,0522687989,NULL,USER,ACTIVE,NULL
+ieunju@example.com,충청남도 음성군 가락9로,353-9,02505,2024-09-14 00:33:56,호권,이,$2a$10$nGOQkHVH6WTnKers03V6kv,0335779479,NULL,USER,ACTIVE,NULL
+yeeunan@example.org,충청남도 청주시 청원구 삼성길,737 (경자김면),81331,2025-04-08 12:00:01,자리,이,$2a$10$yKRhbSyzW0VjtleTx2KZpB,0322814648,NULL,USER,ACTIVE,NULL
+gimsangceol@example.org,경상북도 용인시 강남대가 595,\N,65228,2024-09-02 15:48:29,중하,김,$2a$10$PTHp2QAg3yWpVDJKiBkrCM,0423665137,NULL,USER,ACTIVE,NULL
+sunogbag@example.com,대전광역시 구로,구 가락81거리 516,88165,2024-11-20 23:10:04,동석,박,$2a$10$4BStzzIa9U6XKGJinBaWW8,0411635314,NULL,USER,ACTIVE,NULL
+yangseonghyeon@example.com,대전광역시 성동구 압구정가 736-15,\N,44372,2024-05-23 06:07:33,경하,홍,$2a$10$pfQhIvv3nKW9NJe4x0CIyl,0619097834,NULL,USER,ACTIVE,NULL
+cunja97@example.com,전라남도 증평군 오금길,지하195 (성훈윤한마을),30486,2024-03-23 07:16:11,준미,김,$2a$10$M1P3RVXg71aWpCOWCdmSTO,0334216773,NULL,USER,ACTIVE,NULL
+jungsugim@example.org,강원도 성남시 수정구 석촌호수9거리 22 (영숙김김동),\N,20942,2023-07-08 20:12:47,지주,김,$2a$10$s4QjBahrytQGosjbT4j3PO,0330118153,NULL,USER,ACTIVE,NULL
+ijihyeon@example.org,경기도 안산시 테헤란87거리 717 (순옥이읍),\N,98807,2024-06-04 13:19:10,지유,박,$2a$10$2VnOYqR7z5pubFzCJqozaD,01066993385,NULL,USER,ACTIVE,NULL
+nojeongnam@example.net,세종특별자치시 북구 백제고분거리 821-52 (수빈심마을),\N,69633,2025-03-26 14:33:49,영운,윤,$2a$10$Tuo9spqavy9f8Pdko3wBrU,0529611611,NULL,USER,ACTIVE,NULL
+jeongsun10@example.org,세종특별자치시 관악구 논현09가 630,\N,80594,2024-01-24 02:56:49,호역,지,$2a$10$ai9T9HTIjtwRUbe3eMsPtE,0426600135,NULL,USER,ACTIVE,NULL
+yeongho92@example.com,제주특별자치도 강릉시 강남대가 334 (민준이읍),\N,00224,2024-11-06 23:10:35,상석,박,$2a$10$B40lRCTo19J4fgw7X9OJBB,0439852952,NULL,USER,ACTIVE,NULL
+byeongceolim@example.org,인천광역시 종로,구 서초중앙로 지하310,56186,2023-10-19 14:53:52,봉미,조,$2a$10$gRZ8DNj4SUK87rwvj4eDwU,0620318456,NULL,USER,ACTIVE,NULL
+coejungsu@example.net,강원도 고양시 석촌호수6길,411 (민수윤윤면),58234,2025-06-05 20:13:40,하라,송,$2a$10$KvZ95a1VC9eI2kdEAAEViU,0429347319,NULL,USER,ACTIVE,NULL
+jeonghun87@example.org,부산광역시 광진구 양재천509길,217-46,36900,2024-11-16 08:59:29,주윤,염,$2a$10$7DUzQL7T6087dDkiZMdONI,01007463911,NULL,USER,ACTIVE,NULL
+lbag@example.com,충청북도 계룡시 봉은사0가 334,\N,98286,2024-08-01 04:35:03,유윤,홍,$2a$10$q7jgnq7N59CdeVn5Tg6A6Y,0182141531,NULL,USER,ACTIVE,NULL
+areumgim@example.org,전라남도 안산시 단원구 역삼3길,63 (현주박동),47084,2024-05-13 17:21:41,수원,김,$2a$10$ZLQtRz6dc3zlNWWzl7MATq,0249670230,NULL,USER,WITHDRAWN,2025-05-20 10:53:04
+sujingim@example.com,대구광역시 광진구 테헤란1거리 652,\N,35617,2024-11-24 14:16:07,서하,정,$2a$10$190p5w9JwPC2Vu8BxRUaJp,0442568181,NULL,USER,ACTIVE,NULL
+yeongil76@example.org,경상남도 청주시 청원구 가락5가 87-8,\N,50070,2025-05-02 22:25:09,희미,우,$2a$10$4uFC7KcwsMrBaWdKAyWMVw,0328486683,NULL,USER,ACTIVE,NULL
+rgim@example.com,제주특별자치도 예산군 오금8로,288,99856,2024-11-19 07:11:31,미하,서,$2a$10$np2TBPxsS2vqJl53kmcUy3,0173279766,NULL,USER,ACTIVE,NULL
+kgim@example.org,제주특별자치도 평택시 강남대거리 50-56,\N,22601,2024-03-21 08:10:12,지균,장,$2a$10$ADJqg9EBEZGUBAUZN4jOd8,0322609633,NULL,USER,ACTIVE,NULL
+jeongsig72@example.com,충청북도 증평군 서초중앙238가 519 (민지차동),\N,26058,2023-07-15 14:03:39,지지,심,$2a$10$auCkptYf48RzYqqi5RJsVP,0632542127,NULL,USER,ACTIVE,NULL
+baesunog@example.net,대구광역시 도봉구 압구정로,423-5 (혜진김권동),07688,2024-11-27 03:28:58,준하,김,$2a$10$Cqwp4uVyy1ZoXwt03eGNSB,0433220969,NULL,USER,ACTIVE,NULL
+minseo84@example.net,서울특별시 송파구 석촌호수거리 653,\N,97888,2025-05-09 11:00:25,가하,신,$2a$10$s5uAjtUrvMF3PTKPQvE5aG,0647531438,NULL,USER,ACTIVE,NULL
+gimgwangsu@example.com,세종특별자치시 서구 서초중앙가 126,\N,68873,2024-03-16 04:55:09,지영,김,$2a$10$Mp7mpq43jofG0hsouHP7ZP,0647416514,NULL,USER,ACTIVE,NULL
+jeongsug60@example.com,서울특별시 영등포구 양재천로,352,64289,2025-02-07 06:41:07,지경,허,$2a$10$tTN2PbjQHBPNGLIkAZIWaY,0547482703,NULL,USER,ACTIVE,NULL
+jiabag@example.org,경기도 음성군 논현94로,425-69,90799,2023-12-20 14:14:58,영하,김,$2a$10$75RM094S5ckSLTheNu51NZ,01094504627,NULL,USER,ACTIVE,NULL
+yeongsiggim@example.com,전라북도 천안시 동남구 학동68거리 322-55,\N,90466,2024-10-28 15:04:13,저리,김,$2a$10$7uPHuZupjEy1zmrz4viOPy,0269014332,NULL,USER,ACTIVE,NULL
+sujinbag@example.net,울산광역시 강동구 영동대9거리 662 (경숙오김면),\N,82988,2024-02-20 01:08:01,은지,국,$2a$10$vp0FOhyftg1Z5MxpLODx1T,0197476162,NULL,USER,WITHDRAWN,2025-06-14 03:55:41
+sunja96@example.org,광주광역시 강북구 도산대2길,708,68237,2023-10-28 14:54:36,윤은,윤,$2a$10$2aSzeBamSewDtKShLbkr5E,0521997428,NULL,USER,ACTIVE,NULL
+junhocoe@example.net,경기도 부천시 오정구 봉은사584길,398 (주원김최리),39717,2024-07-18 08:55:04,종하,김,$2a$10$mkDoqhgt6wt3Z2bfZegFHX,0422709617,NULL,USER,ACTIVE,NULL
+yeongjai@example.net,경기도 철원군 개포길,5-53 (도현이읍),94681,2023-10-10 18:22:35,수우,임,$2a$10$DQqSbxz3b1z1v4WdGHSM1n,0442472198,NULL,USER,ACTIVE,NULL
+myeongsugryu@example.org,인천광역시 은평구 압구정가 274-26 (순자양면),\N,29439,2023-09-22 06:23:40,도이,박,$2a$10$YZ4fu2AA9VU6BAebOymB1t,0416652528,NULL,USER,ACTIVE,NULL
+mijeonggim@example.org,세종특별자치시 종로,구 개포8거리 지하221 (영환최리),31767,2025-04-11 14:42:42,예지,주,$2a$10$9Ng93FStk0TmmL2OwvIUjm,07087773561,NULL,USER,ACTIVE,NULL
+yejungang@example.org,경상남도 단양군 논현거리 918-76 (도윤한읍),\N,36264,2024-03-19 00:57:05,성수,황,$2a$10$wNYxBw26wgI32fbw03GSq4,01003316550,NULL,USER,ACTIVE,NULL
+munyeongja@example.net,강원도 충주시 압구정4로,803-22 (시우이박리),99688,2024-05-27 00:55:11,궁지,나,$2a$10$3aUtY8bWqoYEScjKLx4NPq,07049953292,NULL,USER,ACTIVE,NULL
+iminseo@example.net,전라북도 수원시 팔달구 가락길,915 (영진최박리),95957,2024-12-22 12:17:00,희운,송,$2a$10$h2Kofg3swr1es93wsYsXc9,0558376365,NULL,USER,ACTIVE,NULL
+gimbyeongceol@example.com,울산광역시 강서구 서초중앙3거리 274-82,\N,41171,2025-06-02 22:23:43,상하,김,$2a$10$rWBMBNjgbXC5ZvyI4ly7M5,0333247176,NULL,USER,ACTIVE,NULL
+yeonghobag@example.org,울산광역시 서대문구 테헤란거리 796 (아름김면),\N,80594,2024-08-19 00:21:44,성원,최,$2a$10$0L3QawkZgXt25tnj3xbGG9,0322681125,NULL,USER,ACTIVE,NULL
+pi@example.org,울산광역시 종로,구 석촌호수가 582,45138,2024-10-07 22:15:57,승경,도,$2a$10$HlejIHEfdcOZzYODRJ245d,0311050659,NULL,USER,ACTIVE,NULL
+ijihyeon@example.net,부산광역시 중구 도산대로,56-19,87446,2024-06-24 09:50:40,재유,하,$2a$10$Xd0HYONqq3TXDIPIt6FFja,0612628272,NULL,USER,ACTIVE,NULL

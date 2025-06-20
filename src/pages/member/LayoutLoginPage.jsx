@@ -15,7 +15,7 @@ const LayoutLoginPage = () => {
   useEffect(() => {
     if (isLoggedIn) {
       if (user?.role === "ADMIN") {
-        navigate("/admin", { replace: true });
+        navigate("/admin/stats", { replace: true });
       } else {
         navigate("/", { replace: true });
       }
