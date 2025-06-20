@@ -4,6 +4,7 @@ import { getOrderInfo, patchOrdersWithState, patchUpdateOrdersWithState, putCanc
 import { getMyInfo } from "../../api/memberApi";
 import { getReviewsByMember } from "../../api/reviewApi";
 import WriteReview from "../review/WriteReview";
+import { useSelector } from "react-redux";
 
 const statusMapping = {
   PREPARE: "상품준비중",
@@ -14,7 +15,7 @@ const statusMapping = {
 };
 
 const OrderDetailComp = () => {
-  const [user, setUser] = useState(null);
+  const user = useSelector(state => state.login.user);
   const [order, setOrder] = useState();
   const [reviewedItemIds, setReviewedItemIds] = useState([]);
   const { id } = useParams();
@@ -23,13 +24,8 @@ const OrderDetailComp = () => {
   const refreshOrder = async () => {
     if (!id) return;
 
-    const myInfoRes = await getMyInfo();
     const myOrderRes = await getOrderInfo(id);
     const myReviewRes = await getReviewsByMember();
-    if (!myInfoRes) {
-      alert('내 정보 조회 실패')
-      return;
-    }
     if (!myOrderRes) {
       alert('내 주문 조회 실패')
       return;
@@ -38,7 +34,6 @@ const OrderDetailComp = () => {
       alert('내 리뷰 조회 실패')
       return;
     }
-    setUser(myInfoRes);
     setOrder(myOrderRes);
     setReviewedItemIds(myReviewRes.map(r => String(r.productId)));
   }
