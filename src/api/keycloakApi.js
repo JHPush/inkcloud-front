@@ -38,7 +38,7 @@ export const refreshToken = async (refreshToken) => {
   params.append('grant_type', 'refresh_token');
   params.append('client_id', KEYCLOAK_CLIENT_ID);
   params.append('refresh_token', refreshToken);
- // params.append('client_secret', "Uj7Q4wHSLsryIbQNREcSvrFjf4ASy2b5");
+  //params.append('client_secret', "Uj7Q4wHSLsryIbQNREcSvrFjf4ASy2b5");
 
   try {
     const response = await axios.post(KEYCLOAK_TOKEN_URL, params, {

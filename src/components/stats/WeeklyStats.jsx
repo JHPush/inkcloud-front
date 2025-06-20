@@ -269,7 +269,7 @@ const WeeklyStats = () => {
         className="border rounded px-2 py-1"
         max={getWeekString(currentWeekEnd)}
       />
-      <span className="text-xs text-gray-500">(선택한 주 기준 이전 10주 구간 표시)</span>
+      <span className="text-xs text-gray-500">(이전 10주 구간 표시)</span>
     </>
   );
 
