@@ -13,9 +13,9 @@ const OrderDetailPage = () => {
             <BasicLayout>
                 <OrderDetailComp />
             </BasicLayout>) : 
-            (<AdminLayout>
+            (
                 <OrderDetailComp />
-            </AdminLayout>)}
+            )}
         </>
     )
 }

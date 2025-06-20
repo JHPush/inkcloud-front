@@ -107,6 +107,10 @@ const root = createBrowserRouter([
       {
         path: "categories",
         element: <Suspense fallback={Loading}><AdminCategoryPage /></Suspense>
+      },
+      {
+        path: "order/member/:id",
+        element: <Suspense fallback={Loading}><OrderDetailPage /></Suspense>
       }
       // ...필요시 추가
     ]

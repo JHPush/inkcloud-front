@@ -22,6 +22,7 @@ const OrderDetailComp = () => {
   const [stateType, setStateType] = useState("PREPARE");
 
   const refreshOrder = async () => {
+    console.log('id : ', id)
     if (!id) return;
 
     const myOrderRes = await getOrderInfo(id);
