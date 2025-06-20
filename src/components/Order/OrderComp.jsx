@@ -338,7 +338,7 @@ const OrderComp = () => {
 
                                     <div key={item.id} className="flex items-center border-b pb-4">
                                         <img
-                                            src={item.image}
+                                            src={item.thumbnailUrl}
                                             alt={item.name} className="w-24 h-32 bg-gray-200 rounded-lg" />
                                         <div className="ml-4 flex-1">
                                             <p className="text-base font-medium text-gray-700">{item.name}</p>
