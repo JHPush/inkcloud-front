@@ -35,7 +35,8 @@ const OrderCompleteComp = () => {
         }
         try {
             const res = await getOrderInfo(orderId);
-            if (!res.paymentDto?.at) {
+            console.log('res222 : ', res)
+            if (!res.paymentDto.at) {
                 retryCount.current += 1;
                 console.log('결제 정보 미완료, 재시도:', retryCount.current);
 
