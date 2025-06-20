@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 const OrderDetailPage = () => {
     const user = useSelector(state => state.login.user);
+    console.log('detail user : ', user)
 
     return (
         <>
