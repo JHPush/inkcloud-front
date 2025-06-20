@@ -7,15 +7,32 @@ const OrderCompleteComp = () => {
     const navi = useNavigate();
     const [order, setOrder] = useState(null);
 
+    let retryCount = 0;
+    const MAX_RETRY = 10;
+
     useEffect(() => {
         const data = loc.state;
-        getOrderInfo(data.orderId).then((res) => {
-            setOrder(res)
-            console.log("res :: ", res);
-        }).catch(e => {
-            console.error('에러 : ', e)
-        });
+        if (data?.orderId)
+            getOrderComplete(data.orderId);
+        else
+            console.error('주문 정보 없음')
+
     }, [])
+
+    const getOrderComplete = async (orderId) => {
+        if (retryCount >= MAX_RETRY) {
+            console.error('최대 재시도 횟수 초과');
+            return;
+        }
+        const res = await getOrderInfo(orderId);
+        if (res.paymentDto.price === 0 && retryCount < MAX_RETRY) {
+            retryCount++;
+            console.log('결제 정보 미완료, 재시도:', retryCount);
+            setTimeout(() => getOrderComplete(orderId), 500);
+            return;
+        }
+        setOrder(res);
+    };
 
     const handleToHome = () => {
         navi('/', { replace: true })
@@ -57,13 +74,13 @@ const OrderCompleteComp = () => {
                             <h2 className="text-xl font-bold text-gray-900 mb-6 pb-4 border-b">
                                 구매한 상품 ({order.quantity}개)
                             </h2>
-                            
+
                             <div className="space-y-6">
                                 {order.orderItems.map((item, idx) => (
                                     <div key={idx} className="flex items-center p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                        <img 
-                                            src={item.thumbnailUrl} 
-                                            alt={item.name} 
+                                        <img
+                                            src={item.thumbnailUrl}
+                                            alt={item.name}
                                             className="w-20 h-24 object-cover rounded-lg shadow-sm"
                                         />
                                         <div className="ml-6 flex-1">
@@ -85,7 +102,7 @@ const OrderCompleteComp = () => {
                         {/* Shipping Info */}
                         <div className="bg-white rounded-xl shadow-sm border p-8">
                             <h2 className="text-xl font-bold text-gray-900 mb-6 pb-4 border-b">배송 정보</h2>
-                            
+
                             <div className="grid grid-cols-2 gap-8">
                                 <div className="space-y-4">
                                     <div>
@@ -157,7 +174,7 @@ const OrderCompleteComp = () => {
                         </div>
 
                         {/* Home Button */}
-                        <button 
+                        <button
                             onClick={handleToHome}
                             className="w-full bg-blue-600 text-white px-6 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-colors shadow-sm"
                         >
