@@ -11,7 +11,7 @@ const ProductFilterSidebar = ({ searchFields, setSearchFields, categoryIds, setC
     <h2 className="text-xl font-semibold mb-4">검색 조건</h2>
     <div className="mb-6">
       <h3 className="font-medium">검색 대상</h3>
-      {["name", "author", "publisher", "isbn"].map((field) => (
+      {["도서명", "저자", "출판사", "isbn"].map((field) => (
         <label key={field} className="block">
           <input
             type="checkbox"
