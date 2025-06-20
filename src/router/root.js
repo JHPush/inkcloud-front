@@ -109,7 +109,7 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><AdminCategoryPage /></Suspense>
       },
       {
-        path: "/order/member/:id",
+        path: "order/member/:id",
         element: <Suspense fallback={Loading}><OrderDetailPage /></Suspense>
       }
       // ...필요시 추가

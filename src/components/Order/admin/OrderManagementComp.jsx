@@ -429,7 +429,7 @@ const OrderManagementComp = () => {
                   </td>}
                   <td className="p-3 text-center">
                     <Link
-                      to={`/order/member/${order.id}`}
+                      to={`/order/member/:id/${order.id}`}
                       className="text-blue-500 cursor-pointer hover:underline"
                     >
                       보기
