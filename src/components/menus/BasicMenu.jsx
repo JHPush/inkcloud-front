@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUtil } from "../../utils/logoutUtils";
 import { useState } from "react";
@@ -10,9 +10,11 @@ const BasicMenu = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.login.isLoggedIn);
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     logoutUtil(dispatch)
+    navigate('/');
   };
 
   return (
