@@ -89,93 +89,94 @@ const GetReviewReports = () => {
   };
   
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">리뷰 신고 내역</h2>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <h2 className="text-2xl font-semibold mb-6">리뷰 신고 내역</h2>
 
       {/* 필터/검색 */}
-      <div className="flex flex-wrap gap-3 mb-4 justify-center">
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="border rounded px-3 py-1 text-sm"
-        >
-          {REPORT_TYPE_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          className="border rounded px-3 py-1 text-sm w-64"
-          placeholder="신고 사유, 작성자 이메일로 검색"
-        />
-        <input
-          type="date"
-          value={from ? dayjs(from).format("YYYY-MM-DD") : ""}
-          max={to ? dayjs(to).format("YYYY-MM-DD") : undefined}
-          onChange={(e) => {
-            const d = dayjs(e.target.value).startOf("day");
-            setFrom(d.format("YYYY-MM-DDTHH:mm:ss"));
-          }}
-          className="border rounded px-2 py-1"
-        />
-        <span>~</span>
-        <input
-          type="date"
-          value={to ? dayjs(to).format("YYYY-MM-DD") : ""}
-          min={from ? dayjs(from).format("YYYY-MM-DD") : undefined}
-          onChange={(e) => {
-            const d = dayjs(e.target.value).endOf("day");
-            setTo(d.format("YYYY-MM-DDTHH:mm:ss"));
-          }}
-          className="border rounded px-2 py-1"
-        />
-        <button
-          onClick={handleSearch}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-1.5 rounded-full shadow transition text-sm"
-        >
-          검색
-        </button>
+      <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="flex flex-wrap gap-3 justify-center items-center">
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="border rounded px-3 py-2 text-sm"
+          >
+            {REPORT_TYPE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="border rounded px-3 py-2 text-sm w-64"
+            placeholder="신고 사유, 작성자 이메일로 검색"
+          />
+          <input
+            type="date"
+            value={from ? dayjs(from).format("YYYY-MM-DD") : ""}
+            max={to ? dayjs(to).format("YYYY-MM-DD") : undefined}
+            onChange={(e) => {
+              const d = dayjs(e.target.value).startOf("day");
+              setFrom(d.format("YYYY-MM-DDTHH:mm:ss"));
+            }}
+            className="border rounded px-2 py-2 text-sm"
+          />
+          <span>~</span>
+          <input
+            type="date"
+            value={to ? dayjs(to).format("YYYY-MM-DD") : ""}
+            min={from ? dayjs(from).format("YYYY-MM-DD") : undefined}
+            onChange={(e) => {
+              const d = dayjs(e.target.value).endOf("day");
+              setTo(d.format("YYYY-MM-DDTHH:mm:ss"));
+            }}
+            className="border rounded px-2 py-2 text-sm"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-md shadow transition text-sm"
+          >
+            검색
+          </button>
+        </div>
       </div>
 
       {/* 신고 삭제 버튼 */}
       <div className="mb-4 flex justify-start">
         <button
           onClick={handleDeleteReports}
-          className="px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition text-sm font-medium"
+          className="px-2 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-xs hover:bg-gray-100 transition text-sm font-medium"
           style={{ minWidth: 80, textAlign: "center" }}
-        >
-          선택 삭제
+        >선택 삭제
         </button>
       </div>
 
       {/* 신고 리스트 테이블 */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border">
+      <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <table className="min-w-full text-sm">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border px-4 py-2 w-12">
+              <th className="p-3 text-center">
                 <input
                   type="checkbox"
                   checked={checked.length === reports.length && reports.length > 0}
                   onChange={handleAllCheck}
                 />
               </th>
-              <th className="border px-2 py-1">ID</th>
-              <th className="border px-2 py-1">리뷰ID</th>
-              <th className="border px-2 py-1">신고유형</th>
-              <th className="border px-2 py-1">신고사유</th>
-              <th className="border px-2 py-1">신고자</th>
-              <th className="border px-2 py-1">신고일시</th>
+              <th className="p-3 text-center font-medium text-black">번호</th>
+              {/* <th className="p-3 text-center font-medium text-black">리뷰ID</th> */}
+              <th className="p-3 text-center font-medium text-black">신고유형</th>
+              <th className="p-3 text-center font-medium text-black">신고사유</th>
+              <th className="p-3 text-center font-medium text-black">신고자</th>
+              <th className="p-3 text-center font-medium text-black">신고일시</th>
             </tr>
           </thead>
           <tbody>
             {reports.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-4 text-gray-400">
+                <td colSpan={8} className="text-center py-8 text-gray-400">
                   신고 내역이 없습니다.
                 </td>
               </tr>
@@ -189,29 +190,29 @@ const GetReviewReports = () => {
                 return (
                   <tr
                     key={report.id}
-                    className="cursor-pointer hover:bg-blue-50 transition"
+                    className="cursor-pointer hover:bg-gray-50 transition"
                     onClick={() => navigate(`/admin/reviews/${report.reviewId}`)}
                     title="리뷰 상세보기"
                   >
-                    <td className="border px-4 py-2" onClick={e => e.stopPropagation()}>
+                    <td className="p-3 text-center" onClick={e => e.stopPropagation()}>
                       <input
                         type="checkbox"
                         checked={checked.includes(report.id)}
                         onChange={() => handleCheck(report.id)}
                       />
                     </td>
-                    <td className="border px-2 py-1">{report.id}</td>
-                    <td className="border px-2 py-1">{report.reviewId}</td>
-                    <td className="border px-2 py-1">
+                    <td className="p-3 text-black text-center">{report.id}</td>
+                    {/* <td className="p-3 text-black text-center">{report.reviewId}</td> */}
+                    <td className="p-3 text-black text-center">
                       {
                         REPORT_TYPE_OPTIONS.find(
                           (opt) => opt.value === report.type
                         )?.label || report.type
                       }
                     </td>
-                    <td className="border px-2 py-1">{report.reason}</td>
-                    <td className="border px-2 py-1">{report.reporterEmail}</td>
-                    <td className="border px-2 py-1">{kstTime}</td>
+                    <td className="p-3 text-black text-center">{report.reason}</td>
+                    <td className="p-3 text-black text-center">{report.reporterEmail}</td>
+                    <td className="p-3 text-black text-center">{kstTime}</td>
                   </tr>
                 );
               })

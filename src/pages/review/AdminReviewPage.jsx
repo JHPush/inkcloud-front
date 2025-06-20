@@ -47,7 +47,6 @@ const AdminReviewPage = () => {
       minRating: (params.minRating ?? minRating) || null,
       maxRating: (params.maxRating ?? maxRating) || null,
     });
-    console.log(data)
     setReviews(data.content || []);
     setTotalPages(data.totalPages || 1);
   };
@@ -135,46 +134,63 @@ const AdminReviewPage = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex items-center gap-3 mb-4">
-        <h2 className="text-xl font-bold">리뷰 관리</h2>
+        <h2 className="text-2xl font-semibold">리뷰 관리</h2>
         <Link
           to="/admin/reviews/reports"
-          className="px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold text-sm  transition"
+          className="px-3 py-1 rounded bg-red-100 text-red-700 font-semibold text-sm transition"
         >
-          신고 관리
+          신고내역
         </Link>
       </div>
       {/* 검색창 */}
-      <div className="mb-6 flex flex-col items-center justify-center">
-        <div className="w-full max-w-2xl mx-auto relative">
+      <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="flex items-center gap-4">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border border-gray-300 rounded-full px-5 py-2.5 w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base"
+            className="border rounded-md px-3 py-2 flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="책 이름, 내용, 작성자 이메일로 검색"
           />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+          >
+            검색
+          </button>
         </div>
       </div>
 
       {/* 날짜 필터 버튼 */}
       <div className="flex flex-wrap gap-3 mb-4 justify-center">
-        {[
-          { key: "today", label: "오늘" },
-          { key: "yesterday", label: "어제" },
-          { key: "week", label: "최근 7일" },
-          { key: "month", label: "최근 30일" },
+        {[{
+          key: "today",
+          label: "오늘",
+        },
+        {
+          key: "yesterday",
+          label: "어제",
+        },
+        {
+          key: "week",
+          label: "최근 7일",
+        },
+        {
+          key: "month",
+          label: "최근 30일",
+        },
         ].map((btn) => (
           <button
             key={btn.key}
             type="button"
             onClick={() => handleQuickDate(btn.key)}
-            className={`px-4 py-2 rounded-full font-semibold border transition 
+            className={`px-4 py-2 rounded-full font-semibold border text-sm transition 
                 ${
                   quickDate === btn.key
                     ? "bg-blue-600 text-white border-blue-600 shadow"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50"
+                    : "text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 border text-gray-700"
                 }`}
           >
             {btn.label}
@@ -183,17 +199,17 @@ const AdminReviewPage = () => {
         <button
           type="button"
           onClick={() => setShowDetail((v) => !v)}
-          className={`px-4 py-2 rounded-full font-semibold border transition ${
+          className={`px-4 py-2 rounded-full font-semibold border text-sm transition ${
             showDetail
               ? "bg-blue-100 text-blue-700 border-blue-400"
-              : "bg-white text-gray-700 border-gray-300 hover:bg-blue-50"
+              : "text-xs px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 border text-gray-700"
           }`}
         >
           상세 검색
         </button>
       </div>
       {showDetail && (
-        <div className="flex gap-2 items-center mb-4 justify-center">
+        <div className="flex gap-2 items-center mb-4">
           <input
             type="date"
             max={dayjs().tz("Asia/Seoul").format("YYYY-MM-DD")}
@@ -208,7 +224,7 @@ const AdminReviewPage = () => {
               setStartDate(d.format("YYYY-MM-DDTHH:mm:ss"));
               setQuickDate("");
             }}
-            className="border rounded px-2 py-1"
+            className="border rounded px-2 py-1 text-sm"
           />
           <span>~</span>
           <input
@@ -226,7 +242,7 @@ const AdminReviewPage = () => {
               setEndDate(d.format("YYYY-MM-DDTHH:mm:ss"));
               setQuickDate("");
             }}
-            className="border rounded px-2 py-1"
+            className="border rounded px-2 py-1 text-sm"
           />
         </div>
       )}
@@ -237,7 +253,7 @@ const AdminReviewPage = () => {
         <select
           value={minRating}
           onChange={(e) => setMinRating(e.target.value)}
-          className="border rounded px-2 py-1"
+          className="border rounded px-2 py-1 text-sm"
         >
           <option value="">최소</option>
           {[1, 2, 3, 4, 5].map((n) => (
@@ -250,7 +266,7 @@ const AdminReviewPage = () => {
         <select
           value={maxRating}
           onChange={(e) => setMaxRating(e.target.value)}
-          className="border rounded px-2 py-1"
+          className="border rounded px-2 py-1 text-sm"
         >
           <option value="">최대</option>
           {[1, 2, 3, 4, 5].map((n) => (
@@ -265,7 +281,7 @@ const AdminReviewPage = () => {
       <div className="flex justify-center mb-6">
         <button
           onClick={handleSearch}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2 rounded-full shadow transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2 rounded-md shadow transition text-base"
         >
           검색
         </button>
@@ -274,7 +290,7 @@ const AdminReviewPage = () => {
       {isSearched && (
         <button
           onClick={handleBack}
-          className="text-blue-500 hover:underline mt-2"
+          className="text-blue-500 hover:underline mt-2 text-sm"
         >
           전체목록으로 돌아가기
         </button>
@@ -306,7 +322,7 @@ const AdminReviewPage = () => {
             )}
         >
           <span
-            className="px-2 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition text-sm font-medium"
+            className="px-1 py-1 rounded-md border border-gray-300 bg-white text-gray-700 text-xs hover:bg-gray-100 transition text-sm font-medium"
             style={{ minWidth: 80, textAlign: "center" }}
           >
             선택 삭제
@@ -315,32 +331,32 @@ const AdminReviewPage = () => {
       </div>
 
       {/* 리뷰 테이블 */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border">
+      <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="border px-4 py-2 w-16">
+            <tr className="bg-gray-100 border-b">
+              <th className="p-3 text-left">
                 <input
                   type="checkbox"
                   checked={
                     checked.length === reviews.length && reviews.length > 0
                   }
                   onChange={handleAllCheck}
+                  className="rounded"
                 />
               </th>
-              <th className="border px-2 py-1">ID</th>
-              <th className="border px-2 py-1">작성자 이메일</th>
-              <th className="border px-2 py-1">책 이름</th>
-              <th className="border px-2 py-1">평점</th>
-              <th className="border px-2 py-1">내용</th>
-              <th className="border px-2 py-1">작성일(수정일)</th>
-              <th className="border px-2 py-1">좋아요 수</th>
+              <th className="p-3 text-left font-medium text-gray-600">작성자 이메일</th>
+              <th className="p-3 text-left font-medium text-gray-600">책 이름</th>
+              <th className="p-3 text-left font-medium text-gray-600">평점</th>
+              <th className="p-3 text-left font-medium text-gray-600">내용</th>
+              <th className="p-3 text-left font-medium text-gray-600">작성일(수정일)</th>
+              <th className="p-3 text-left font-medium text-gray-600">좋아요 수</th>
             </tr>
           </thead>
           <tbody>
             {reviews.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-4">
+                <td colSpan={8} className="p-8 text-center text-gray-500">
                   {isSearched
                     ? "검색 결과가 없습니다."
                     : "등록된 리뷰가 없습니다."}
@@ -350,29 +366,30 @@ const AdminReviewPage = () => {
               getSortedReviews(reviews, sort).map((review) => (
                 <tr
                   key={review.id}
-                  className="cursor-pointer hover:bg-blue-50 transition"
+                  className="hover:bg-gray-50 transition"
                   onClick={() => navigate(`/admin/reviews/${review.id}`)}
+                  style={{ cursor: "pointer" }}
                 >
-                  <td className="border px-4 py-2" onClick={e => e.stopPropagation()}>
+                  <td className="p-3" onClick={e => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={checked.includes(review.id)}
                       onChange={() => handleCheck(review.id)}
+                      className="rounded"
                     />
                   </td>
-                  <td className="border px-2 py-1">{review.id}</td>
-                  <td className="border px-2 py-1">{review.email}</td>
-                  <td className="border px-2 py-1">{review.productName}</td>
-                  <td className="border px-2 py-1"><StarRating rating={review.rating} /></td>
-                  <td className="border px-2 py-1">{review.comment}</td>
-                  <td className="border px-2 py-1">
+                  <td className="p-3 text-black-700">{review.email}</td>
+                  <td className="p-3 text-black-700">{review.productName}</td>
+                  <td className="p-3 text-black-700"><StarRating rating={review.rating} /></td>
+                  <td className="p-3 text-black-700">{review.comment}</td>
+                  <td className="p-3 text-black-700">
                     {review.updatedAt
                       ? dayjs.utc(review.updatedAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
                       : review.createdAt
                       ? dayjs.utc(review.createdAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
                       : ""}
                   </td>
-                  <td className="border px-2 py-1">{review.likeCount ?? 0}</td>
+                  <td className="p-3 text-black-700">{review.likeCount ?? 0}</td>
                 </tr>
               ))
             )}
@@ -383,6 +400,5 @@ const AdminReviewPage = () => {
     </div>
   );
 };
-
 
 export default AdminReviewPage;

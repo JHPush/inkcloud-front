@@ -7,14 +7,18 @@ import Modal from "react-modal";
 import { ShoppingCart, User, LogOut, BookOpenIcon } from 'lucide-react';
 
 const BasicMenu = () => {
+  const user = useSelector((state) => state.login.user);
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     logoutUtil(dispatch)
     navigate('/');
+  };
+  const moveAdmin = () => {
+    navigate("/admin/stats");
   };
 
   return (
@@ -35,8 +39,16 @@ const BasicMenu = () => {
             
             {/* 사용자 계정 및 아이콘 - 수직 배치로 변경 */}
             <div className="flex flex-col items-end">
-              {/* 상단 로그인/회원가입 */}
               <div className="flex items-center gap-2 mb-1">
+                {/* 관리자페이지 버튼: 로그인 상태 + ADMIN만 노출 */}
+                {isLoggedIn && user?.role === "ADMIN" && (
+                  <button
+                    onClick={moveAdmin}
+                    className="inline-flex items-center px-1 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition-colors duration-200"
+                  >
+                    관리자페이지
+                  </button>
+                )}
                 {isLoggedIn ? (
                   <button 
                     onClick={handleLogout}
