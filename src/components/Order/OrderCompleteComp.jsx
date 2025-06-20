@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getOrderInfo } from "../../api/paymentOrderApi";
 
@@ -7,31 +7,46 @@ const OrderCompleteComp = () => {
     const navi = useNavigate();
     const [order, setOrder] = useState(null);
 
-    let retryCount = 0;
+    const retryCount = useRef(0);
+    const timeoutRef = useRef(null); 
     const MAX_RETRY = 10;
 
     useEffect(() => {
         const data = loc.state;
-        if (data?.orderId)
+        if (data?.orderId) {
             getOrderComplete(data.orderId);
-        else
-            console.error('주문 정보 없음')
+        } else {
+            console.error('주문 정보 없음');
+        }
 
-    }, [])
+        // 언마운트 시 타이머 제거
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+                console.log("타이머 클리어됨");
+            }
+        };
+    }, [loc.state]);
 
     const getOrderComplete = async (orderId) => {
-        if (retryCount >= MAX_RETRY) {
+        if (retryCount.current >= MAX_RETRY) {
             console.error('최대 재시도 횟수 초과');
             return;
         }
-        const res = await getOrderInfo(orderId);
-        if (res.paymentDto.price === 0 && retryCount < MAX_RETRY) {
-            retryCount++;
-            console.log('결제 정보 미완료, 재시도:', retryCount);
-            setTimeout(() => getOrderComplete(orderId), 500);
-            return;
+        try {
+            const res = await getOrderInfo(orderId);
+            if (!res.paymentDto?.at) {
+                retryCount.current += 1;
+                console.log('결제 정보 미완료, 재시도:', retryCount.current);
+
+                timeoutRef.current = setTimeout(() => getOrderComplete(orderId), 500); // 타이머 ID 저장
+                return;
+            }
+            retryCount.current = 0;
+            setOrder(res);
+        } catch (err) {
+            console.error('주문 조회 중 오류:', err);
         }
-        setOrder(res);
     };
 
     const handleToHome = () => {
