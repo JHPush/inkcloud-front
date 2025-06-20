@@ -15,7 +15,7 @@ function scheduleTokenRefresh() {
   const decoded = jwtDecode(token);
   const exp = decoded.exp * 1000; // 만료시각(ms)
   const now = Date.now();
-  const refreshTime = exp - now - 120 * 1000; // 만료 2분전
+  const refreshTime = exp - now - 600 * 1000; // 만료 2분전
 
 
   if (refreshTime > 0) {
