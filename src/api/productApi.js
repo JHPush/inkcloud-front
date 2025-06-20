@@ -44,6 +44,15 @@ export const getProductsByCondition = async ({ category }) => {
   return response.data;
 };
 
+// 상품 검색 (관리자)
+export const fetchAdminProducts = async (params) => {
+  const response = await jwtAxios.get(`${PRODUCT_API_URL}/admin/search`, {
+    params,
+    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
+  });
+  return response.data;
+};
+
 // 상품 등록 (관리자)
 export const createProduct = async (form) => {
   const response = await jwtAxios.post(`${PRODUCT_API_URL}`, form);

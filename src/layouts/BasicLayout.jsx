@@ -19,17 +19,12 @@ const BasicLayout = ({ children }) => {
 
       {/* 메인 콘텐츠 영역 */}
       <div className="container mx-auto py-6 flex-grow">
-        <div className="card bg-base-100 shadow-xl">
+        <div className="card bg-base-100 ">
           <div className="card-body">{children}</div>
         </div>
       </div>
 
-      {/* 푸터 (옵션) */}
-      <footer className="footer footer-center p-4 bg-base-300 text-base-content">
-        <div>
-          <p>Copyright © 2025 - InkCloud</p>
-        </div>
-      </footer>
+
     </div>
   );
 };

@@ -40,7 +40,7 @@ export const getOrdersByMember = async (state, startDate, endDate, sortBy, sortD
     if (sortBy) params.sortBy = sortBy;
     if (sortDir) params.sortDir = sortDir;
 
-    if (page && size) {
+    if (page || size) {
         params.page = page;
         params.size = size;
     }

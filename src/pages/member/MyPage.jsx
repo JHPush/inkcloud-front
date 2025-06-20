@@ -6,6 +6,7 @@ import ShippingList from "../../components/Member/shipping/ShippingList";
 import MemberLayout from "../../layouts/MemberLayout";
 import MemberReviewPage from "../review/MemberReviewPage";
 import { getAccessToken } from "../../utils/cookieUtils";
+import MemberOrdersComp from "../../components/Order/MemberOrdersComp";
 
 const MyPage = () => {
   const [tab, setTab] = useState("info");
@@ -19,7 +20,7 @@ const MyPage = () => {
     const token = getAccessToken();
     if (!token && !alerted.current) {
       alerted.current = true;
-      window.alert("로그인이 필요합니다.");
+      // window.alert("로그인이 필요합니다.");
       setBlocked(true);
       navigate("/login");
     }
@@ -38,6 +39,7 @@ const MyPage = () => {
     <MemberLayout tab={tab} setTab={setTab}>
       {tab === "info" && <MyInfoPage />}
       {tab === "review" && <MemberReviewPage />}
+      {tab === "order" && <MemberOrdersComp />}
       {tab === "address" && <ShippingList />}
       {tab === "withdraw" && <WithdrawMember />}
     </MemberLayout>
