@@ -117,11 +117,11 @@ const GetMemberList = () => {
                     className="rounded"
                   />
                 </th>
-                <th className="p-3 text-left font-medium text-gray-600">이메일</th>
-                <th className="p-3 text-left font-medium text-gray-600">이름</th>
-                <th className="p-3 text-left font-medium text-gray-600">가입일</th>
-                <th className="p-3 text-left font-medium text-gray-600">상태</th>
-                <th className="p-3 text-left font-medium text-gray-600">상세</th>
+                <th className="p-3 text-left font-medium text-black">이메일</th>
+                <th className="p-3 text-left font-medium text-black">이름</th>
+                <th className="p-3 text-left font-medium text-black">가입일</th>
+                <th className="p-3 text-left font-medium text-black">상태</th>
+                <th className="p-3 text-left font-medium text-black">상세</th>
               </tr>
             </thead>
             <tbody>
@@ -144,9 +144,9 @@ const GetMemberList = () => {
                           className="rounded"
                         />
                       </td>
-                      <td className="p-3 text-gray-700">{member.email}</td>
-                      <td className="p-3 text-gray-700">{member.lastName}{member.firstName}</td>
-                      <td className="p-3 text-gray-700">
+                      <td className="p-3 text-black">{member.email}</td>
+                      <td className="p-3 text-black">{member.lastName}{member.firstName}</td>
+                      <td className="p-3 text-black">
                         {member.createdAt ? member.createdAt.slice(0, 10) : "-"}
                       </td>
                       <td className="p-3">
