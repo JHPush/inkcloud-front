@@ -8,7 +8,7 @@ const BookRankCard = ({ book, rank }) => {
         {rank}
       </div>
       <img
-        src={book.image}
+        src={book.imageUrl}
         alt={book.title}
         className="w-full h-48 object-cover rounded"
       />
