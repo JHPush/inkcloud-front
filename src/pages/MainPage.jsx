@@ -16,15 +16,16 @@ const MainPage = () => {
   useEffect(() => {
     const fetchMainPageData = async () => {
       try {
-        const [daily, weekly] = await Promise.all([
+        const [daily, weekly, newBooks, recommendedBooks] = await Promise.all([
           getDailyBestsellers(),
           getWeeklyBestsellers(),
+          getNewBooks(),
+          getRecommendedBooks(),
         ]);
         setDailyBooks(daily);
         setWeeklyBooks(weekly);
-        // 추후 추가 가능
-        // setNewBooks(await getNewBooks());
-        // setRecommendedBooks(await getRecommendedBooks());
+        setNewBooks(newBooks);
+        setRecommendedBooks(recommendedBooks);
       } catch (error) {
         console.error("메인 페이지 데이터 로딩 실패:", error);
       }
