@@ -1,9 +1,19 @@
 // src/components/Main/BookRankCard.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BookRankCard = ({ book, rank }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/products/${book.id}`);
+  };
+
   return (
-    <div className="relative bg-white shadow-md rounded-xl p-3 text-center hover:shadow-lg transition-shadow">
+    <div
+      onClick={handleClick}
+      className="relative bg-white shadow-md rounded-xl p-3 text-center hover:shadow-lg transition-shadow cursor-pointer"
+    >
       {/* 랭킹 뱃지 */}
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-white text-sm font-bold px-3 py-1 rounded-full shadow">
         #{rank}
