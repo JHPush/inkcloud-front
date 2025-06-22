@@ -1,70 +1,67 @@
-// src/components/Main/CategoryMenu.jsx
+// src/components/main/CategoryMenu.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { fetchAllCategories } from "../../api/productApi";
 
 const CategoryMenu = () => {
-  const [topCategories, setTopCategories] = useState([]);
-  const [subCategoriesMap, setSubCategoriesMap] = useState({});
-  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [showSubcategories, setShowSubcategories] = useState(false);
+  const [selectedParentId, setSelectedParentId] = useState(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await fetchAllCategories();
-
-        const tops = data.filter((cat) => cat.parentId === null);
-        const subs = data.filter((cat) => cat.parentId !== null);
-
-        const subMap = {};
-        subs.forEach((sub) => {
-          if (!subMap[sub.parentId]) subMap[sub.parentId] = [];
-          subMap[sub.parentId].push(sub);
-        });
-
-        setTopCategories(tops);
-        setSubCategoriesMap(subMap);
-      } catch (err) {
-        console.error("카테고리 목록 불러오기 실패", err);
-      }
+    const fetchData = async () => {
+      const data = await fetchAllCategories();
+      setCategories(data);
     };
-
-    fetchCategories();
+    fetchData();
   }, []);
 
-  const handleClick = (categoryId) => {
-    navigate(`/products?categoryIds=${categoryId}`);
+  const parentCategories = categories.filter(cat => cat.parentId === null);
+  const subcategories = categories.filter(cat => cat.parentId === selectedParentId);
+
+  const toggleSubcategories = (parentId) => {
+    if (selectedParentId === parentId) {
+      setShowSubcategories(!showSubcategories);
+    } else {
+      setSelectedParentId(parentId);
+      setShowSubcategories(true);
+    }
   };
 
   return (
-    <div className="w-full bg-white border-b px-4 py-2">
-      <div className="flex flex-wrap gap-2 text-sm">
-        {topCategories.map((top) => (
-          <div key={top.id} className="relative group">
-            <button
-              onClick={() => handleClick(top.id)}
-              className="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800"
-            >
-              {top.name}
-            </button>
+    <div className="relative bg-white shadow-sm py-2 px-4 border-b">
+      {/* 상단 메뉴바 */}
+      <div className="flex items-center space-x-4">
+        {/* 메뉴 아이콘 */}
+        <Menu className="cursor-pointer" onClick={() => setShowSubcategories(!showSubcategories)} />
 
-            {/* 하위 카테고리 드롭다운 */}
-            {subCategoriesMap[top.id] && (
-              <div className="absolute z-10 hidden group-hover:block bg-white shadow-md rounded mt-1 min-w-[10rem]">
-                {subCategoriesMap[top.id].map((sub) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => handleClick(sub.id)}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {sub.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+        {/* 상위 카테고리 리스트 */}
+        {parentCategories.map((parent) => (
+          <button
+            key={parent.id}
+            onClick={() => toggleSubcategories(parent.id)}
+            className={`text-sm px-2 py-1 rounded hover:bg-gray-100 ${
+              selectedParentId === parent.id && showSubcategories ? "font-bold text-blue-700" : ""
+            }`}
+          >
+            {parent.name}
+          </button>
         ))}
       </div>
+
+      {/* 하위 카테고리 리스트 */}
+      {showSubcategories && subcategories.length > 0 && (
+        <div className="absolute top-full left-0 w-full bg-white shadow-md z-10 mt-2 px-4 py-3 border-t grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          {subcategories.map((sub) => (
+            <button
+              key={sub.id}
+              className="text-sm text-gray-700 hover:text-blue-600 hover:underline text-left"
+            >
+              {sub.name}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
