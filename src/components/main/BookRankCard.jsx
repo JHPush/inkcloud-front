@@ -12,13 +12,13 @@ const BookRankCard = ({ book, rank }) => {
       {/* 책 이미지 */}
       <img
         src={book.imageUrl}
-        alt={book.title}
+        alt={book.name}
         className="w-full h-52 object-cover rounded-md"
       />
 
       {/* 책 정보 */}
       <div className="mt-3 space-y-1">
-        <div className="text-sm font-semibold text-gray-800 truncate">{book.title}</div>
+        <div className="text-sm font-semibold text-gray-800 truncate">{book.name}</div>
         <div className="text-xs text-gray-500 truncate">{book.author}</div>
         <div className="text-sm text-primary font-medium">{book.price?.toLocaleString()}원</div>
       </div>
