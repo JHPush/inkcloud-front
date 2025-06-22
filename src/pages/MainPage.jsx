@@ -35,10 +35,11 @@ const MainPage = () => {
 
   return (
     <BasicLayout>
-      {/* HERO 영역 */}
-      <section className="hero min-h-[50vh] bg-base-100">
-        <div className="flex flex-col items-center justify-center w-full h-full px-4">
-          <MainSearchBar />
+      <section className="bg-base-100 py-12">
+        <div className="flex justify-center">
+          <div className="w-full max-w-2xl px-4">
+            <MainSearchBar />
+          </div>
         </div>
       </section>
 
