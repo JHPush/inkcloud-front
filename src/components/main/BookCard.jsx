@@ -6,21 +6,27 @@ const BookCard = ({ book }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/products/${book.id}`);
+    navigate(`/products/${book.bookId}`);
   };
 
   return (
     <div
       onClick={handleClick}
-      className="w-40 bg-white shadow-lg rounded-lg p-3 text-center hover:shadow-xl transition-shadow cursor-pointer"
+      className="bg-white shadow-md rounded-lg p-3 text-left hover:shadow-lg transition-shadow cursor-pointer"
     >
       <img
         src={book.imageUrl}
         alt={book.name}
-        className="w-full h-52 object-cover rounded"
+        className="w-full h-48 object-cover rounded mb-2"
       />
-      <div className="mt-2 text-sm font-semibold truncate">{book.name}</div>
-      <div className="text-xs text-gray-500 truncate">{book.author}</div>
+      <div className="space-y-0.5">
+        <div className="text-sm font-semibold text-gray-800 truncate">{book.name}</div>
+        <div className="text-xs text-gray-500 truncate">{book.author}</div>
+        <div className="text-xs text-gray-400 truncate">{book.publisher}</div>
+        <div className="text-sm text-indigo-600 font-medium">
+          {book.price?.toLocaleString()}원
+        </div>
+      </div>
     </div>
   );
 };

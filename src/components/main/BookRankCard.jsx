@@ -6,7 +6,7 @@ const BookRankCard = ({ book, rank }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/products/${book.id}`);
+    navigate(`/products/${book.bookId}`);
   };
 
   return (

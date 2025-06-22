@@ -21,13 +21,15 @@ const MainTabbedBookSection = ({ bestsellers = [], newBooks = [], recommendedBoo
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="space-y-4 w-full px-4">
       {/* 탭 영역 */}
-      <div className="tabs justify-center">
+      <div className="flex space-x-4 border-b pb-2">
         {TABS.map((tab, idx) => (
           <button
             key={idx}
-            className={`tab tab-lg tab-bordered ${activeTab === idx ? 'tab-active' : ''}`}
+            className={`text-sm font-semibold px-2 pb-1 ${
+              activeTab === idx ? 'border-b-2 border-black text-black' : 'text-gray-500'
+            }`}
             onClick={() => setActiveTab(idx)}
           >
             {tab}
@@ -35,10 +37,12 @@ const MainTabbedBookSection = ({ bestsellers = [], newBooks = [], recommendedBoo
         ))}
       </div>
 
-      {/* 카드 Grid 영역 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 px-4">
-        {getCurrentBooks().slice(0, 10).map((book) => (
-          <BookCard key={book.id} book={book} />
+      {/* 가로 스크롤 도서 리스트 */}
+      <div className="overflow-x-auto whitespace-nowrap py-4">
+        {getCurrentBooks().slice(0, 12).map((book) => (
+          <div key={book.bookId} className="inline-block align-top mr-4 w-40">
+            <BookCard book={book} />
+          </div>
         ))}
       </div>
     </div>
