@@ -149,6 +149,10 @@ const root = createBrowserRouter([
     element: <Suspense fallback={Loading}><ProductList /></Suspense>
   },
   {
+    path: "products/search",
+    element: <Suspense fallback={Loading}><ProductList /></Suspense>
+  },
+  {
     path: "products/:id",
     element: <Suspense fallback={Loading}><ProductDetail /></Suspense>
   },
