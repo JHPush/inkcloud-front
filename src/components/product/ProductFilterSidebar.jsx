@@ -1,9 +1,15 @@
-// components/product/ProductFilterSidebar.jsx
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const toggleItem = (item, list, setList) => {
   setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
+};
+
+const FIELD_LABELS = {
+  name: "도서명",
+  author: "저자",
+  publisher: "출판사",
+  isbn: "ISBN"
 };
 
 const ProductFilterSidebar = ({
@@ -28,7 +34,7 @@ const ProductFilterSidebar = ({
     categoryIds.forEach((id) => params.append("categoryIds", id));
 
     navigate(`${location.pathname}?${params.toString()}`);
-    onSearch(); // 즉시 검색도 수행
+    onSearch(); // 즉시 검색 수행
   };
 
   return (
@@ -38,15 +44,15 @@ const ProductFilterSidebar = ({
       {/* 검색 대상 필드 */}
       <div className="mb-6">
         <h3 className="font-medium">검색 대상</h3>
-        {["도서명", "저자", "출판사", "isbn"].map((field) => (
-          <label key={field} className="block">
+        {Object.entries(FIELD_LABELS).map(([fieldKey, label]) => (
+          <label key={fieldKey} className="block">
             <input
               type="checkbox"
-              checked={searchFields.includes(field)}
-              onChange={() => toggleItem(field, searchFields, setSearchFields)}
+              checked={searchFields.includes(fieldKey)}
+              onChange={() => toggleItem(fieldKey, searchFields, setSearchFields)}
               className="mr-2"
             />
-            {field.toUpperCase()}
+            {label}
           </label>
         ))}
       </div>

@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { fetchAllCategories } from "../../api/productApi";
 import { MenuIcon } from "lucide-react";
 
+const DEFAULT_FIELDS = ["name", "author", "publisher", "isbn"];
+
 const CategoryMenu = () => {
   const [categories, setCategories] = useState([]);
   const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
 
-  // 카테고리 데이터 로딩
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -27,15 +28,15 @@ const CategoryMenu = () => {
     categories.filter((c) => c.parentId === parentId);
 
   const handleCategoryClick = (id) => {
-    // 선택한 카테고리(id)의 하위 카테고리 id들까지 포함
     const childIds = categories
       .filter((c) => c.parentId === id)
       .map((c) => c.id);
 
-    const allCategoryIds = [id, ...childIds]; // 상위 + 하위 포함
-    const query = allCategoryIds.map((id) => `categoryIds=${id}`).join("&");
+    const allCategoryIds = [id, ...childIds];
+    const categoryQuery = allCategoryIds.map((id) => `categoryIds=${id}`).join("&");
+    const fieldQuery = DEFAULT_FIELDS.map((f) => `searchFields=${f}`).join("&");
 
-    navigate(`/products/search?${query}`);
+    navigate(`/products/search?${categoryQuery}&${fieldQuery}&sortType=POPULAR&keyword=`);
   };
 
   return (
