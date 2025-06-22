@@ -10,7 +10,7 @@ import ProductSortBar from "../../components/product/ProductSortBar";
 import ProductItem from "../../components/product/ProductItem";
 import ProductPagination from "../../components/product/ProductPagination";
 
-const DEFAULT_FIELDS = ["도서명", "저자", "출판사", "isbn"];
+const DEFAULT_FIELDS = ["name", "author", "publisher", "isbn"];
 
 const ProductListPage = () => {
   const [searchParams] = useSearchParams();
