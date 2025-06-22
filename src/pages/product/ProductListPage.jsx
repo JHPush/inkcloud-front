@@ -12,21 +12,30 @@ import ProductPagination from "../../components/product/ProductPagination";
 
 const ProductListPage = () => {
   const [searchParams] = useSearchParams();
-  const initialCategory = searchParams.get("category");
+  const navigate = useNavigate();
+
+  const initialCategoryIds = searchParams.getAll("categoryIds");
   const keywordParam = searchParams.get("keyword") || "";
+
   const [products, setProducts] = useState([]);
   const [keyword, setKeyword] = useState(keywordParam);
   const [searchFields, setSearchFields] = useState(["name"]);
-  const [categoryIds, setCategoryIds] = useState(initialCategory ? [initialCategory] : []);
+  const [categoryIds, setCategoryIds] = useState(initialCategoryIds.length ? initialCategoryIds : []);
   const [sortType, setSortType] = useState("POPULAR");
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const navigate = useNavigate();
 
   const handleSearch = async (targetPage = 0) => {
     try {
-      const params = { keyword, searchFields, categoryIds, sortType, page: targetPage, size: 10 };
+      const params = {
+        keyword,
+        searchFields,
+        categoryIds,
+        sortType,
+        page: targetPage,
+        size: 10,
+      };
       const data = await fetchProducts(params);
       setProducts(data?.products?.content ?? []);
       setCategories(data?.categoryCounts ?? []);
@@ -39,7 +48,7 @@ const ProductListPage = () => {
 
   useEffect(() => {
     handleSearch(0);
-  }, [initialCategory, keywordParam]);
+  }, [initialCategoryIds.join(","), keywordParam]);
 
   const handleAddToCart = async (productId) => {
     try {
@@ -80,7 +89,7 @@ const ProductListPage = () => {
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar keyword={keyword} setKeyword={setKeyword} onSearch={() => handleSearch(0)} />
-          <ProductSortBar sortType={sortType} setSortType={setSortType} />
+          <ProductSortBar sortType={sortType} setSortType={setSortType} onSearch={() => handleSearch(0)}/>
           {products.map((product) => (
             <ProductItem
               key={product.id}
