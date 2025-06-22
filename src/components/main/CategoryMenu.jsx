@@ -5,8 +5,7 @@ import { fetchAllCategories } from "../../api/productApi";
 
 const CategoryMenu = () => {
   const [categories, setCategories] = useState([]);
-  const [showSubcategories, setShowSubcategories] = useState(true); // 기본 열려 있음
-  const [selectedParentId, setSelectedParentId] = useState(null);
+  const [showAllCategories, setShowAllCategories] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,49 +16,44 @@ const CategoryMenu = () => {
   }, []);
 
   const parentCategories = categories.filter((cat) => cat.parentId === null);
-  const subcategoriesByParent = (parentId) =>
+  const getChildren = (parentId) =>
     categories.filter((cat) => cat.parentId === parentId);
 
-  const toggleSubcategories = (parentId) => {
-    if (selectedParentId === parentId) {
-      setShowSubcategories(!showSubcategories);
-    } else {
-      setSelectedParentId(parentId);
-      setShowSubcategories(true);
-    }
-  };
-
   return (
-    <div className="relative bg-white shadow-sm border-b border-gray-200">
-      {/* 메뉴 헤더 */}
-      <div className="flex items-center space-x-3 px-4 py-3">
-        <Menu className="cursor-pointer" onClick={() => setShowSubcategories(!showSubcategories)} />
-        <div className="flex gap-3 overflow-x-auto">
+    <div className="relative bg-white border-b border-gray-200">
+      {/* 상단 메뉴 바 */}
+      <div className="flex items-center space-x-4 px-4 py-3">
+        <Menu
+          className="cursor-pointer"
+          onClick={() => setShowAllCategories(!showAllCategories)}
+        />
+        <div className="flex gap-4 overflow-x-auto">
           {parentCategories.map((parent) => (
-            <button
-              key={parent.id}
-              onClick={() => toggleSubcategories(parent.id)}
-              className={`text-sm whitespace-nowrap px-2 py-1 rounded hover:bg-gray-100 ${
-                selectedParentId === parent.id && showSubcategories ? "font-bold text-blue-700" : ""
-              }`}
-            >
+            <span key={parent.id} className="text-sm text-gray-700">
               {parent.name}
-            </button>
+            </span>
           ))}
         </div>
       </div>
 
-      {/* 하위 카테고리 섹션 */}
-      {showSubcategories && selectedParentId && (
-        <div className="w-full px-6 pb-4">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-            {subcategoriesByParent(selectedParentId).map((sub) => (
-              <button
-                key={sub.id}
-                className="text-sm text-gray-700 hover:text-blue-600 hover:underline text-left"
-              >
-                {sub.name}
-              </button>
+      {/* 전체 카테고리 펼침 */}
+      {showAllCategories && (
+        <div className="w-full px-6 pb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            {parentCategories.map((parent) => (
+              <div key={parent.id}>
+                <h3 className="font-semibold text-gray-800 mb-2">{parent.name}</h3>
+                <ul className="space-y-1">
+                  {getChildren(parent.id).map((child) => (
+                    <li
+                      key={child.id}
+                      className="text-sm text-gray-600 hover:text-blue-600 hover:underline cursor-pointer"
+                    >
+                      {child.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </div>
