@@ -6,6 +6,7 @@ import {
   fetchAllCategories,
 } from "../../api/productApi";
 import publicApi from "../../api/publicApi";
+import NestedCategoryDropdown from "./NestedCategoryDropdown";
 
 const ProductForm = ({ product, onClose }) => {
   const isEdit = !!product;
@@ -168,13 +169,17 @@ const ProductForm = ({ product, onClose }) => {
               </div>
             </div>
             <div>
-              <label className="block text-sm text-gray-700">카테고리</label>
-              <select name="categoryId" value={form.categoryId} onChange={handleChange} className="border rounded px-3 py-2 w-full" required>
-                <option value="">카테고리를 선택하세요</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
+              <label className="block text-sm text-gray-700 mb-1">카테고리</label>
+              <NestedCategoryDropdown
+                categories={categories}
+                selectedId={form.categoryId}
+                onSelect={(id) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    categoryId: id,
+                  }))
+                }
+              />
             </div>
             <div>
               <label className="block text-sm text-gray-700">출간일</label>
