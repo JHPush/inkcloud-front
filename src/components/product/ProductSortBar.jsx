@@ -1,10 +1,22 @@
 // components/product/ProductSortBar.jsx
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const ProductSortBar = ({ sortType, setSortType, onSearch }) => {
+const ProductSortBar = ({ sortType, setSortType, keyword, searchFields, categoryIds }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleChange = (e) => {
-    setSortType(e.target.value);
-    onSearch(); // 선택 즉시 검색 수행
+    const newSortType = e.target.value;
+    setSortType(newSortType);
+
+    const params = new URLSearchParams();
+    if (keyword) params.set("keyword", keyword);
+    if (newSortType) params.set("sortType", newSortType);
+    searchFields.forEach((field) => params.append("searchFields", field));
+    categoryIds.forEach((id) => params.append("categoryIds", id));
+
+    navigate(`${location.pathname}?${params.toString()}`);
   };
 
   return (

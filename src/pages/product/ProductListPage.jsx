@@ -14,24 +14,30 @@ const ProductListPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const initialCategoryIds = searchParams.getAll("categoryIds");
-  const keywordParam = searchParams.get("keyword") || "";
-
   const [products, setProducts] = useState([]);
-  const [keyword, setKeyword] = useState(keywordParam);
+  const [keyword, setKeyword] = useState("");
   const [searchFields, setSearchFields] = useState(["name"]);
-  const [categoryIds, setCategoryIds] = useState(initialCategoryIds.length ? initialCategoryIds : []);
+  const [categoryIds, setCategoryIds] = useState([]);
   const [sortType, setSortType] = useState("POPULAR");
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  const handleSearch = async (targetPage = 0) => {
+  // ⛳ searchParams 기반으로 상태 설정 및 검색 실행
+  useEffect(() => {
+    const ids = searchParams.getAll("categoryIds");
+    const keywordFromParam = searchParams.get("keyword") || "";
+    setCategoryIds(ids);
+    setKeyword(keywordFromParam);
+    handleSearch(0, ids, keywordFromParam);
+  }, [searchParams]);
+
+  const handleSearch = async (targetPage = 0, externalCategoryIds = categoryIds, externalKeyword = keyword) => {
     try {
       const params = {
-        keyword,
+        keyword: externalKeyword,
         searchFields,
-        categoryIds,
+        categoryIds: externalCategoryIds,
         sortType,
         page: targetPage,
         size: 10,
@@ -45,10 +51,6 @@ const ProductListPage = () => {
       console.error("❌ 검색 실패", error);
     }
   };
-
-  useEffect(() => {
-    handleSearch(0);
-  }, [initialCategoryIds.join(","), keywordParam]);
 
   const handleAddToCart = async (productId) => {
     try {
@@ -85,11 +87,13 @@ const ProductListPage = () => {
           categoryIds={categoryIds}
           setCategoryIds={setCategoryIds}
           categories={categories}
+          keyword={keyword}
+          sortType={sortType}
           onSearch={() => handleSearch(0)}
         />
         <div className="w-3/4 p-6">
-          <ProductSearchBar keyword={keyword} setKeyword={setKeyword} onSearch={() => handleSearch(0)} />
-          <ProductSortBar sortType={sortType} setSortType={setSortType} onSearch={() => handleSearch(0)}/>
+          <ProductSearchBar keyword={keyword} setKeyword={setKeyword} searchFields={searchFields} categoryIds={categoryIds} sortType={sortType} onSearch={() => handleSearch(0)} />
+          <ProductSortBar sortType={sortType} setSortType={setSortType} keyword={keyword} searchFields={searchFields} categoryIds={categoryIds} onSearch={() => handleSearch(0)} />
           {products.map((product) => (
             <ProductItem
               key={product.id}
@@ -99,7 +103,7 @@ const ProductListPage = () => {
               onBuyNow={() => handleBuyNow(product)}
             />
           ))}
-          <ProductPagination page={page} totalPages={totalPages} onPageChange={handleSearch} />
+          <ProductPagination page={page} totalPages={totalPages} onPageChange={(p) => handleSearch(p)} />
         </div>
       </div>
     </BasicLayout>
