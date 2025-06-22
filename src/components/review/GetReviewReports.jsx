@@ -6,6 +6,7 @@ import useCheckBox from "../../hooks/useCheckBox";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { getSortedReviews } from "../../hooks/SortingReview";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -34,6 +35,7 @@ const GetReviewReports = () => {
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+  const [sort, setSort] = useState("latest"); // 정렬 기준 추가
 
   // 체크박스 훅 (report id 기준)
   const { checked, setChecked, handleAllCheck, handleCheck } = useCheckBox(reports, "id");
@@ -47,17 +49,17 @@ const GetReviewReports = () => {
       keyword: params.keyword ?? keyword,
       page: params.page ?? page,
       size: params.size ?? size,
+      // sort 파라미터는 서버에 전달하지 않음
     });
     setReports(data.content || []);
     setTotalPages(data.totalPages || 1);
     setChecked([]); // 페이지 이동 시 체크박스 초기화
-    console.log(data)
   };
 
   useEffect(() => {
     fetchReports();
     // eslint-disable-next-line
-  }, [page, size]);
+  }, [page, size, sort]); // sort 변경 시도 반영
 
   // 검색 버튼 클릭
   const handleSearch = () => {
@@ -87,7 +89,13 @@ const GetReviewReports = () => {
       window.alert("신고 삭제에 실패했습니다.");
     }
   };
-  
+
+  // 정렬 변경 핸들러
+  const handleSortChange = (e) => {
+    setSort(e.target.value);
+    setPage(0);
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h2 className="text-2xl font-semibold mb-6">리뷰 신고 내역</h2>
@@ -143,6 +151,19 @@ const GetReviewReports = () => {
         </div>
       </div>
 
+      {/* 정렬 드롭다운 */}
+      <div className="flex justify-end mb-4">
+        <select
+          value={sort}
+          onChange={handleSortChange}
+          className="border rounded px-3 py-1 text-sm"
+          style={{ minWidth: 120 }}
+        >
+          <option value="latest">최신순</option>
+          <option value="oldest">오래된순</option>
+        </select>
+      </div>
+
       {/* 신고 삭제 버튼 */}
       <div className="mb-4 flex justify-start">
         <button
@@ -165,8 +186,7 @@ const GetReviewReports = () => {
                   onChange={handleAllCheck}
                 />
               </th>
-              <th className="p-3 text-center font-medium text-black">번호</th>
-              {/* <th className="p-3 text-center font-medium text-black">리뷰ID</th> */}
+              <th className="p-3 text-center font-medium text-black">책 이름</th>
               <th className="p-3 text-center font-medium text-black">신고유형</th>
               <th className="p-3 text-center font-medium text-black">신고사유</th>
               <th className="p-3 text-center font-medium text-black">신고자</th>
@@ -176,17 +196,15 @@ const GetReviewReports = () => {
           <tbody>
             {reports.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-8 text-gray-400">
+                <td colSpan={7} className="text-center py-8 text-gray-400">
                   신고 내역이 없습니다.
                 </td>
               </tr>
             ) : (
-              reports.map((report) => {
-                // UTC → KST 변환
+              getSortedReviews(reports, sort).map((report) => {
                 const kstTime = report.reportedAt
                   ? dayjs.utc(report.reportedAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
                   : "";
-
                 return (
                   <tr
                     key={report.id}
@@ -201,8 +219,7 @@ const GetReviewReports = () => {
                         onChange={() => handleCheck(report.id)}
                       />
                     </td>
-                    <td className="p-3 text-black text-center">{report.id}</td>
-                    {/* <td className="p-3 text-black text-center">{report.reviewId}</td> */}
+                    <td className="p-3 text-black text-center">{report.productName}</td>
                     <td className="p-3 text-black text-center">
                       {
                         REPORT_TYPE_OPTIONS.find(

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getReviewDetailByAdmin } from "../../api/reviewApi";
+import { getReviewDetailByAdmin, getReportsByReviewId } from "../../api/reviewApi";
 import DeleteReview from "./DeleteReview";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -9,9 +9,17 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+const REPORT_TYPE_OPTIONS = [
+  { value: "ABUSE", label: "욕설/비방" },
+  { value: "AD", label: "광고/홍보" },
+  { value: "SPAM", label: "도배/스팸" },
+  { value: "ETC", label: "기타" },
+];
+
 const AdminReviewDetail = () => {
   const { id } = useParams();
   const [review, setReview] = useState(null);
+  const [reports, setReports] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,12 +27,23 @@ const AdminReviewDetail = () => {
       try {
         const data = await getReviewDetailByAdmin(id);
         setReview(data);
-        console.log(data)
       } catch (e) {
         setReview(null);
       }
     };
     fetchReview();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const data = await getReportsByReviewId(id);
+        setReports(data.content || []);
+      } catch (e) {
+        setReports([]);
+      }
+    };
+    fetchReports();
   }, [id]);
 
   const handleDeleteSuccess = () => {
@@ -40,7 +59,6 @@ const AdminReviewDetail = () => {
     );
   }
 
-  // review.createdAt이 UTC라면 KST로 변환해서 표시
   const kstTime = dayjs.utc(review.createdAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm");
 
   return (
@@ -98,6 +116,41 @@ const AdminReviewDetail = () => {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      {/* 신고 내역 테이블 */}
+      <div className="w-full px-16 mt-10">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800">신고 내역</h3>
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-3 text-center font-medium text-black">신고자 이메일</th>
+                <th className="p-3 text-center font-medium text-black">신고유형</th>
+                <th className="p-3 text-center font-medium text-black">신고사유</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="text-center py-8 text-gray-400">
+                    신고 내역이 없습니다.
+                  </td>
+                </tr>
+              ) : (
+                reports.map((report) => (
+                  <tr key={report.id} className="hover:bg-gray-50 transition">
+                    <td className="p-3 text-black text-center">{report.reporterEmail}</td>
+                    <td className="p-3 text-black text-center">
+                      {REPORT_TYPE_OPTIONS.find(opt => opt.value === report.type)?.label || report.type}
+                    </td>
+                    <td className="p-3 text-black text-center">{report.reason}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
