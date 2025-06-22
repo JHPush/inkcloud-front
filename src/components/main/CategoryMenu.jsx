@@ -1,81 +1,85 @@
-// src/components/main/CategoryMenu.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAllCategories } from "../../api/productApi";
-import { MenuIcon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const CategoryMenu = () => {
   const [categories, setCategories] = useState([]);
-  const [showAll, setShowAll] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
-  // 카테고리 데이터 로딩
   useEffect(() => {
-    const loadCategories = async () => {
+    const fetchCategories = async () => {
       try {
         const data = await fetchAllCategories();
         setCategories(data);
       } catch (err) {
-        console.error("카테고리 불러오기 실패", err);
+        console.error("카테고리 목록 불러오기 실패:", err);
       }
     };
-    loadCategories();
+    fetchCategories();
   }, []);
 
-  const topCategories = categories.filter((c) => c.parentId === null);
-  const getChildren = (parentId) =>
-    categories.filter((c) => c.parentId === parentId);
-
-  const handleCategoryClick = (id) => {
-    navigate(`/products/search?categoryIds=${id}`);
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
+
+  const getChildren = (parentId) =>
+    categories.filter((cat) => cat.parentId === parentId);
+
+  // 🔽 재귀적으로 모든 하위 카테고리 ID 포함
+  const getAllDescendantIds = (parentId) => {
+    const result = [];
+    const stack = [parentId];
+
+    while (stack.length > 0) {
+      const current = stack.pop();
+      result.push(current);
+      const children = getChildren(current).map((c) => c.id);
+      stack.push(...children);
+    }
+
+    return result;
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    const allIds = getAllDescendantIds(categoryId);
+    navigate(`/products/search?categoryIds=${allIds.join(",")}`);
+    setIsOpen(false); // 클릭 시 메뉴 닫기
+  };
+
+  const topCategories = categories.filter((cat) => cat.parentId === null);
 
   return (
     <div className="relative">
-      {/* 메뉴 아이콘 + 상위 카테고리 */}
-      <div className="flex items-center space-x-3 px-4 py-2">
-        <button onClick={() => setShowAll(!showAll)} className="text-gray-600 hover:text-black">
-          <MenuIcon className="w-5 h-5" />
-        </button>
-        <div className="flex flex-wrap gap-4 text-sm">
-          {topCategories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleCategoryClick(cat.id)}
-              className="hover:text-blue-600"
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-      </div>
+      <button onClick={toggleMenu} className="p-2">
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      {/* 전체 카테고리 박스 */}
-      {showAll && (
-        <div className="absolute z-40 w-full bg-white shadow-lg border rounded p-6">
-          <div className="grid grid-cols-3 gap-6 text-sm">
-            {topCategories.map((parent) => (
-              <div key={parent.id}>
-                <h4
-                  className="font-semibold mb-2 cursor-pointer hover:text-blue-600"
-                  onClick={() => handleCategoryClick(parent.id)}
-                >
-                  {parent.name}
-                </h4>
-                <ul className="space-y-1">
-                  {getChildren(parent.id).map((child) => (
-                    <li
-                      key={child.id}
-                      className="cursor-pointer hover:text-blue-600"
-                      onClick={() => handleCategoryClick(child.id)}
-                    >
-                      {child.name}
-                    </li>
-                  ))}
-                </ul>
+      {isOpen && (
+        <div className="absolute z-10 bg-white border p-4 shadow-xl w-64">
+          <h2 className="text-lg font-semibold mb-2">카테고리</h2>
+          {topCategories.map((top) => (
+            <div key={top.id} className="mb-2">
+              <div
+                onClick={() => handleCategoryClick(top.id)}
+                className="cursor-pointer font-medium text-blue-600 hover:underline"
+              >
+                {top.name}
               </div>
-            ))}
-          </div>
+              <div className="ml-4 mt-1 space-y-1">
+                {getChildren(top.id).map((child) => (
+                  <div
+                    key={child.id}
+                    onClick={() => handleCategoryClick(child.id)}
+                    className="cursor-pointer text-sm text-gray-700 hover:underline"
+                  >
+                    └ {child.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
