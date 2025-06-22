@@ -37,8 +37,10 @@ const AdminReviewDetail = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
+        // getReportsByReviewId는 배열을 반환합니다.
         const data = await getReportsByReviewId(id);
-        setReports(data.content || []);
+        setReports(Array.isArray(data) ? data : (data.content || []));
+        console.log("data:", data)
       } catch (e) {
         setReports([]);
       }
