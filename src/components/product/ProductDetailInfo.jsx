@@ -14,7 +14,11 @@ const ProductDetailInfo = ({ product }) => {
 
   const handleDecrease = () => setQuantity((q) => Math.max(1, q - 1));
   const handleIncrease = () => {
-    if (quantity < product.quantity) setQuantity((q) => q + 1);
+    if (quantity < product.quantity) {
+      setQuantity((q) => q + 1);
+    } else {
+      alert("더 이상 담을 수 없습니다.");
+    }
   };
 
   const handleAddToCart = async () => {
@@ -108,9 +112,6 @@ const ProductDetailInfo = ({ product }) => {
             >
               ＋
             </button>
-            <span className="text-sm text-gray-500">
-              ({product.quantity}개 남음)
-            </span>
           </div>
         )}
 
