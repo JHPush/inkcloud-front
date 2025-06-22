@@ -1,7 +1,7 @@
 // src/pages/MainPage.jsx
 import React, { useEffect, useState } from "react";
 import BasicLayout from "../layouts/BasicLayout";
-import MainCarousel from "../components/main/MainCarousel";
+import MainTabbedBookSection from "../components/main/MainTabbedBookSection";
 import BookRankingSection from "../components/main/BookRankingSection";
 import { getDailyBestsellers, getWeeklyBestsellers } from "../api/bestsellerApi";
 import { getNewBooks, getRecommendedBooks } from "../api/productApi";
@@ -45,7 +45,7 @@ const MainPage = () => {
       {/* 캐러셀 영역 */}
       <section className="py-12 px-4 bg-white">
         <h2 className="text-2xl font-bold mb-6 text-center">🔥 오늘의 인기 도서</h2>
-        <MainCarousel
+        <MainTabbedBookSection
           bestsellers={dailyBooks}
           newBooks={newBooks}
           recommendedBooks={recommendedBooks}

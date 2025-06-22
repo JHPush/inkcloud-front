@@ -1,10 +1,10 @@
-// src/components/Main/MainCarousel.jsx
+// src/components/Main/MainTabbedBookSection.jsx
 import React, { useState } from 'react';
 import BookCard from './BookCard';
 
 const TABS = ['일간 베스트셀러', '신작 소개', '추천 도서'];
 
-const MainCarousel = ({ bestsellers = [], newBooks = [], recommendedBooks = [] }) => {
+const MainTabbedBookSection = ({ bestsellers = [], newBooks = [], recommendedBooks = [] }) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const getCurrentBooks = () => {
@@ -22,7 +22,7 @@ const MainCarousel = ({ bestsellers = [], newBooks = [], recommendedBooks = [] }
 
   return (
     <div className="w-full space-y-6">
-      {/* 탭 */}
+      {/* 탭 영역 */}
       <div className="tabs justify-center">
         {TABS.map((tab, idx) => (
           <button
@@ -35,16 +35,14 @@ const MainCarousel = ({ bestsellers = [], newBooks = [], recommendedBooks = [] }
         ))}
       </div>
 
-      {/* 캐러셀 */}
-      <div className="carousel carousel-center p-4 space-x-4 bg-base-100 rounded-box">
-        {getCurrentBooks().map((book) => (
-          <div key={book.id} className="carousel-item">
-            <BookCard book={book} />
-          </div>
+      {/* 카드 Grid 영역 */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 px-4">
+        {getCurrentBooks().slice(0, 10).map((book) => (
+          <BookCard key={book.id} book={book} />
         ))}
       </div>
     </div>
   );
 };
 
-export default MainCarousel;
+export default MainTabbedBookSection;
