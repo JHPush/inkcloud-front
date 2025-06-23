@@ -36,7 +36,7 @@ const ProductListPage = () => {
     setSortType(sortTypeFromParam);
     setSearchFields(searchFieldsFromParam.length > 0 ? searchFieldsFromParam : DEFAULT_FIELDS);
 
-    handleSearch(0, ids, keywordFromParam, false); // ✅ 초기 진입도 상태 유지
+    handleSearch(0, ids, keywordFromParam, false); // 초기 진입도 상태 유지
   }, [searchParams]);
 
   const handleSearch = async (
@@ -107,7 +107,7 @@ const ProductListPage = () => {
           categories={categories}
           keyword={keyword}
           sortType={sortType}
-          onSearch={() => handleSearch(0, categoryIds, keyword, false)} // ✅ 초기화 방지
+          onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
@@ -116,7 +116,7 @@ const ProductListPage = () => {
             searchFields={searchFields}
             categoryIds={categoryIds}
             sortType={sortType}
-            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // ✅ 초기화 방지
+            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
           />
           <ProductSortBar
             sortType={sortType}
@@ -124,7 +124,7 @@ const ProductListPage = () => {
             keyword={keyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
-            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // ✅ 초기화 방지
+            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
           />
           {products.map((product) => (
             <ProductItem
@@ -139,7 +139,7 @@ const ProductListPage = () => {
             page={page}
             totalPages={totalPages}
             onPageChange={(p) =>
-              handleSearch(p, categoryIds, keyword, false) // ✅ 초기화 방지
+              handleSearch(p, categoryIds, keyword, false) // 초기화 방지
             }
           />
         </div>

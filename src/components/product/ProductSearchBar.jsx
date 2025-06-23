@@ -2,31 +2,34 @@ import React from "react";
 import { Search } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const ProductSearchBar = ({ keyword, setKeyword, searchFields, categoryIds, sortType }) => {
+const ProductSearchBar = ({
+  keyword,
+  setKeyword,
+  searchFields,
+  categoryIds,
+  sortType,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleSearch = () => {
     const params = new URLSearchParams();
 
+    // keyword 반영
     if (keyword) params.set("keyword", keyword);
+
+    // 정렬 조건 반영
     if (sortType) params.set("sortType", sortType);
 
-    // ✅ 검색 필드는 항상 포함 (없으면 기본값 사용 필요)
-    if (!searchFields || searchFields.length === 0) {
-      ["name", "author", "publisher", "isbn"].forEach((field) =>
-        params.append("searchFields", field)
-      );
-    } else {
-      searchFields.forEach((field) => params.append("searchFields", field));
-    }
+    // 검색 필드 (비어있으면 기본 필드 추가)
+    const fieldsToUse =
+      searchFields && searchFields.length > 0
+        ? searchFields
+        : ["name", "author", "publisher", "isbn"];
+    fieldsToUse.forEach((field) => params.append("searchFields", field));
 
-    // ✅ '최초 검색 시 categoryIds는 제외'
-    if (keyword && location.pathname === "/products/search") {
-      // 필터 제거를 원하면 categoryIds는 제거
-      // 만약 유지하고 싶다면 아래 라인 사용
-      // categoryIds.forEach((id) => params.append("categoryIds", id));
-    }
+    // 카테고리 필터 유지
+    categoryIds?.forEach((id) => params.append("categoryIds", id));
 
     navigate(`${location.pathname}?${params.toString()}`);
   };

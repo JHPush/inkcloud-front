@@ -9,7 +9,7 @@ const FIELD_LABELS = {
   name: "도서명",
   author: "저자",
   publisher: "출판사",
-  isbn: "ISBN"
+  isbn: "ISBN",
 };
 
 const ProductFilterSidebar = ({
@@ -28,13 +28,15 @@ const ProductFilterSidebar = ({
   const handleSearchClick = () => {
     const params = new URLSearchParams();
 
+    // ✅ 모든 현재 상태를 정확히 쿼리로 반영
     if (keyword) params.set("keyword", keyword);
     if (sortType) params.set("sortType", sortType);
+
     searchFields.forEach((field) => params.append("searchFields", field));
     categoryIds.forEach((id) => params.append("categoryIds", id));
 
     navigate(`${location.pathname}?${params.toString()}`);
-    onSearch(); // 즉시 검색 수행
+    onSearch(); // URL 반영 후 검색 실행
   };
 
   return (
