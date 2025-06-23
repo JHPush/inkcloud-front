@@ -45,6 +45,44 @@ const ProductFilterSidebar = ({ categories }) => {
     navigate(`/products/search?${newParams.toString()}`);
   };
 
+  const renderCategoryTree = () => {
+    const parents = categories.filter((c) => c.parentId === null);
+    const children = categories.filter((c) => c.parentId !== null);
+
+    return parents.map((parent) => (
+      <div key={parent.id}>
+        {/* 상위 카테고리 */}
+        <label className="flex items-center space-x-2 font-semibold text-black">
+          <input
+            type="checkbox"
+            checked={selectedCategoryIds.includes(String(parent.id))}
+            onChange={() => handleCategoryToggle(parent.id)}
+          />
+          <span>{parent.name}</span>
+        </label>
+
+        {/* 하위 카테고리 */}
+        <div className="ml-6 space-y-1 mt-1">
+          {children
+            .filter((child) => child.parentId === parent.id)
+            .map((child) => (
+              <label
+                key={child.id}
+                className="flex items-center space-x-2 text-sm text-gray-700"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedCategoryIds.includes(String(child.id))}
+                  onChange={() => handleCategoryToggle(child.id)}
+                />
+                <span>ㄴ {child.name}</span>
+              </label>
+            ))}
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className="w-1/4 border-r p-6 space-y-6">
       {/* 검색 필드 */}
@@ -68,16 +106,7 @@ const ProductFilterSidebar = ({ categories }) => {
       <div>
         <h2 className="font-semibold mb-2">카테고리</h2>
         <div className="space-y-1 max-h-64 overflow-y-auto">
-          {categories.map((cat) => (
-            <label key={cat.id} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={selectedCategoryIds.includes(String(cat.id))}
-                onChange={() => handleCategoryToggle(cat.id)}
-              />
-              <span>{cat.name}</span>
-            </label>
-          ))}
+          {renderCategoryTree()}
         </div>
       </div>
 
