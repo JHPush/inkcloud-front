@@ -57,12 +57,19 @@ export const getUserInfo = async({email}) => {
   return response.data;
 };
 
-//회원 정보 목록 조회 ,검색, 페이징- 관리자
-export const getUserList = async({email, name, page, size}) => {
+//회원 정보 목록 조회, 검색, 페이징, 정렬, 상태 필터링 - 관리자
+export const getUserList = async({email, name, status, page, size, sort}) => {
   const response = await jwtAxios.get(
     `${MEMBER_SERVICE_URL}`,
     {
-      params: { email, name, page, size }
+      params: { 
+        email, 
+        name, 
+        status,
+        page, 
+        size,
+        sort: sort ? sort : "createdAt,desc" // 기본값: 최신순 정렬
+      }
     }
   );
   return response.data;
