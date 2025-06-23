@@ -25,27 +25,19 @@ const ProductListPage = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  // URL에서 상태 세팅
   useEffect(() => {
     const ids = searchParams.getAll("categoryIds");
     const keywordFromParam = searchParams.get("keyword") || "";
     const sortTypeFromParam = searchParams.get("sortType") || "POPULAR";
     const searchFieldsFromParam = searchParams.getAll("searchFields");
 
-    setCategoryIds([...new Set(ids)]);
+    setCategoryIds(ids);
     setKeyword(keywordFromParam);
     setSortType(sortTypeFromParam);
-    setSearchFields(
-      searchFieldsFromParam.length > 0
-        ? searchFieldsFromParam
-        : DEFAULT_FIELDS
-    );
-  }, [searchParams]);
+    setSearchFields(searchFieldsFromParam.length > 0 ? searchFieldsFromParam : DEFAULT_FIELDS);
 
-  // 상태가 모두 세팅된 뒤에 검색 실행
-  useEffect(() => {
-    handleSearch(0, categoryIds, keyword, false);
-  }, [categoryIds, keyword, searchFields, sortType]);
+    handleSearch(0, ids, keywordFromParam, false); // 초기 진입도 상태 유지
+  }, [searchParams]);
 
   const handleSearch = async (
     targetPage = 0,
@@ -115,6 +107,7 @@ const ProductListPage = () => {
           categories={categories}
           keyword={keyword}
           sortType={sortType}
+          onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
@@ -123,6 +116,7 @@ const ProductListPage = () => {
             searchFields={searchFields}
             categoryIds={categoryIds}
             sortType={sortType}
+            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
           />
           <ProductSortBar
             sortType={sortType}
@@ -130,6 +124,7 @@ const ProductListPage = () => {
             keyword={keyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
+            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
           />
           {products.map((product) => (
             <ProductItem
@@ -144,7 +139,7 @@ const ProductListPage = () => {
             page={page}
             totalPages={totalPages}
             onPageChange={(p) =>
-              handleSearch(p, categoryIds, keyword, false)
+              handleSearch(p, categoryIds, keyword, false) // 초기화 방지
             }
           />
         </div>
