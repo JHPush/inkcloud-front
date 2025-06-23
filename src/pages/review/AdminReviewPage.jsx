@@ -133,6 +133,12 @@ const AdminReviewPage = () => {
     setQuickDate(range);
   };
 
+  // 1. 리뷰 내용 요약 함수 추가 (줄 상단에 추가)
+  const truncateText = (text, maxLength = 50) => {
+    if (!text) return '';
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex items-center gap-3 mb-4">
@@ -379,9 +385,17 @@ const AdminReviewPage = () => {
                     />
                   </td>
                   <td className="p-3 text-black-700">{review.email}</td>
-                  <td className="p-3 text-black-700">{review.productName}</td>
+                  <td className="p-3 text-black-700 max-w-[150px]">
+                    <div className="truncate" title={review.productName}>
+                      {review.productName}
+                    </div>
+                  </td>
                   <td className="p-3 text-black-700"><StarRating rating={review.rating} /></td>
-                  <td className="p-3 text-black-700">{review.comment}</td>
+                  <td className="p-3 text-black-700 max-w-[200px]">
+                    <div className="truncate" title={review.comment}>
+                      {truncateText(review.comment, 40)}
+                    </div>
+                  </td>
                   <td className="p-3 text-black-700">
                     {review.updatedAt
                       ? dayjs.utc(review.updatedAt).tz("Asia/Seoul").format("YYYY-MM-DD HH:mm")
