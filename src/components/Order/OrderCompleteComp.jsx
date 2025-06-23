@@ -31,6 +31,7 @@ const OrderCompleteComp = () => {
     const getOrderComplete = async (orderId) => {
         if (retryCount.current >= MAX_RETRY) {
             console.error('최대 재시도 횟수 초과');
+            alert('주문 중 오류가 발생하였습니다.')
             const res = await putCancelOrder(orderId)
             setOrder(res)
             return;
