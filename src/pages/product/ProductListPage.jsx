@@ -115,7 +115,8 @@ const ProductListPage = () => {
           categories={categories}
           keyword={keyword}
           sortType={sortType}
-          onSearch={() => handleSearch(0, categoryIds, searchFields, keyword, sortType)}
+          onSearch={(catIds, fields) => handleSearch(0, catIds, fields, keyword, sortType)
+  }
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
