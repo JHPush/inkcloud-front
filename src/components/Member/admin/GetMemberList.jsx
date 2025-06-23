@@ -4,29 +4,31 @@ import { getUserList } from "../../../api/memberApi";
 import DeleteMembers from "./DeleteMembers";
 import useCheckBox from "../../../hooks/useCheckBox";
 import usePaging from "../../../hooks/usePaging";
+import Pagination from "../../common/Pagination";
 
 const GetMemberList = () => {
   const [members, setMembers] = useState([]);
   const { checked, setChecked, handleAllCheck, handleCheck } = useCheckBox(members, "email");
-  const { page, setPage, totalPages, setTotalPages, size, setSize } = usePaging(0, 1, 20);
+  const { page, setPage, totalPages, setTotalPages, size } = usePaging(0, 1, 20);
   const [refresh, setRefresh] = useState(false);
+  const [search, setSearch] = useState("");
+  const [isSearched, setIsSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [searchKeyword, setSearchKeyword] = useState("");
-  
+
   const navigate = useNavigate();
 
-  // 데이터 로드 함수
-  const fetchMembers = async () => {
+  // 회원 목록 조회
+  const fetchMembers = async (params = {}) => {
     setLoading(true);
     setError(null);
     try {
-      const params = {
-        page,
-        size,
-        ...(searchKeyword && { email: searchKeyword }),
-      };
-      const data = await getUserList(params);
+      const data = await getUserList({
+        page: params.page ?? page,
+        size: params.size ?? size,
+        email: (params.search ?? search) || undefined,
+        name: (params.search ?? search) || undefined,
+      });
       setMembers(data.content || []);
       setTotalPages(data.totalPages || 1);
     } catch (err) {
@@ -39,12 +41,21 @@ const GetMemberList = () => {
 
   useEffect(() => {
     fetchMembers();
+    // eslint-disable-next-line
   }, [refresh, page, size]);
 
-  // 검색 처리
+  // 검색 버튼 클릭
   const handleSearch = () => {
     setPage(0);
-    fetchMembers();
+    fetchMembers({ search, page: 0 });
+    setIsSearched(true);
+  };
+
+  // 전체목록 보기
+  const handleBack = () => {
+    setSearch("");
+    fetchMembers({ search: "", page: 0 });
+    setIsSearched(false);
   };
 
   // 회원 상세로 이동
@@ -58,6 +69,13 @@ const GetMemberList = () => {
     setRefresh((prev) => !prev);
   };
 
+  // Enter 키로 검색
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-semibold mb-6">회원 관리</h1>
@@ -67,10 +85,10 @@ const GetMemberList = () => {
         <div className="flex items-center gap-4">
           <input
             type="text"
-            placeholder="이메일 검색"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="이메일 또는 이름으로 검색"
             className="border rounded-md px-3 py-2 flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
@@ -80,6 +98,14 @@ const GetMemberList = () => {
             검색
           </button>
         </div>
+        {isSearched && (
+          <button
+            onClick={handleBack}
+            className="text-blue-500 hover:underline mt-2"
+          >
+            전체목록 보기
+          </button>
+        )}
       </div>
 
       {/* 삭제 버튼 */}
@@ -117,18 +143,18 @@ const GetMemberList = () => {
                     className="rounded"
                   />
                 </th>
-                <th className="p-3 text-left font-medium text-black">이메일</th>
-                <th className="p-3 text-left font-medium text-black">이름</th>
-                <th className="p-3 text-left font-medium text-black">가입일</th>
-                <th className="p-3 text-left font-medium text-black">상태</th>
-                <th className="p-3 text-left font-medium text-black">상세</th>
+                <th className="p-3 text-left font-medium text-gray-600">이메일</th>
+                <th className="p-3 text-left font-medium text-gray-600">이름</th>
+                <th className="p-3 text-left font-medium text-gray-600">가입일</th>
+                <th className="p-3 text-left font-medium text-gray-600">상태</th>
+                <th className="p-3 text-left font-medium text-gray-600">상세</th>
               </tr>
             </thead>
             <tbody>
               {members.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="p-8 text-center text-gray-500">
-                    등록된 회원이 없습니다.
+                    {isSearched ? "검색 결과가 없습니다." : "등록된 회원이 없습니다."}
                   </td>
                 </tr>
               ) : (
@@ -179,42 +205,7 @@ const GetMemberList = () => {
       )}
 
       {/* 페이지네이션 */}
-      <div className="mt-6 flex justify-center items-center gap-2">
-        <button
-          onClick={() => setPage(Math.max(0, page - 1))}
-          disabled={page === 0}
-          className="px-3 py-1 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-        >
-          &lt; 이전
-        </button>
-
-        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-          const pageNum = Math.floor(page / 5) * 5 + i;
-          if (pageNum >= totalPages) return null;
-
-          return (
-            <button
-              key={pageNum}
-              onClick={() => setPage(pageNum)}
-              className={`px-3 py-1 rounded-md text-sm ${
-                page === pageNum 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-white border hover:bg-gray-50'
-              }`}
-            >
-              {pageNum + 1}
-            </button>
-          );
-        })}
-
-        <button
-          onClick={() => setPage(Math.min(totalPages - 1, page + 1))}
-          disabled={page >= totalPages - 1}
-          className="px-3 py-1 border rounded-md disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-        >
-          다음 &gt;
-        </button>
-      </div>
+      <Pagination page={page} totalPages={totalPages} setPage={setPage} />
     </div>
   );
 };
