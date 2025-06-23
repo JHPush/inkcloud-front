@@ -9,7 +9,7 @@ const FIELD_LABELS = {
   name: "도서명",
   author: "저자",
   publisher: "출판사",
-  isbn: "ISBN",
+  isbn: "ISBN"
 };
 
 const ProductFilterSidebar = ({
@@ -18,7 +18,6 @@ const ProductFilterSidebar = ({
   categoryIds,
   setCategoryIds,
   categories,
-  onSearch,
   keyword,
   sortType,
 }) => {
@@ -28,15 +27,13 @@ const ProductFilterSidebar = ({
   const handleSearchClick = () => {
     const params = new URLSearchParams();
 
-    // ✅ 모든 현재 상태를 정확히 쿼리로 반영
     if (keyword) params.set("keyword", keyword);
     if (sortType) params.set("sortType", sortType);
+    [...new Set(searchFields)].forEach((field) => params.append("searchFields", field));
+    [...new Set(categoryIds)].forEach((id) => params.append("categoryIds", id));
 
-    searchFields.forEach((field) => params.append("searchFields", field));
-    categoryIds.forEach((id) => params.append("categoryIds", id));
-
+    // navigate만 수행: searchParams가 바뀌면 ProductListPage에서 검색 수행됨
     navigate(`${location.pathname}?${params.toString()}`);
-    onSearch(); // URL 반영 후 검색 실행
   };
 
   return (
