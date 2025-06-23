@@ -39,19 +39,12 @@ const ProductFilterSidebar = ({ categories }) => {
     navigate(`/products/search?${newParams.toString()}`);
   };
 
-  const handleSearch = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("page", "0");
-    navigate(`/products/search?${newParams.toString()}`);
-  };
-
   const renderCategoryTree = () => {
     const parents = categories.filter((c) => c.parentId === null);
     const children = categories.filter((c) => c.parentId !== null);
 
     return parents.map((parent) => (
       <div key={parent.id}>
-        {/* 상위 카테고리 */}
         <label className="flex items-center space-x-2 font-semibold text-black">
           <input
             type="checkbox"
@@ -61,7 +54,6 @@ const ProductFilterSidebar = ({ categories }) => {
           <span>{parent.name}</span>
         </label>
 
-        {/* 하위 카테고리 */}
         <div className="ml-6 space-y-1 mt-1">
           {children
             .filter((child) => child.parentId === parent.id)
@@ -105,17 +97,10 @@ const ProductFilterSidebar = ({ categories }) => {
       {/* 카테고리 필터 */}
       <div>
         <h2 className="font-semibold mb-2">카테고리</h2>
-        <div className="space-y-1 max-h-64 overflow-y-auto">
+        <div className="space-y-1 max-h-96 overflow-y-auto">
           {renderCategoryTree()}
         </div>
       </div>
-
-      <button
-        className="px-4 py-2 bg-black text-white rounded-md w-full"
-        onClick={handleSearch}
-      >
-        검색
-      </button>
     </div>
   );
 };
