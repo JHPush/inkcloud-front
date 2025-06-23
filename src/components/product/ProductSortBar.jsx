@@ -1,25 +1,40 @@
+// components/product/ProductSortBar.jsx
 import React from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const ProductSortBar = ({ sortType, setSortType, onSearch }) => {
-  const handleChange = (e) => {
-    const newSortType = e.target.value;
-    setSortType(newSortType);
-    onSearch(); // 상태 변경 후 검색 수행 (navigate는 부모가 처리)
+const SORT_OPTIONS = [
+  { value: "POPULAR", label: "인기순" },
+  { value: "LATEST", label: "최신순" },
+  { value: "RATING", label: "평점순" },
+  { value: "HIGH_PRICE", label: "높은 가격순" },
+  { value: "LOW_PRICE", label: "낮은 가격순" },
+];
+
+const ProductSortBar = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const currentSort = searchParams.get("sortType") || "POPULAR";
+
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("sortType", value);
+    newParams.set("page", "0"); // 정렬 변경 시 1페이지로 초기화
+    navigate(`/products/search?${newParams.toString()}`);
   };
 
   return (
-    <div className="flex justify-between items-center mb-6">
-      <h2 className="text-xl font-semibold text-gray-800">📚 검색 결과</h2>
+    <div className="flex justify-end mb-4">
       <select
-        className="border border-gray-300 rounded-full px-4 py-2 text-sm shadow-sm focus:outline-none"
-        value={sortType}
-        onChange={handleChange}
+        value={currentSort}
+        onChange={handleSortChange}
+        className="border border-gray-300 rounded-md px-3 py-2 text-sm"
       >
-        <option value="POPULAR">인기순</option>
-        <option value="LATEST">최신순</option>
-        <option value="RATING">평점순</option>
-        <option value="PRICE_HIGH">높은 가격순</option>
-        <option value="PRICE_LOW">낮은 가격순</option>
+        {SORT_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   );

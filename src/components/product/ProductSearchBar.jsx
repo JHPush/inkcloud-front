@@ -1,36 +1,53 @@
-import React from "react";
+// components/product/ProductSearchBar.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 
-const ProductSearchBar = ({ keyword, setKeyword, onSearch }) => {
+const ProductSearchBar = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const initialKeyword = searchParams.get("keyword") || "";
+  const [keyword, setKeyword] = useState(initialKeyword);
+
+  // URL이 바뀌었을 때 keyword도 반영되게 (ex. 뒤로가기 등)
+  useEffect(() => {
+    setKeyword(searchParams.get("keyword") || "");
+  }, [searchParams]);
+
+  const handleSearch = () => {
+    const newParams = new URLSearchParams(searchParams);
+    if (keyword) {
+      newParams.set("keyword", keyword);
+    } else {
+      newParams.delete("keyword");
+    }
+    newParams.set("page", "0"); // 검색하면 페이지 초기화
+    navigate(`/products/search?${newParams.toString()}`);
+  };
+
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") onSearch();
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
-    <div className="flex justify-center w-full mb-6">
-      <div className="relative w-full max-w-2xl">
-        <input
-          type="text"
-          placeholder="도서명, 저자, 출판사 검색..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full py-3 pl-5 pr-12 rounded-full 
-                     bg-white text-gray-800 text-base 
-                     placeholder:text-gray-400 
-                     border border-gray-300 
-                     shadow-md focus:outline-none 
-                     focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={onSearch}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 
-                     bg-black text-white p-2 rounded-full 
-                     hover:bg-gray-800 transition-all"
-        >
-          <Search size={18} />
-        </button>
-      </div>
+    <div className="flex items-center space-x-2 mb-4">
+      <input
+        type="text"
+        placeholder="검색어를 입력하세요"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className="w-full border rounded-md px-4 py-2"
+      />
+      <button
+        onClick={handleSearch}
+        className="p-2 bg-black text-white rounded-md"
+      >
+        <Search size={18} />
+      </button>
     </div>
   );
 };
