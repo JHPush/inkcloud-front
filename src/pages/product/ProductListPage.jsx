@@ -73,9 +73,9 @@ const ProductListPage = () => {
       setTotalPages(data?.products?.totalPages ?? 1);
 
       // 검색 후 상태 초기화
-      setKeyword("");
-      setSearchFields(DEFAULT_FIELDS);
-      setCategoryIds([]);
+      // setKeyword("");
+      // setSearchFields(DEFAULT_FIELDS);
+      // setCategoryIds([]);
     } catch (error) {
       console.error("❌ 검색 실패", error);
     }
