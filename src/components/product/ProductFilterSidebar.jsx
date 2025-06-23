@@ -58,7 +58,7 @@ const ProductFilterSidebar = ({
       {/* 검색 버튼 */}
       <div className="mt-6">
         <button
-          onClick={onSearch}
+          onClick={() => onSearch(categoryIds.slice(), searchFields.slice())}
           className="w-full py-2 rounded-full bg-black text-white hover:bg-gray-800 transition-all"
         >
           🔍 검색
