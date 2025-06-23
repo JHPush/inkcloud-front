@@ -1,26 +1,10 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
-const ProductSortBar = ({ sortType, setSortType, keyword, searchFields, categoryIds }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
+const ProductSortBar = ({ sortType, setSortType, onSearch }) => {
   const handleChange = (e) => {
     const newSortType = e.target.value;
     setSortType(newSortType);
-
-    const params = new URLSearchParams();
-    if (keyword) params.set("keyword", keyword);
-    if (newSortType) params.set("sortType", newSortType);
-
-    // ✅ searchFields 기본값 처리
-    const fieldsToUse = searchFields.length > 0 ? searchFields : ["name", "author", "publisher", "isbn"];
-    fieldsToUse.forEach((field) => params.append("searchFields", field));
-
-    // ✅ categoryIds는 상황에 따라 유지
-    categoryIds.forEach((id) => params.append("categoryIds", id));
-
-    navigate(`${location.pathname}?${params.toString()}`);
+    onSearch(); // 상태 변경 후 검색 수행 (navigate는 부모가 처리)
   };
 
   return (
