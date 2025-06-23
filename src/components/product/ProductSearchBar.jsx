@@ -1,65 +1,53 @@
-import React from "react";
+// components/product/ProductSearchBar.jsx
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
 
-const ProductSearchBar = ({ keyword, setKeyword, searchFields, categoryIds, sortType }) => {
+const ProductSearchBar = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
+
+  const initialKeyword = searchParams.get("keyword") || "";
+  const [keyword, setKeyword] = useState(initialKeyword);
+
+  // URL이 바뀌었을 때 keyword도 반영되게 (ex. 뒤로가기 등)
+  useEffect(() => {
+    setKeyword(searchParams.get("keyword") || "");
+  }, [searchParams]);
 
   const handleSearch = () => {
-    const params = new URLSearchParams();
-
-    if (keyword) params.set("keyword", keyword);
-    if (sortType) params.set("sortType", sortType);
-
-    // ✅ 검색 필드는 항상 포함 (없으면 기본값 사용 필요)
-    if (!searchFields || searchFields.length === 0) {
-      ["name", "author", "publisher", "isbn"].forEach((field) =>
-        params.append("searchFields", field)
-      );
+    const newParams = new URLSearchParams(searchParams);
+    if (keyword) {
+      newParams.set("keyword", keyword);
     } else {
-      searchFields.forEach((field) => params.append("searchFields", field));
+      newParams.delete("keyword");
     }
-
-    // ✅ '최초 검색 시 categoryIds는 제외'
-    if (keyword && location.pathname === "/products/search") {
-      // 필터 제거를 원하면 categoryIds는 제거
-      // 만약 유지하고 싶다면 아래 라인 사용
-      // categoryIds.forEach((id) => params.append("categoryIds", id));
-    }
-
-    navigate(`${location.pathname}?${params.toString()}`);
+    newParams.set("page", "0"); // 검색하면 페이지 초기화
+    navigate(`/products/search?${newParams.toString()}`);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
-    <div className="flex justify-center w-full mb-6">
-      <div className="relative w-full max-w-2xl">
-        <input
-          type="text"
-          placeholder="도서명, 저자, 출판사 검색..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full py-3 pl-5 pr-12 rounded-full 
-                     bg-white text-gray-800 text-base 
-                     placeholder:text-gray-400 
-                     border border-gray-300 
-                     shadow-md focus:outline-none 
-                     focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 
-                     bg-black text-white p-2 rounded-full 
-                     hover:bg-gray-800 transition-all"
-        >
-          <Search size={18} />
-        </button>
-      </div>
+    <div className="flex items-center space-x-2 mb-4">
+      <input
+        type="text"
+        placeholder="검색어를 입력하세요"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className="w-full border rounded-md px-4 py-2"
+      />
+      <button
+        onClick={handleSearch}
+        className="p-2 bg-black text-white rounded-md"
+      >
+        <Search size={18} />
+      </button>
     </div>
   );
 };

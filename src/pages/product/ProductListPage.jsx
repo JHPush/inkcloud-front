@@ -17,69 +17,45 @@ const ProductListPage = () => {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [keyword, setKeyword] = useState("");
-  const [searchFields, setSearchFields] = useState(DEFAULT_FIELDS);
-  const [categoryIds, setCategoryIds] = useState([]);
-  const [sortType, setSortType] = useState("POPULAR");
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  useEffect(() => {
-    const ids = searchParams.getAll("categoryIds");
-    const keywordFromParam = searchParams.get("keyword") || "";
+  const getParamsFromURL = () => {
+    const keyword = searchParams.get("keyword") || "";
+    const searchFields = searchParams.getAll("searchFields");
+    const categoryIds = searchParams.getAll("categoryIds");
+    const sortType = searchParams.get("sortType") || "POPULAR";
+    const page = parseInt(searchParams.get("page") || "0", 10);
+    return { keyword, searchFields, categoryIds, sortType, page };
+  };
 
-    console.log("[useEffect] URL 파라미터:", {
-      ids,
-      keywordFromParam,
-      searchParams: searchParams.toString(),
-    });
-
-    setCategoryIds(ids);
-    setKeyword(keywordFromParam);
-
-    // category만 있을 때 초기값 세팅
-    if (ids.length > 0 && !searchParams.has("keyword")) {
-      setSearchFields(DEFAULT_FIELDS);
-    }
-
-    handleSearch(0, ids, keywordFromParam);
-  }, [searchParams]);
-
-  const handleSearch = async (
-    targetPage = 0,
-    externalCategoryIds = categoryIds,
-    externalKeyword = keyword
-  ) => {
+  const handleSearch = async () => {
+    const { keyword, searchFields, categoryIds, sortType, page } = getParamsFromURL();
     try {
       const params = {
-        keyword: externalKeyword,
-        searchFields,
-        categoryIds: externalCategoryIds,
+        keyword,
+        searchFields: searchFields.length > 0 ? searchFields : DEFAULT_FIELDS,
+        categoryIds,
         sortType,
-        page: targetPage,
+        page,
         size: 10,
       };
 
       console.log("[handleSearch] 검색 조건: ", params);
-
       const data = await fetchProducts(params);
-
-      console.log("[handleSearch] 응답 데이터: ", data);
-
       setProducts(data?.products?.content ?? []);
       setCategories(data?.categoryCounts ?? []);
       setPage(data?.products?.number ?? 0);
       setTotalPages(data?.products?.totalPages ?? 1);
-
-      // 검색 후 상태 초기화
-      // setKeyword("");
-      // setSearchFields(DEFAULT_FIELDS);
-      // setCategoryIds([]);
     } catch (error) {
-      console.error("❌ 검색 실패", error);
+      console.error("❌ 검색 실패:", error);
     }
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [searchParams]);
 
   const handleAddToCart = async (productId) => {
     try {
@@ -110,33 +86,10 @@ const ProductListPage = () => {
   return (
     <BasicLayout>
       <div className="flex min-h-screen">
-        <ProductFilterSidebar
-          searchFields={searchFields}
-          setSearchFields={setSearchFields}
-          categoryIds={categoryIds}
-          setCategoryIds={setCategoryIds}
-          categories={categories}
-          keyword={keyword}
-          sortType={sortType}
-          onSearch={() => handleSearch(0)}
-        />
+        <ProductFilterSidebar categories={categories} />
         <div className="w-3/4 p-6">
-          <ProductSearchBar
-            keyword={keyword}
-            setKeyword={setKeyword}
-            searchFields={searchFields}
-            categoryIds={categoryIds}
-            sortType={sortType}
-            onSearch={() => handleSearch(0)}
-          />
-          <ProductSortBar
-            sortType={sortType}
-            setSortType={setSortType}
-            keyword={keyword}
-            searchFields={searchFields}
-            categoryIds={categoryIds}
-            onSearch={() => handleSearch(0)}
-          />
+          <ProductSearchBar />
+          <ProductSortBar />
           {products.map((product) => (
             <ProductItem
               key={product.id}
@@ -149,7 +102,11 @@ const ProductListPage = () => {
           <ProductPagination
             page={page}
             totalPages={totalPages}
-            onPageChange={(p) => handleSearch(p)}
+            onPageChange={(newPage) => {
+              const newParams = new URLSearchParams(searchParams);
+              newParams.set("page", newPage);
+              navigate(`/products/search?${newParams.toString()}`);
+            }}
           />
         </div>
       </div>

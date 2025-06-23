@@ -1,44 +1,42 @@
+// components/product/ProductSortBar.jsx
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const ProductSortBar = ({ sortType, setSortType, keyword, searchFields, categoryIds }) => {
+const SORT_OPTIONS = [
+  { value: "POPULAR", label: "인기순" },
+  { value: "LATEST", label: "최신순" },
+  { value: "RATING", label: "평점순" },
+  { value: "HIGH_PRICE", label: "높은 가격순" },
+  { value: "LOW_PRICE", label: "낮은 가격순" },
+];
+
+const ProductSortBar = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
+  const currentSort = searchParams.get("sortType") || "POPULAR";
 
-  const handleChange = (e) => {
-    const newSortType = e.target.value;
-    setSortType(newSortType);
-
-    const params = new URLSearchParams();
-    if (keyword) params.set("keyword", keyword);
-    if (newSortType) params.set("sortType", newSortType);
-
-    console.log("[ProductSortBar 안의 params] : ", params);
-
-    // searchFields 기본값 처리
-    const fieldsToUse = searchFields.length > 0 ? searchFields : ["name", "author", "publisher", "isbn"];
-    fieldsToUse.forEach((field) => params.append("searchFields", field));
-
-    // categoryIds는 상황에 따라 유지
-    categoryIds.forEach((id) => params.append("categoryIds", id));
-
-    navigate(`${location.pathname}?${params.toString()}`);
+  const handleSortChange = (value) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("sortType", value);
+    newParams.set("page", "0"); // 정렬 바꾸면 1페이지로 초기화
+    navigate(`/products/search?${newParams.toString()}`);
   };
 
   return (
-    <div className="flex justify-between items-center mb-6">
-      <h2 className="text-xl font-semibold text-gray-800">📚 검색 결과</h2>
-      <select
-        className="border border-gray-300 rounded-full px-4 py-2 text-sm shadow-sm focus:outline-none"
-        value={sortType}
-        onChange={handleChange}
-      >
-        <option value="POPULAR">인기순</option>
-        <option value="LATEST">최신순</option>
-        <option value="RATING">평점순</option>
-        <option value="PRICE_HIGH">높은 가격순</option>
-        <option value="PRICE_LOW">낮은 가격순</option>
-      </select>
+    <div className="flex items-center justify-end mb-4 space-x-2">
+      {SORT_OPTIONS.map((option) => (
+        <button
+          key={option.value}
+          onClick={() => handleSortChange(option.value)}
+          className={`px-3 py-1 rounded-md text-sm border ${
+            currentSort === option.value
+              ? "bg-black text-white"
+              : "bg-white text-gray-700 border-gray-300"
+          }`}
+        >
+          {option.label}
+        </button>
+      ))}
     </div>
   );
 };

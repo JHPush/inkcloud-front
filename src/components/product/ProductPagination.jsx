@@ -1,76 +1,54 @@
+// components/product/ProductPagination.jsx
 import React from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-const ProductPagination = ({ page, totalPages, onPageChange }) => {
-  const MAX_VISIBLE = 7; // 보여줄 최대 페이지 수 (이미지 기준)
+const ProductPagination = ({ page, totalPages }) => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const getPageNumbers = () => {
-    const pages = [];
-
-    if (totalPages <= MAX_VISIBLE) {
-      for (let i = 0; i < totalPages; i++) pages.push(i);
-    } else {
-      const left = Math.max(0, page - 2);
-      const right = Math.min(totalPages - 1, page + 2);
-
-      if (page > 3) {
-        pages.push(0);
-        if (page > 4) pages.push("ellipsis-left");
-      }
-
-      for (let i = left; i <= right; i++) {
-        pages.push(i);
-      }
-
-      if (page < totalPages - 4) {
-        if (page < totalPages - 5) pages.push("ellipsis-right");
-        pages.push(totalPages - 1);
-      }
-    }
-
-    return pages;
+  const goToPage = (targetPage) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("page", targetPage);
+    navigate(`/products/search?${newParams.toString()}`);
   };
 
-  const pageNumbers = getPageNumbers();
+  if (totalPages <= 1) return null;
+
+  const visiblePages = [];
+  const start = Math.max(0, page - 2);
+  const end = Math.min(totalPages - 1, page + 2);
+  for (let i = start; i <= end; i++) {
+    visiblePages.push(i);
+  }
 
   return (
-    <div className="flex justify-center mt-6 space-x-2 text-sm">
-      {/* ◀ 이전 */}
+    <div className="flex justify-center items-center space-x-2 mt-6">
       <button
+        onClick={() => goToPage(Math.max(0, page - 1))}
         disabled={page === 0}
-        onClick={() => onPageChange(page - 1)}
-        className="px-3 py-1 border rounded-full disabled:opacity-30"
+        className="px-3 py-1 border rounded disabled:opacity-30"
       >
-        ◀
+        이전
       </button>
 
-      {/* 페이지 숫자 & 생략 기호 */}
-      {pageNumbers.map((p, idx) =>
-        typeof p === "string" ? (
-          <span key={idx} className="px-2 py-1 text-gray-500">
-            ...
-          </span>
-        ) : (
-          <button
-            key={p}
-            onClick={() => onPageChange(p)}
-            className={`px-3 py-1 rounded-full border ${
-              p === page
-                ? "bg-gray-700 text-white font-bold"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            {p + 1}
-          </button>
-        )
-      )}
+      {visiblePages.map((p) => (
+        <button
+          key={p}
+          onClick={() => goToPage(p)}
+          className={`px-3 py-1 border rounded ${
+            p === page ? "bg-black text-white" : "bg-white text-gray-700"
+          }`}
+        >
+          {p + 1}
+        </button>
+      ))}
 
-      {/* ▶ 다음 */}
       <button
-        disabled={page >= totalPages - 1}
-        onClick={() => onPageChange(page + 1)}
-        className="px-3 py-1 border rounded-full disabled:opacity-30"
+        onClick={() => goToPage(Math.min(totalPages - 1, page + 1))}
+        disabled={page === totalPages - 1}
+        className="px-3 py-1 border rounded disabled:opacity-30"
       >
-        ▶
+        다음
       </button>
     </div>
   );
