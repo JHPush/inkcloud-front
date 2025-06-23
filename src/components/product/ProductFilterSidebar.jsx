@@ -15,8 +15,6 @@ const ProductFilterSidebar = ({ categories }) => {
 
   const selectedFields = searchParams.getAll("searchFields");
   const selectedCategoryIds = searchParams.getAll("categoryIds").map(String);
-  const keyword = searchParams.get("keyword") || "";
-  const sortType = searchParams.get("sortType") || "POPULAR";
 
   const toggleValue = (arr, value) =>
     arr.includes(value)
@@ -71,13 +69,13 @@ const ProductFilterSidebar = ({ categories }) => {
         <h2 className="font-semibold mb-2">카테고리</h2>
         <div className="space-y-1 max-h-64 overflow-y-auto">
           {categories.map((cat) => (
-            <label key={cat.categoryId} className="flex items-center space-x-2">
+            <label key={cat.id} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={selectedCategoryIds.includes(String(cat.categoryId))}
-                onChange={() => handleCategoryToggle(cat.categoryId)}
+                checked={selectedCategoryIds.includes(String(cat.id))}
+                onChange={() => handleCategoryToggle(cat.id)}
               />
-              <span>{cat.categoryName} ({cat.count})</span>
+              <span>{cat.name}</span>
             </label>
           ))}
         </div>

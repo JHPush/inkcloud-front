@@ -1,7 +1,7 @@
 // pages/product/ProductListPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { fetchProducts } from "../../api/productApi";
+import { fetchProducts, fetchAllCategories } from "../../api/productApi";
 import { addToCart } from "../../api/cartApi";
 import BasicLayout from "../../layouts/BasicLayout";
 import ProductFilterSidebar from "../../components/product/ProductFilterSidebar";
@@ -17,7 +17,7 @@ const ProductListPage = () => {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]); // 전체 카테고리
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -42,10 +42,8 @@ const ProductListPage = () => {
         size: 10,
       };
 
-      console.log("[handleSearch] 검색 조건: ", params);
       const data = await fetchProducts(params);
       setProducts(data?.products?.content ?? []);
-      setCategories(data?.categoryCounts ?? []);
       setPage(data?.products?.number ?? 0);
       setTotalPages(data?.products?.totalPages ?? 1);
     } catch (error) {
@@ -54,7 +52,16 @@ const ProductListPage = () => {
   };
 
   useEffect(() => {
-    handleSearch();
+    const fetchData = async () => {
+      try {
+        const allCats = await fetchAllCategories();
+        setCategories(allCats); // 전체 카테고리 설정
+        handleSearch();
+      } catch (error) {
+        console.error("❌ 카테고리 로딩 실패:", error);
+      }
+    };
+    fetchData();
   }, [searchParams]);
 
   const handleAddToCart = async (productId) => {
@@ -102,11 +109,6 @@ const ProductListPage = () => {
           <ProductPagination
             page={page}
             totalPages={totalPages}
-            onPageChange={(newPage) => {
-              const newParams = new URLSearchParams(searchParams);
-              newParams.set("page", newPage);
-              navigate(`/products/search?${newParams.toString()}`);
-            }}
           />
         </div>
       </div>
