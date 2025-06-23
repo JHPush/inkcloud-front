@@ -1,5 +1,4 @@
 import React from 'react';
-import QuantitySelect from './QuantitySelect';
 import { useNavigate } from 'react-router-dom';
 
 const CartItemCard = ({
@@ -10,8 +9,18 @@ const CartItemCard = ({
   onDelete,
 }) => {
   const navigate = useNavigate();
-  const status = item.product.status;
+  const { product, quantity } = item;
+  const status = product.status;
   const isUnavailable = status === 'OUT_OF_STOCK' || status === 'DISCONTINUED';
+  const stock = product.quantity;
+
+  const handleDecrease = () => {
+    if (quantity > 1) onQuantityChange(item.id, quantity - 1);
+  };
+
+  const handleIncrease = () => {
+    if (quantity < stock) onQuantityChange(item.id, quantity + 1);
+  };
 
   return (
     <div
@@ -33,25 +42,25 @@ const CartItemCard = ({
 
         {/* 이미지 */}
         <img
-          src={item.product.image}
-          alt={item.product.name}
+          src={product.image}
+          alt={product.name}
           className="w-24 h-32 object-cover rounded cursor-pointer"
-          onClick={() => navigate(`/products/${item.product.id}`)}
+          onClick={() => navigate(`/products/${product.id}`)}
         />
 
         {/* 정보 */}
         <div className="space-y-1">
           <p
             className="font-bold text-lg text-blue-700 cursor-pointer hover:underline"
-            onClick={() => navigate(`/products/${item.product.id}`)}
+            onClick={() => navigate(`/products/${product.id}`)}
           >
-            {item.product.name}
+            {product.name}
           </p>
           <p className="text-sm text-gray-600">
-            {item.product.author} / {item.product.publisher}
+            {product.author} / {product.publisher}
           </p>
           <p className="text-md text-blue-600">
-            {item.product.price.toLocaleString()}원
+            {product.price.toLocaleString()}원
           </p>
 
           {status === 'OUT_OF_STOCK' && (
@@ -61,12 +70,26 @@ const CartItemCard = ({
             <p className="text-gray-500">절판</p>
           )}
 
-          {/* 수량 선택 */}
-          <div onClick={(e) => e.stopPropagation()}>
-            <QuantitySelect
-              quantity={item.quantity}
-              onChange={(qty) => onQuantityChange(item.id, qty)}
-            />
+          {/* 수량 선택 (버튼 방식) */}
+          <div
+            className="flex items-center gap-2 mt-1"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={handleDecrease}
+              disabled={isUnavailable || quantity <= 1}
+              className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
+            >
+              -
+            </button>
+            <span className="w-6 text-center text-sm">{quantity}</span>
+            <button
+              onClick={handleIncrease}
+              disabled={isUnavailable || quantity >= stock}
+              className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-40"
+            >
+              +
+            </button>
           </div>
         </div>
       </div>
