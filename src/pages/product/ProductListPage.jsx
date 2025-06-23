@@ -25,54 +25,54 @@ const ProductListPage = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  // URL에서 상태 세팅
   useEffect(() => {
     const ids = searchParams.getAll("categoryIds");
+    const fields = searchParams.getAll("searchFields");
     const keywordFromParam = searchParams.get("keyword") || "";
-    const sortTypeFromParam = searchParams.get("sortType") || "POPULAR";
-    const searchFieldsFromParam = searchParams.getAll("searchFields");
+    const sort = searchParams.get("sortType") || "POPULAR";
 
-    setCategoryIds([...new Set(ids)]);
+    setCategoryIds(ids);
+    setSearchFields(fields.length ? fields : DEFAULT_FIELDS);
     setKeyword(keywordFromParam);
-    setSortType(sortTypeFromParam);
-    setSearchFields(
-      searchFieldsFromParam.length > 0
-        ? searchFieldsFromParam
-        : DEFAULT_FIELDS
-    );
-  }, [searchParams]);
+    setSortType(sort);
 
-  // 상태가 모두 세팅된 뒤에 검색 실행
-  useEffect(() => {
-    handleSearch(0, categoryIds, keyword, false);
-  }, [categoryIds, keyword, searchFields, sortType]);
+    handleSearch(0, ids, fields, keywordFromParam, sort);
+  }, [searchParams]);
 
   const handleSearch = async (
     targetPage = 0,
     externalCategoryIds = categoryIds,
+    externalSearchFields = searchFields,
     externalKeyword = keyword,
-    shouldReset = true
+    externalSortType = sortType
   ) => {
     try {
       const params = {
         keyword: externalKeyword,
-        searchFields,
+        searchFields: externalSearchFields,
         categoryIds: externalCategoryIds,
-        sortType,
+        sortType: externalSortType,
         page: targetPage,
         size: 10,
       };
+
+      const queryParams = new URLSearchParams();
+      externalCategoryIds.forEach((id) =>
+        queryParams.append("categoryIds", id)
+      );
+      externalSearchFields.forEach((field) =>
+        queryParams.append("searchFields", field)
+      );
+      queryParams.append("sortType", externalSortType);
+      queryParams.append("keyword", externalKeyword);
+
+      navigate(`/products/search?${queryParams.toString()}`);
+
       const data = await fetchProducts(params);
       setProducts(data?.products?.content ?? []);
       setCategories(data?.categoryCounts ?? []);
       setPage(data?.products?.number ?? 0);
       setTotalPages(data?.products?.totalPages ?? 1);
-
-      if (shouldReset) {
-        setKeyword("");
-        setSearchFields(DEFAULT_FIELDS);
-        setCategoryIds([]);
-      }
     } catch (error) {
       console.error("❌ 검색 실패", error);
     }
@@ -115,18 +115,20 @@ const ProductListPage = () => {
           categories={categories}
           keyword={keyword}
           sortType={sortType}
+          onSearch={() => handleSearch(0, categoryIds, searchFields, keyword, sortType)}
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
             keyword={keyword}
             setKeyword={setKeyword}
-            searchFields={searchFields}
-            categoryIds={categoryIds}
-            sortType={sortType}
+            onSearch={() => handleSearch(0)}
           />
           <ProductSortBar
             sortType={sortType}
-            setSortType={setSortType}
+            setSortType={(val) => {
+              setSortType(val);
+              handleSearch(0, categoryIds, searchFields, keyword, val);
+            }}
             keyword={keyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
@@ -144,7 +146,7 @@ const ProductListPage = () => {
             page={page}
             totalPages={totalPages}
             onPageChange={(p) =>
-              handleSearch(p, categoryIds, keyword, false)
+              handleSearch(p, categoryIds, searchFields, keyword, sortType)
             }
           />
         </div>

@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const toggleItem = (item, list, setList) => {
   setList(list.includes(item) ? list.filter((i) => i !== item) : [...list, item]);
@@ -18,24 +17,8 @@ const ProductFilterSidebar = ({
   categoryIds,
   setCategoryIds,
   categories,
-  keyword,
-  sortType,
+  onSearch,
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleSearchClick = () => {
-    const params = new URLSearchParams();
-
-    if (keyword) params.set("keyword", keyword);
-    if (sortType) params.set("sortType", sortType);
-    [...new Set(searchFields)].forEach((field) => params.append("searchFields", field));
-    [...new Set(categoryIds)].forEach((id) => params.append("categoryIds", id));
-
-    // navigate만 수행: searchParams가 바뀌면 ProductListPage에서 검색 수행됨
-    navigate(`${location.pathname}?${params.toString()}`);
-  };
-
   return (
     <div className="w-1/4 p-4 border-r bg-gray-50">
       <h2 className="text-xl font-semibold mb-4">검색 조건</h2>
@@ -75,7 +58,7 @@ const ProductFilterSidebar = ({
       {/* 검색 버튼 */}
       <div className="mt-6">
         <button
-          onClick={handleSearchClick}
+          onClick={onSearch}
           className="w-full py-2 rounded-full bg-black text-white hover:bg-gray-800 transition-all"
         >
           🔍 검색
