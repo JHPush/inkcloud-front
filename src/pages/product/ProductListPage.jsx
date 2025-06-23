@@ -1,3 +1,4 @@
+// pages/product/ProductListPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { fetchProducts } from "../../api/productApi";
@@ -12,61 +13,61 @@ import ProductPagination from "../../components/product/ProductPagination";
 const DEFAULT_FIELDS = ["name", "author", "publisher", "isbn"];
 
 const ProductListPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
+  const [keyword, setKeyword] = useState("");
+  const [searchFields, setSearchFields] = useState(DEFAULT_FIELDS);
+  const [categoryIds, setCategoryIds] = useState([]);
+  const [sortType, setSortType] = useState("POPULAR");
   const [categories, setCategories] = useState([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  const keyword = searchParams.get("keyword") || "";
-  const searchFields = searchParams.getAll("field") || DEFAULT_FIELDS;
-  const categoryIds = searchParams.getAll("category") || [];
-  const sortType = searchParams.get("sort") || "POPULAR";
-  const pageParam = parseInt(searchParams.get("page") || "0");
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const params = {
-          keyword,
-          searchFields,
-          categoryIds,
-          sortType,
-          page: pageParam,
-          size: 10,
-        };
-        const data = await fetchProducts(params);
-        setProducts(data?.products?.content ?? []);
-        setCategories(data?.categoryCounts ?? []);
-        setPage(data?.products?.number ?? 0);
-        setTotalPages(data?.products?.totalPages ?? 1);
-      } catch (error) {
-        console.error("❌ 검색 실패", error);
-      }
-    };
+    const ids = searchParams.getAll("categoryIds");
+    const keywordFromParam = searchParams.get("keyword") || "";
+    const sortTypeFromParam = searchParams.get("sortType") || "POPULAR";
+    const searchFieldsFromParam = searchParams.getAll("searchFields");
 
-    fetchData();
+    setCategoryIds(ids);
+    setKeyword(keywordFromParam);
+    setSortType(sortTypeFromParam);
+    setSearchFields(searchFieldsFromParam.length > 0 ? searchFieldsFromParam : DEFAULT_FIELDS);
+
+    handleSearch(0, ids, keywordFromParam, false); // ✅ 초기 진입도 상태 유지
   }, [searchParams]);
 
-  const handleSearch = (updated = {}) => {
-    const params = new URLSearchParams();
+  const handleSearch = async (
+    targetPage = 0,
+    externalCategoryIds = categoryIds,
+    externalKeyword = keyword,
+    shouldReset = true
+  ) => {
+    try {
+      const params = {
+        keyword: externalKeyword,
+        searchFields,
+        categoryIds: externalCategoryIds,
+        sortType,
+        page: targetPage,
+        size: 10,
+      };
+      const data = await fetchProducts(params);
+      setProducts(data?.products?.content ?? []);
+      setCategories(data?.categoryCounts ?? []);
+      setPage(data?.products?.number ?? 0);
+      setTotalPages(data?.products?.totalPages ?? 1);
 
-    // 기존 파라미터 유지
-    const newKeyword = updated.keyword ?? keyword;
-    const newFields = updated.searchFields ?? searchFields;
-    const newCategories = updated.categoryIds ?? categoryIds;
-    const newSort = updated.sortType ?? sortType;
-    const newPage = updated.page ?? 0;
-
-    if (newKeyword) params.set("keyword", newKeyword);
-    newFields.forEach((field) => params.append("field", field));
-    newCategories.forEach((id) => params.append("category", id));
-    if (newSort) params.set("sort", newSort);
-    params.set("page", newPage);
-
-    setSearchParams(params);
+      if (shouldReset) {
+        setKeyword("");
+        setSearchFields(DEFAULT_FIELDS);
+        setCategoryIds([]);
+      }
+    } catch (error) {
+      console.error("❌ 검색 실패", error);
+    }
   };
 
   const handleAddToCart = async (productId) => {
@@ -100,30 +101,30 @@ const ProductListPage = () => {
       <div className="flex min-h-screen">
         <ProductFilterSidebar
           searchFields={searchFields}
-          setSearchFields={(fields) => handleSearch({ searchFields: fields })}
+          setSearchFields={setSearchFields}
           categoryIds={categoryIds}
-          setCategoryIds={(ids) => handleSearch({ categoryIds: ids })}
+          setCategoryIds={setCategoryIds}
           categories={categories}
           keyword={keyword}
           sortType={sortType}
-          onSearch={() => handleSearch()}
+          onSearch={() => handleSearch(0, categoryIds, keyword, false)} // ✅ 초기화 방지
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
             keyword={keyword}
-            setKeyword={(k) => handleSearch({ keyword: k })}
+            setKeyword={setKeyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
             sortType={sortType}
-            onSearch={() => handleSearch()}
+            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // ✅ 초기화 방지
           />
           <ProductSortBar
             sortType={sortType}
-            setSortType={(sort) => handleSearch({ sortType: sort })}
+            setSortType={setSortType}
             keyword={keyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
-            onSearch={() => handleSearch()}
+            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // ✅ 초기화 방지
           />
           {products.map((product) => (
             <ProductItem
@@ -137,7 +138,9 @@ const ProductListPage = () => {
           <ProductPagination
             page={page}
             totalPages={totalPages}
-            onPageChange={(p) => handleSearch({ page: p })}
+            onPageChange={(p) =>
+              handleSearch(p, categoryIds, keyword, false) // ✅ 초기화 방지
+            }
           />
         </div>
       </div>
