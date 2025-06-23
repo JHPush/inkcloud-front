@@ -395,7 +395,7 @@ const OrderComp = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
                             <div>
                                 <label className="block mb-1 font-medium">이름</label>
-                                <input type="text" value={user?.firstName + user?.lastName || ''} readOnly className="w-full border rounded px-3 py-2 bg-gray-100" />
+                                <input type="text" value={user?.lastName + user?.firstName || ''} readOnly className="w-full border rounded px-3 py-2 bg-gray-100" />
                             </div>
                             <div>
                                 <label className="block mb-1 font-medium">연락처</label>
