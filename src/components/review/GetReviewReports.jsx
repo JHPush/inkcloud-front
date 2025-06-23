@@ -18,6 +18,12 @@ const REPORT_TYPE_OPTIONS = [
   { value: "ETC", label: "기타" },
 ];
 
+// 텍스트 말줄임표 처리 함수 추가 (파일 상단에 추가)
+const truncateText = (text, maxLength = 30) => {
+  if (!text) return '';
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+};
+
 const GetReviewReports = () => {
   const navigate = useNavigate();
   // 기본값: 한달 전 ~ 오늘
@@ -219,7 +225,11 @@ const GetReviewReports = () => {
                         onChange={() => handleCheck(report.id)}
                       />
                     </td>
-                    <td className="p-3 text-black text-center">{report.productName}</td>
+                    <td className="p-3 text-black text-center max-w-[150px] px-4">
+                      <div className="truncate" title={report.productName}>
+                        {truncateText(report.productName, 30)}
+                      </div>
+                    </td>
                     <td className="p-3 text-black text-center">
                       {
                         REPORT_TYPE_OPTIONS.find(
@@ -227,7 +237,11 @@ const GetReviewReports = () => {
                         )?.label || report.type
                       }
                     </td>
-                    <td className="p-3 text-black text-center">{report.reason}</td>
+                    <td className="p-3 text-black text-center max-w-[150px]">
+                      <div className="truncate" title={report.reason}>
+                        {truncateText(report.reason, 30)}
+                      </div>
+                    </td>
                     <td className="p-3 text-black text-center">{report.reporterEmail}</td>
                     <td className="p-3 text-black text-center">{kstTime}</td>
                   </tr>
