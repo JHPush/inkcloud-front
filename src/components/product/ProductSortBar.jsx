@@ -13,11 +13,13 @@ const ProductSortBar = ({ sortType, setSortType, keyword, searchFields, category
     if (keyword) params.set("keyword", keyword);
     if (newSortType) params.set("sortType", newSortType);
 
-    // ✅ searchFields 기본값 처리
+    console.log("[ProductSortBar 안의 params] : ", params);
+
+    // searchFields 기본값 처리
     const fieldsToUse = searchFields.length > 0 ? searchFields : ["name", "author", "publisher", "isbn"];
     fieldsToUse.forEach((field) => params.append("searchFields", field));
 
-    // ✅ categoryIds는 상황에 따라 유지
+    // categoryIds는 상황에 따라 유지
     categoryIds.forEach((id) => params.append("categoryIds", id));
 
     navigate(`${location.pathname}?${params.toString()}`);

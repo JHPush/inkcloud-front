@@ -30,6 +30,9 @@ const ProductFilterSidebar = ({
 
     if (keyword) params.set("keyword", keyword);
     if (sortType) params.set("sortType", sortType);
+
+    console.log("[ProductFilterSideBar 안의 params : ]", params);
+
     searchFields.forEach((field) => params.append("searchFields", field));
     categoryIds.forEach((id) => params.append("categoryIds", id));
 

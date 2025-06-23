@@ -29,6 +29,12 @@ const ProductListPage = () => {
     const ids = searchParams.getAll("categoryIds");
     const keywordFromParam = searchParams.get("keyword") || "";
 
+    console.log("[useEffect] URL 파라미터:", {
+      ids,
+      keywordFromParam,
+      searchParams: searchParams.toString(),
+    });
+
     setCategoryIds(ids);
     setKeyword(keywordFromParam);
 
@@ -54,7 +60,13 @@ const ProductListPage = () => {
         page: targetPage,
         size: 10,
       };
+
+      console.log("[handleSearch] 검색 조건: ", params);
+
       const data = await fetchProducts(params);
+
+      console.log("[handleSearch] 응답 데이터: ", data);
+
       setProducts(data?.products?.content ?? []);
       setCategories(data?.categoryCounts ?? []);
       setPage(data?.products?.number ?? 0);
