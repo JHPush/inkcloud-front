@@ -39,21 +39,6 @@ const MemberLayout = ({ children, tab, setTab }) => {
                 <button
                   className={`flex items-center w-full text-left px-4 py-2 rounded-lg transition
                     ${
-                      tab === "info"
-                        ? "bg-white text-blue-600 font-bold"
-                        : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
-                    }
-                  `}
-                  onClick={() => setTab("info")}
-                >
-                  <User className="w-5 h-5 mr-2" />
-                  <span>내 정보</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  className={`flex items-center w-full text-left px-4 py-2 rounded-lg transition
-                    ${
                       tab === "order"
                         ? "bg-white text-blue-600 font-bold"
                         : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
@@ -95,6 +80,21 @@ const MemberLayout = ({ children, tab, setTab }) => {
                 >
                   <MapPin className="w-5 h-5 mr-2" />
                   <span>배송지 관리</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`flex items-center w-full text-left px-4 py-2 rounded-lg transition
+                    ${
+                      tab === "info"
+                        ? "bg-white text-blue-600 font-bold"
+                        : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                    }
+                  `}
+                  onClick={() => setTab("info")}
+                >
+                  <User className="w-5 h-5 mr-2" />
+                  <span>내 정보</span>
                 </button>
               </li>
             </ul>
