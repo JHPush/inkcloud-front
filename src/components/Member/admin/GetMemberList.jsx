@@ -119,7 +119,7 @@ const GetMemberList = () => {
 
       {/* 검색 및 필터 영역 */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
-        <div className="flex flex-wrap items-center gap-6 mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-6 mb-3">
           {/* 검색어 입력 */}
           <div className="flex flex-grow items-center gap-4">
             <input
@@ -158,17 +158,20 @@ const GetMemberList = () => {
               <span className="text-black">탈퇴 회원만 보기</span>
             </label>
           </div>
+          
+          {/* 검색 버튼 */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleSearch}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+            >
+              검색
+            </button>
+          </div>
         </div>
         
-        {/* 검색 및 초기화 버튼 */}
-        <div className="flex items-center gap-4">
-          <button
-            onClick={handleSearch}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
-          >
-            검색
-          </button>
-          
+        {/* 필터 초기화 버튼 */}
+        <div className="flex justify-end">
           {(isSearched || memberStatus || sortOrder !== "createdAt,desc" || search) && (
             <button
               onClick={handleBack}
