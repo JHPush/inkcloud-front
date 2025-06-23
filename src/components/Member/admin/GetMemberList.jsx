@@ -71,6 +71,7 @@ const GetMemberList = () => {
     setPage(0);
   };
 
+  
   // 정렬 순서 변경 처리
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
