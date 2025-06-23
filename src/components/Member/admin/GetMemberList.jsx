@@ -15,8 +15,8 @@ const GetMemberList = () => {
   const [isSearched, setIsSearched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [sortOrder, setSortOrder] = useState("createdAt,desc"); // 정렬 순서 상태 추가
-  const [memberStatus, setMemberStatus] = useState(""); // 회원 상태 필터 추가
+  const [sortOrder, setSortOrder] = useState("createdAt,desc");
+  const [memberStatus, setMemberStatus] = useState("");
 
   const navigate = useNavigate();
 
@@ -25,14 +25,30 @@ const GetMemberList = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getUserList({
+      // 백엔드로 보낼 최종 파라미터
+      const requestParams = {
         page: params.page ?? page,
         size: params.size ?? size,
-        email: (params.search ?? search) || undefined,
-        name: (params.search ?? search) || undefined,
         sort: params.sort ?? sortOrder,
-        status: params.status ?? memberStatus,
-      });
+      };
+      
+      // 검색어가 있는 경우만 email, name 파라미터 추가
+      if ((params.search ?? search) && (params.search ?? search).trim() !== '') {
+        requestParams.email = params.search ?? search;
+        requestParams.name = params.search ?? search;
+      }
+      
+      // 회원 상태 필터가 있는 경우만 status 파라미터 추가
+      if ((params.status ?? memberStatus) && (params.status ?? memberStatus).trim() !== '') {
+        requestParams.status = params.status ?? memberStatus;
+      }
+      
+      console.log("API 요청 파라미터:", requestParams); // 디버깅용
+      
+      const data = await getUserList(requestParams);
+      
+      console.log("API 응답 데이터:", data); // 디버깅용
+      
       setMembers(data.content || []);
       setTotalPages(data.totalPages || 1);
     } catch (err) {
@@ -46,12 +62,17 @@ const GetMemberList = () => {
   useEffect(() => {
     fetchMembers();
     // eslint-disable-next-line
-  }, [refresh, page, size, sortOrder, memberStatus]);
+  }, [refresh, page, size]);
 
-  // 검색 버튼 클릭
+  // 검색 버튼 클릭 - 모든 필터 적용하여 검색
   const handleSearch = () => {
     setPage(0);
-    fetchMembers({ search, page: 0 });
+    fetchMembers({ 
+      search, 
+      page: 0,
+      status: memberStatus,
+      sort: sortOrder
+    });
     setIsSearched(true);
   };
 
@@ -60,22 +81,25 @@ const GetMemberList = () => {
     setSearch("");
     setMemberStatus("");
     setSortOrder("createdAt,desc");
-    fetchMembers({ search: "", page: 0, status: "" });
+    fetchMembers({ 
+      search: "", 
+      page: 0, 
+      status: "",
+      sort: "createdAt,desc" 
+    });
     setIsSearched(false);
   };
 
   // 회원 상태 변경 처리
   const handleStatusChange = (e) => {
-    const status = e.target.checked ? "WITHDRAW" : "";
-    setMemberStatus(status);
-    setPage(0);
+    setMemberStatus(e.target.checked ? "WITHDRAW" : "");
+    // 여기서는 API 요청 안함 - 검색 버튼 클릭 시 처리
   };
-
   
   // 정렬 순서 변경 처리
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
-    setPage(0);
+    // 여기서는 API 요청 안함 - 검색 버튼 클릭 시 처리
   };
 
   // 회원 상세로 이동
@@ -89,40 +113,27 @@ const GetMemberList = () => {
     setRefresh((prev) => !prev);
   };
 
-  // Enter 키로 검색
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-semibold mb-6">회원 관리</h1>
 
       {/* 검색 및 필터 영역 */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
-        <div className="flex items-center gap-4 mb-3">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="이메일 또는 이름으로 검색"
-            className="border rounded-md px-3 py-2 flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={handleSearch}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
-          >
-            검색
-          </button>
-        </div>
-        
-        <div className="flex flex-wrap items-center gap-6">
+        <div className="flex flex-wrap items-center gap-6 mb-3">
+          {/* 검색어 입력 */}
+          <div className="flex flex-grow items-center gap-4">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="이메일 또는 이름으로 검색"
+              className="border rounded-md px-3 py-2 flex-grow focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
           {/* 정렬 옵션 */}
           <div className="flex items-center">
-            <label className="mr-2 font-medium text-gray-700">정렬:</label>
+            <label className="mr-2 font-medium text-black">정렬:</label>
             <select
               value={sortOrder}
               onChange={handleSortChange}
@@ -144,11 +155,21 @@ const GetMemberList = () => {
                 onChange={handleStatusChange}
                 className="rounded mr-2"
               />
-              <span className="text-gray-700">탈퇴 회원만 보기</span>
+              <span className="text-black">탈퇴 회원만 보기</span>
             </label>
           </div>
+        </div>
+        
+        {/* 검색 및 초기화 버튼 */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleSearch}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+          >
+            검색
+          </button>
           
-          {(isSearched || memberStatus || sortOrder !== "createdAt,desc") && (
+          {(isSearched || memberStatus || sortOrder !== "createdAt,desc" || search) && (
             <button
               onClick={handleBack}
               className="text-blue-500 hover:underline"
