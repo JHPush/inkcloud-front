@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getOrderInfo } from "../../api/paymentOrderApi";
+import { getOrderInfo, putCancelOrder } from "../../api/paymentOrderApi";
 
 const OrderCompleteComp = () => {
     const loc = useLocation()
@@ -31,6 +31,7 @@ const OrderCompleteComp = () => {
     const getOrderComplete = async (orderId) => {
         if (retryCount.current >= MAX_RETRY) {
             console.error('최대 재시도 횟수 초과');
+            await putCancelOrder(orderId)
             return;
         }
         try {
