@@ -23,18 +23,18 @@ const DeleteMembers = ({ selectedEmails = [], onSuccess }) => {
 
   return (
     <div className="my-4 w-full">
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <button
           onClick={handleDelete}
           disabled={selectedEmails.length === 0}
-          className="px-2 py-1 rounded bg-red-500 text-white font-semibold hover:bg-red-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="px-1 py-1 rounded bg-red-500 text-white text-xs  hover:bg-red-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           회원 탈퇴
         </button>
       </div>
       {error && <div className="text-red-600 mt-2">{error}</div>}
 
-      <div className="flex justify-end mt-3 text-xs text-gray-500">
+      <div className="flex justify-start mt-3 text-xs text-gray-500">
         ※ 관리자 강제 회원 탈퇴는 복구가 불가능합니다. 탈퇴된 회원은 동일 이메일로 재가입이 일주일간 제한됩니다.
       </div>
     </div>

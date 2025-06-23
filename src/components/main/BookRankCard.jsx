@@ -1,19 +1,37 @@
 // src/components/Main/BookRankCard.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const BookRankCard = ({ book, rank }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/products/${book.bookId}`);
+  };
+
   return (
-    <div className="relative bg-white shadow-xl rounded-xl p-3 text-center hover:scale-105 transition-transform">
-      <div className="absolute top-2 left-2 bg-primary text-white text-xs rounded-full px-2 py-0.5">
-        {rank}
+    <div
+      onClick={handleClick}
+      className="relative bg-white shadow-md rounded-xl p-3 text-center hover:shadow-lg transition-shadow cursor-pointer"
+    >
+      {/* 랭킹 뱃지 */}
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-white text-sm font-bold px-3 py-1 rounded-full shadow">
+        #{rank}
       </div>
+
+      {/* 책 이미지 */}
       <img
-        src={book.image}
-        alt={book.title}
-        className="w-full h-48 object-cover rounded"
+        src={book.imageUrl}
+        alt={book.name}
+        className="w-full h-52 object-cover rounded-md"
       />
-      <div className="mt-2 text-sm font-semibold truncate">{book.title}</div>
-      <div className="text-xs text-gray-500 truncate">{book.author}</div>
+
+      {/* 책 정보 */}
+      <div className="mt-3 space-y-1">
+        <div className="text-sm font-semibold text-gray-800 truncate">{book.name}</div>
+        <div className="text-xs text-gray-500 truncate">{book.author}</div>
+        <div className="text-sm text-primary font-medium">{book.price?.toLocaleString()}원</div>
+      </div>
     </div>
   );
 };

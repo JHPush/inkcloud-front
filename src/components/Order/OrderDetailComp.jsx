@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getOrderInfo, patchOrdersWithState, patchUpdateOrdersWithState, putCancelOrder } from "../../api/paymentOrderApi";
 import { getMyInfo } from "../../api/memberApi";
 import { getReviewsByMember } from "../../api/reviewApi";
@@ -19,6 +19,7 @@ const OrderDetailComp = () => {
   const [order, setOrder] = useState();
   const [reviewedItemIds, setReviewedItemIds] = useState([]);
   const { id } = useParams();
+  const navi = useNavigate();
   const [stateType, setStateType] = useState("PREPARE");
 
   const refreshOrder = async () => {
@@ -72,6 +73,10 @@ const OrderDetailComp = () => {
     console.log('reer : ', res)
     setOrder(res);
     alert('상태가 반영되었습니다.')
+  }
+
+  const handleOnNavProduct = (item)=>{
+    navi('/products/'+String(item.itemId))
   }
 
   const getStatusColor = (state) => {
@@ -147,7 +152,7 @@ const OrderDetailComp = () => {
                   const diffMonth = (now.getFullYear() - orderDate.getFullYear()) * 12 + (now.getMonth() - orderDate.getMonth());
 
                   return (
-                    <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div key={idx} onClick={()=>handleOnNavProduct(item)} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:cursor-pointer">
                       <div className="w-16 h-20 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
                         {item.thumbnailUrl ? (
                           <img

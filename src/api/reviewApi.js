@@ -144,10 +144,18 @@ export const getReviewReports = async ({
   return response.data;
 };
 
-//리뷰 신고 리스트 조회 - 관리자 
+//리뷰 신고 리스트 삭제- 관리자 
 export const deleteReviewReports = async(reportIds) => {
   const response = await jwtAxios.delete(
       `${REVIEW_SERVICE_URL}/report`,     { data:  reportIds }
+  );
+  return response.data;
+};
+
+//리뷰의 신고리스트 조회- 관리자 
+export const getReportsByReviewId = async(reviewId) => {
+  const response = await jwtAxios.get(
+      `${REVIEW_SERVICE_URL}/reports/${reviewId}`   
   );
   return response.data;
 };

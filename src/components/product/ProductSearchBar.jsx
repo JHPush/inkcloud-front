@@ -1,11 +1,41 @@
-// components/product/ProductSearchBar.jsx
-// ProductListPage
 import React from "react";
-import { Search } from "lucide-react"; // 아이콘 라이브러리 사용
+import { Search } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const ProductSearchBar = ({ keyword, setKeyword, onSearch }) => {
+const ProductSearchBar = ({
+  keyword,
+  setKeyword,
+  searchFields,
+  categoryIds,
+  sortType,
+}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    // keyword 반영
+    if (keyword) params.set("keyword", keyword);
+
+    // 정렬 조건 반영
+    if (sortType) params.set("sortType", sortType);
+
+    // 검색 필드 (비어있으면 기본 필드 추가)
+    const fieldsToUse =
+      searchFields && searchFields.length > 0
+        ? searchFields
+        : ["name", "author", "publisher", "isbn"];
+    fieldsToUse.forEach((field) => params.append("searchFields", field));
+
+    // 카테고리 필터 유지
+    categoryIds?.forEach((id) => params.append("categoryIds", id));
+
+    navigate(`${location.pathname}?${params.toString()}`);
+  };
+
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") onSearch();
+    if (e.key === "Enter") handleSearch();
   };
 
   return (
@@ -25,7 +55,7 @@ const ProductSearchBar = ({ keyword, setKeyword, onSearch }) => {
                      focus:ring-2 focus:ring-blue-500"
         />
         <button
-          onClick={onSearch}
+          onClick={handleSearch}
           className="absolute right-2 top-1/2 transform -translate-y-1/2 
                      bg-black text-white p-2 rounded-full 
                      hover:bg-gray-800 transition-all"

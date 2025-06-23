@@ -1,70 +1,92 @@
-// src/components/Main/CategoryMenu.jsx
+// src/components/main/CategoryMenu.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchAllCategories } from "../../api/productApi";
+import { MenuIcon } from "lucide-react";
+
+const DEFAULT_FIELDS = ["name", "author", "publisher", "isbn"];
 
 const CategoryMenu = () => {
-  const [topCategories, setTopCategories] = useState([]);
-  const [subCategoriesMap, setSubCategoriesMap] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
         const data = await fetchAllCategories();
-
-        const tops = data.filter((cat) => cat.parentId === null);
-        const subs = data.filter((cat) => cat.parentId !== null);
-
-        const subMap = {};
-        subs.forEach((sub) => {
-          if (!subMap[sub.parentId]) subMap[sub.parentId] = [];
-          subMap[sub.parentId].push(sub);
-        });
-
-        setTopCategories(tops);
-        setSubCategoriesMap(subMap);
+        setCategories(data);
       } catch (err) {
-        console.error("카테고리 목록 불러오기 실패", err);
+        console.error("카테고리 불러오기 실패", err);
       }
     };
-
-    fetchCategories();
+    loadCategories();
   }, []);
 
-  const handleClick = (categoryId) => {
-    navigate(`/products?categoryIds=${categoryId}`);
+  const topCategories = categories.filter((c) => c.parentId === null);
+  const getChildren = (parentId) =>
+    categories.filter((c) => c.parentId === parentId);
+
+  const handleCategoryClick = (id) => {
+    const childIds = categories
+      .filter((c) => c.parentId === id)
+      .map((c) => c.id);
+
+    const allCategoryIds = [id, ...childIds];
+    const categoryQuery = allCategoryIds.map((id) => `categoryIds=${id}`).join("&");
+    const fieldQuery = DEFAULT_FIELDS.map((f) => `searchFields=${f}`).join("&");
+
+    navigate(`/products/search?${categoryQuery}&${fieldQuery}&sortType=POPULAR&keyword=`);
   };
 
   return (
-    <div className="w-full bg-white border-b px-4 py-2">
-      <div className="flex flex-wrap gap-2 text-sm">
-        {topCategories.map((top) => (
-          <div key={top.id} className="relative group">
+    <div className="relative">
+      {/* 메뉴 아이콘 + 상위 카테고리 */}
+      <div className="flex items-center space-x-3 px-4 py-2">
+        <button onClick={() => setShowAll(!showAll)} className="text-gray-600 hover:text-black">
+          <MenuIcon className="w-5 h-5" />
+        </button>
+        <div className="flex flex-wrap gap-4 text-sm">
+          {topCategories.map((cat) => (
             <button
-              onClick={() => handleClick(top.id)}
-              className="px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800"
+              key={cat.id}
+              onClick={() => handleCategoryClick(cat.id)}
+              className="hover:text-blue-600"
             >
-              {top.name}
+              {cat.name}
             </button>
-
-            {/* 하위 카테고리 드롭다운 */}
-            {subCategoriesMap[top.id] && (
-              <div className="absolute z-10 hidden group-hover:block bg-white shadow-md rounded mt-1 min-w-[10rem]">
-                {subCategoriesMap[top.id].map((sub) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => handleClick(sub.id)}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {sub.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
+      {/* 전체 카테고리 박스 */}
+      {showAll && (
+        <div className="absolute z-40 w-full bg-white shadow-lg border rounded p-6">
+          <div className="grid grid-cols-3 gap-6 text-sm">
+            {topCategories.map((parent) => (
+              <div key={parent.id}>
+                <h4
+                  className="font-semibold mb-2 cursor-pointer hover:text-blue-600"
+                  onClick={() => handleCategoryClick(parent.id)}
+                >
+                  {parent.name}
+                </h4>
+                <ul className="space-y-1">
+                  {getChildren(parent.id).map((child) => (
+                    <li
+                      key={child.id}
+                      className="cursor-pointer hover:text-blue-600"
+                      onClick={() => handleCategoryClick(child.id)}
+                    >
+                      {child.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

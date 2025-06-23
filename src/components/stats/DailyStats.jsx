@@ -71,7 +71,7 @@ const DailyStats = () => {
         className="border rounded px-2 py-1"
         max={todayStr}
       />
-      <span className="text-xs text-gray-500">(선택일 기준 이전 14일 구간 표시)</span>
+      <span className="text-xs text-gray-500">(이전 14일 구간 표시)</span>
     </>
   );
 

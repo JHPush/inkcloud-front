@@ -82,7 +82,7 @@ const BaseChart = ({
   return (
     <div>
       {/* 날짜 네비 */}
-      <div className="flex gap-2 mb-4 items-center">
+      <div className="flex gap-2 mb-4 items-center justify-center">
         <button
           onClick={onPrev}
           className="btn btn-circle btn-outline btn-sm"
@@ -92,7 +92,13 @@ const BaseChart = ({
         </button>
         <div className="relative">
           <span
-            className="font-semibold text-primary cursor-pointer hover:text-blue-800 bg-primary/10 py-1 px-3 rounded-md border border-primary/20"
+            className="font-semibold px-2 py-1 rounded-lg border-2 border-blue-200 bg-white text-blue-700 hover:bg-blue-50 hover:border-blue-500 transition-all"
+            style={{
+              fontSize: "1.05rem",
+              boxShadow: "0 2px 8px 0 rgba(59,130,246,0.08)",
+              minWidth: 120,
+              textAlign: "center"
+            }}
             onClick={() => setShowDatePicker(!showDatePicker)}
           >
             {dateInfo}
@@ -116,49 +122,55 @@ const BaseChart = ({
       </div>
 
       {/* 매출 정보 카드 */}
-      <div className="mb-6 grid grid-cols-3 gap-4 max-w-3xl mx-auto">
-        <div className="flex flex-col items-center bg-white border border-gray-100 rounded-2xl py-4 px-2 min-w-[110px]">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl mb-2" style={{ background: "#f3f4f6" }}>
+      <div className="mb-6 grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+        <div className="flex flex-col items-center bg-white border-2 border-blue-400 rounded-2xl py-4 px-2 min-w-[110px]">
+          <div className="flex items-center justify-center w-10 h-10 mb-2">
             <span role="img" aria-label="매출" className="text-xl" style={{ color: salesColor }}>💰</span>
           </div>
-          <div className="text-xs font-semibold mb-1" style={{ color: labelGray }}>총 매출액</div>
-          <div className="text-lg font-extrabold" style={{ color: salesColor }}>
-            {formatNumber(selectedData?.totalSales)} 원
-            {/* <span className="text-xs font-normal ml-1" style={{ color: salesColor }}>원</span> */}
+          <div className="flex items-center gap-1 text-xs font-semibold mb-1" style={{ color: labelGray }}>
+            총 매출액
+            <span className="text-lg font-extrabold ml-2" style={{ color: salesColor }}>
+              {formatNumber(selectedData?.totalSales)}
+            </span>
+            <span className="text-xs font-normal ml-1" style={{ color: salesColor }}>원</span>
           </div>
         </div>
-        <div className="flex flex-col items-center bg-white border border-gray-100 rounded-2xl py-4 px-2 min-w-[110px]">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl mb-2" style={{ background: "#f3f4f6" }}>
+        <div className="flex flex-col items-center bg-white border-2 border-blue-400 rounded-2xl py-4 px-2 min-w-[110px]">
+          <div className="flex items-center justify-center w-10 h-10 mb-2">
             <span role="img" aria-label="주문" className="text-xl" style={{ color: orderColor }}>🛒</span>
           </div>
-          <div className="text-xs font-semibold mb-1" style={{ color: labelGray }}>주문 건수</div>
-          <div className="text-lg font-extrabold" style={{ color: orderColor }}>
-            {formatNumber(selectedData?.orderCount)}
+          <div className="flex items-center gap-1 text-xs font-semibold mb-1" style={{ color: labelGray }}>
+            주문 건수
+            <span className="text-lg font-extrabold ml-2" style={{ color: orderColor }}>
+              {formatNumber(selectedData?.orderCount)}
+            </span>
             <span className="text-xs font-normal ml-1" style={{ color: orderColor }}>건</span>
           </div>
         </div>
-        <div className="flex flex-col items-center bg-white border border-gray-100 rounded-2xl py-4 px-2 min-w-[110px]">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl mb-2" style={{ background: "#f3f4f6" }}>
+        <div className="flex flex-col items-center bg-white border-2 border-blue-400 rounded-2xl py-4 px-2 min-w-[110px]">
+          <div className="flex items-center justify-center w-10 h-10 mb-2">
             <span role="img" aria-label="상품" className="text-xl" style={{ color: itemColor }}>📦</span>
           </div>
-          <div className="text-xs font-semibold mb-1" style={{ color: labelGray }}>수량</div>
-          <div className="text-lg font-extrabold" style={{ color: itemColor }}>
-            {formatNumber(selectedData?.itemCount)}
+          <div className="flex items-center gap-1 text-xs font-semibold mb-1" style={{ color: labelGray }}>
+            수량
+            <span className="text-lg font-extrabold ml-2" style={{ color: itemColor }}>
+              {formatNumber(selectedData?.itemCount)}
+            </span>
             <span className="text-xs font-normal ml-1" style={{ color: itemColor }}>개</span>
           </div>
         </div>
       </div>
 
       {/* 차트 카드 */}
-      <div className="card bg-white border border-gray-100">
-        <div className="card-body">
+      <div className="card bg-white border border-gray-100  mx-auto">
+        <div className="card-body p-4">
           <h3 className="card-title text-lg mb-2 font-bold flex items-center gap-2">
             <span className="text-2xl align-middle" style={{ color: orderColor }}>📊</span>
             <span className="align-middle" style={{ color: "#222" }}>매출 추이</span>
           </h3>
-          <div style={{ width: "100%", height: 350 }}>
-            <ResponsiveContainer>
-              <LineChart data={data} margin={{ left: 40, right: 20, top: 20, bottom: 20 }}>
+          <div style={{ height: 450, maxWidth: 1100, margin: "0 auto" }}>
+            <ResponsiveContainer height={400}>
+              <LineChart data={data} margin={{ left: 20, right: 10, top: 20, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="dateKey"

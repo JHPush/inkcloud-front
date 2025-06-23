@@ -22,12 +22,13 @@ const VerifyEmail = ({
         setVerified(false);
         if (onTrySend && onTrySend() === false) return;
         try { 
-            SendVerificationEmail(email);
+            await SendVerificationEmail(email);
             setSuccess(true);
             setExpireTime(Date.now() + 5 * 60 * 1000); // 타이머 시작 시점 고정
             window.alert("입력한 메일로 인증번호가 발송되었습니다. 5분 안에 인증번호를 입력해주세요.");
             // setTimerKey(prev => prev + 1); // 타이머 리셋
         } catch (err) {
+            console.log("error:", err)
             if (err.response) {
                 if (err.response.status === 409) {
                     setError("이미 가입된 회원입니다.");

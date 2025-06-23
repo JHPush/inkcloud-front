@@ -93,7 +93,7 @@ const MonthlyStats = () => {
         className="border rounded px-2 py-1"
         max={`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`}
       />
-      <span className="text-xs text-gray-500">(선택한 월 기준 이전 12개월 표시)</span>
+      <span className="text-xs text-gray-500">(이전 12개월 표시)</span>
     </>
   );
 
