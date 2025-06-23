@@ -9,7 +9,7 @@ import { getAccessToken } from "../../utils/cookieUtils";
 import MemberOrdersComp from "../../components/Order/MemberOrdersComp";
 
 const MyPage = () => {
-  const [tab, setTab] = useState("info");
+  const [tab, setTab] = useState("order");
   const [blocked, setBlocked] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
