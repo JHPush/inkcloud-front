@@ -15,28 +15,27 @@ const ProductSortBar = () => {
   const navigate = useNavigate();
   const currentSort = searchParams.get("sortType") || "POPULAR";
 
-  const handleSortChange = (value) => {
+  const handleSortChange = (e) => {
+    const value = e.target.value;
     const newParams = new URLSearchParams(searchParams);
     newParams.set("sortType", value);
-    newParams.set("page", "0"); // 정렬 바꾸면 1페이지로 초기화
+    newParams.set("page", "0"); // 정렬 변경 시 1페이지로 초기화
     navigate(`/products/search?${newParams.toString()}`);
   };
 
   return (
-    <div className="flex items-center justify-end mb-4 space-x-2">
-      {SORT_OPTIONS.map((option) => (
-        <button
-          key={option.value}
-          onClick={() => handleSortChange(option.value)}
-          className={`px-3 py-1 rounded-md text-sm border ${
-            currentSort === option.value
-              ? "bg-black text-white"
-              : "bg-white text-gray-700 border-gray-300"
-          }`}
-        >
-          {option.label}
-        </button>
-      ))}
+    <div className="flex justify-end mb-4">
+      <select
+        value={currentSort}
+        onChange={handleSortChange}
+        className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+      >
+        {SORT_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
