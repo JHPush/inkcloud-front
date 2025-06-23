@@ -32,7 +32,6 @@ const ProductListPage = () => {
     setCategoryIds(ids);
     setKeyword(keywordFromParam);
 
-    // category만 있을 때 초기값 세팅
     if (ids.length > 0 && !searchParams.has("keyword")) {
       setSearchFields(DEFAULT_FIELDS);
     }
@@ -43,7 +42,8 @@ const ProductListPage = () => {
   const handleSearch = async (
     targetPage = 0,
     externalCategoryIds = categoryIds,
-    externalKeyword = keyword
+    externalKeyword = keyword,
+    shouldReset = true
   ) => {
     try {
       const params = {
@@ -60,10 +60,11 @@ const ProductListPage = () => {
       setPage(data?.products?.number ?? 0);
       setTotalPages(data?.products?.totalPages ?? 1);
 
-      // 검색 후 상태 초기화
-      setKeyword("");
-      setSearchFields(DEFAULT_FIELDS);
-      setCategoryIds([]);
+      if (shouldReset) {
+        setKeyword("");
+        setSearchFields(DEFAULT_FIELDS);
+        setCategoryIds([]);
+      }
     } catch (error) {
       console.error("❌ 검색 실패", error);
     }
@@ -137,7 +138,9 @@ const ProductListPage = () => {
           <ProductPagination
             page={page}
             totalPages={totalPages}
-            onPageChange={(p) => handleSearch(p)}
+            onPageChange={(p) =>
+              handleSearch(p, categoryIds, keyword, false) // 상태 초기화 방지
+            }
           />
         </div>
       </div>
