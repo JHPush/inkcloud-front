@@ -25,14 +25,14 @@ const ProductListPage = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
-  // ✅ URL에서 상태 세팅
+  // URL에서 상태 세팅
   useEffect(() => {
     const ids = searchParams.getAll("categoryIds");
     const keywordFromParam = searchParams.get("keyword") || "";
     const sortTypeFromParam = searchParams.get("sortType") || "POPULAR";
     const searchFieldsFromParam = searchParams.getAll("searchFields");
 
-    setCategoryIds(ids);
+    setCategoryIds([...new Set(ids)]);
     setKeyword(keywordFromParam);
     setSortType(sortTypeFromParam);
     setSearchFields(
@@ -42,7 +42,7 @@ const ProductListPage = () => {
     );
   }, [searchParams]);
 
-  // ✅ 상태가 모두 세팅된 뒤에 검색 실행
+  // 상태가 모두 세팅된 뒤에 검색 실행
   useEffect(() => {
     handleSearch(0, categoryIds, keyword, false);
   }, [categoryIds, keyword, searchFields, sortType]);
