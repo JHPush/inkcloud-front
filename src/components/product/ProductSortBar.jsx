@@ -1,69 +1,44 @@
 import React from "react";
-import { Search } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const ProductSearchBar = ({
-  keyword,
-  setKeyword,
-  searchFields,
-  categoryIds,
-  sortType,
-}) => {
+const ProductSortBar = ({ sortType, setSortType, keyword, searchFields, categoryIds }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSearch = () => {
+  const handleChange = (e) => {
+    const newSortType = e.target.value;
+    setSortType(newSortType);
+
     const params = new URLSearchParams();
-
     if (keyword) params.set("keyword", keyword);
-    if (sortType) params.set("sortType", sortType);
+    if (newSortType) params.set("sortType", newSortType);
 
-    // 중복 제거 후 검색 필드 추가
-    const fieldsToUse =
-      searchFields && searchFields.length > 0
-        ? [...new Set(searchFields)]
-        : ["name", "author", "publisher", "isbn"];
+    // ✅ searchFields 기본값 처리
+    const fieldsToUse = searchFields.length > 0 ? searchFields : ["name", "author", "publisher", "isbn"];
     fieldsToUse.forEach((field) => params.append("searchFields", field));
 
-    // 중복 제거 후 카테고리 추가
-    [...new Set(categoryIds)].forEach((id) =>
-      params.append("categoryIds", id)
-    );
+    // ✅ categoryIds는 상황에 따라 유지
+    categoryIds.forEach((id) => params.append("categoryIds", id));
 
     navigate(`${location.pathname}?${params.toString()}`);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch();
-  };
-
   return (
-    <div className="flex justify-center w-full mb-6">
-      <div className="relative w-full max-w-2xl">
-        <input
-          type="text"
-          placeholder="도서명, 저자, 출판사 검색..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full py-3 pl-5 pr-12 rounded-full 
-                     bg-white text-gray-800 text-base 
-                     placeholder:text-gray-400 
-                     border border-gray-300 
-                     shadow-md focus:outline-none 
-                     focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          onClick={handleSearch}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 
-                     bg-black text-white p-2 rounded-full 
-                     hover:bg-gray-800 transition-all"
-        >
-          <Search size={18} />
-        </button>
-      </div>
+    <div className="flex justify-between items-center mb-6">
+      <h2 className="text-xl font-semibold text-gray-800">📚 검색 결과</h2>
+      <select
+        className="border border-gray-300 rounded-full px-4 py-2 text-sm shadow-sm focus:outline-none"
+        value={sortType}
+        onChange={handleChange}
+      >
+        <option value="POPULAR">인기순</option>
+        <option value="LATEST">최신순</option>
+        <option value="RATING">평점순</option>
+        <option value="PRICE_HIGH">높은 가격순</option>
+        <option value="PRICE_LOW">낮은 가격순</option>
+      </select>
     </div>
   );
 };
 
-export default ProductSearchBar;
+export default ProductSortBar;

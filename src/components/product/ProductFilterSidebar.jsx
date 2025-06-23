@@ -18,6 +18,7 @@ const ProductFilterSidebar = ({
   categoryIds,
   setCategoryIds,
   categories,
+  onSearch,
   keyword,
   sortType,
 }) => {
@@ -29,11 +30,11 @@ const ProductFilterSidebar = ({
 
     if (keyword) params.set("keyword", keyword);
     if (sortType) params.set("sortType", sortType);
-    [...new Set(searchFields)].forEach((field) => params.append("searchFields", field));
-    [...new Set(categoryIds)].forEach((id) => params.append("categoryIds", id));
+    searchFields.forEach((field) => params.append("searchFields", field));
+    categoryIds.forEach((id) => params.append("categoryIds", id));
 
-    // navigate만 수행: searchParams가 바뀌면 ProductListPage에서 검색 수행됨
     navigate(`${location.pathname}?${params.toString()}`);
+    onSearch(); // 즉시 검색 수행
   };
 
   return (

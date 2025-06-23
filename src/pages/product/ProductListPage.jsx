@@ -28,22 +28,22 @@ const ProductListPage = () => {
   useEffect(() => {
     const ids = searchParams.getAll("categoryIds");
     const keywordFromParam = searchParams.get("keyword") || "";
-    const sortTypeFromParam = searchParams.get("sortType") || "POPULAR";
-    const searchFieldsFromParam = searchParams.getAll("searchFields");
 
     setCategoryIds(ids);
     setKeyword(keywordFromParam);
-    setSortType(sortTypeFromParam);
-    setSearchFields(searchFieldsFromParam.length > 0 ? searchFieldsFromParam : DEFAULT_FIELDS);
 
-    handleSearch(0, ids, keywordFromParam, false); // 초기 진입도 상태 유지
+    // category만 있을 때 초기값 세팅
+    if (ids.length > 0 && !searchParams.has("keyword")) {
+      setSearchFields(DEFAULT_FIELDS);
+    }
+
+    handleSearch(0, ids, keywordFromParam);
   }, [searchParams]);
 
   const handleSearch = async (
     targetPage = 0,
     externalCategoryIds = categoryIds,
-    externalKeyword = keyword,
-    shouldReset = true
+    externalKeyword = keyword
   ) => {
     try {
       const params = {
@@ -60,11 +60,10 @@ const ProductListPage = () => {
       setPage(data?.products?.number ?? 0);
       setTotalPages(data?.products?.totalPages ?? 1);
 
-      if (shouldReset) {
-        setKeyword("");
-        setSearchFields(DEFAULT_FIELDS);
-        setCategoryIds([]);
-      }
+      // 검색 후 상태 초기화
+      setKeyword("");
+      setSearchFields(DEFAULT_FIELDS);
+      setCategoryIds([]);
     } catch (error) {
       console.error("❌ 검색 실패", error);
     }
@@ -107,7 +106,7 @@ const ProductListPage = () => {
           categories={categories}
           keyword={keyword}
           sortType={sortType}
-          onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
+          onSearch={() => handleSearch(0)}
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
@@ -116,7 +115,7 @@ const ProductListPage = () => {
             searchFields={searchFields}
             categoryIds={categoryIds}
             sortType={sortType}
-            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
+            onSearch={() => handleSearch(0)}
           />
           <ProductSortBar
             sortType={sortType}
@@ -124,7 +123,7 @@ const ProductListPage = () => {
             keyword={keyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
-            onSearch={() => handleSearch(0, categoryIds, keyword, false)} // 초기화 방지
+            onSearch={() => handleSearch(0)}
           />
           {products.map((product) => (
             <ProductItem
@@ -138,9 +137,7 @@ const ProductListPage = () => {
           <ProductPagination
             page={page}
             totalPages={totalPages}
-            onPageChange={(p) =>
-              handleSearch(p, categoryIds, keyword, false) // 초기화 방지
-            }
+            onPageChange={(p) => handleSearch(p)}
           />
         </div>
       </div>
