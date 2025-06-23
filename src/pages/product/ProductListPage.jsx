@@ -66,7 +66,7 @@ const ProductListPage = () => {
       queryParams.append("sortType", externalSortType);
       queryParams.append("keyword", externalKeyword);
 
-      navigate(`/products/search?${queryParams.toString()}`);
+      //navigate(`/products/search?${queryParams.toString()}`);
 
       const data = await fetchProducts(params);
       setProducts(data?.products?.content ?? []);
@@ -116,7 +116,7 @@ const ProductListPage = () => {
           keyword={keyword}
           sortType={sortType}
           onSearch={(catIds, fields) => handleSearch(0, catIds, fields, keyword, sortType)
-  }
+          }
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
