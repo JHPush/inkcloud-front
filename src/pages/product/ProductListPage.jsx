@@ -27,52 +27,43 @@ const ProductListPage = () => {
 
   useEffect(() => {
     const ids = searchParams.getAll("categoryIds");
-    const fields = searchParams.getAll("searchFields");
     const keywordFromParam = searchParams.get("keyword") || "";
-    const sort = searchParams.get("sortType") || "POPULAR";
 
     setCategoryIds(ids);
-    setSearchFields(fields.length ? fields : DEFAULT_FIELDS);
     setKeyword(keywordFromParam);
-    setSortType(sort);
 
-    handleSearch(0, ids, fields, keywordFromParam, sort);
+    // category만 있을 때 초기값 세팅
+    if (ids.length > 0 && !searchParams.has("keyword")) {
+      setSearchFields(DEFAULT_FIELDS);
+    }
+
+    handleSearch(0, ids, keywordFromParam);
   }, [searchParams]);
 
   const handleSearch = async (
     targetPage = 0,
     externalCategoryIds = categoryIds,
-    externalSearchFields = searchFields,
-    externalKeyword = keyword,
-    externalSortType = sortType
+    externalKeyword = keyword
   ) => {
     try {
       const params = {
         keyword: externalKeyword,
-        searchFields: externalSearchFields,
+        searchFields,
         categoryIds: externalCategoryIds,
-        sortType: externalSortType,
+        sortType,
         page: targetPage,
         size: 10,
       };
-
-      const queryParams = new URLSearchParams();
-      externalCategoryIds.forEach((id) =>
-        queryParams.append("categoryIds", id)
-      );
-      externalSearchFields.forEach((field) =>
-        queryParams.append("searchFields", field)
-      );
-      queryParams.append("sortType", externalSortType);
-      queryParams.append("keyword", externalKeyword);
-
-      //navigate(`/products/search?${queryParams.toString()}`);
-
       const data = await fetchProducts(params);
       setProducts(data?.products?.content ?? []);
       setCategories(data?.categoryCounts ?? []);
       setPage(data?.products?.number ?? 0);
       setTotalPages(data?.products?.totalPages ?? 1);
+
+      // 검색 후 상태 초기화
+      setKeyword("");
+      setSearchFields(DEFAULT_FIELDS);
+      setCategoryIds([]);
     } catch (error) {
       console.error("❌ 검색 실패", error);
     }
@@ -115,24 +106,24 @@ const ProductListPage = () => {
           categories={categories}
           keyword={keyword}
           sortType={sortType}
-          onSearch={(catIds, fields) => handleSearch(0, catIds, fields, keyword, sortType)
-          }
+          onSearch={() => handleSearch(0)}
         />
         <div className="w-3/4 p-6">
           <ProductSearchBar
             keyword={keyword}
             setKeyword={setKeyword}
+            searchFields={searchFields}
+            categoryIds={categoryIds}
+            sortType={sortType}
             onSearch={() => handleSearch(0)}
           />
           <ProductSortBar
             sortType={sortType}
-            setSortType={(val) => {
-              setSortType(val);
-              handleSearch(0, categoryIds, searchFields, keyword, val);
-            }}
+            setSortType={setSortType}
             keyword={keyword}
             searchFields={searchFields}
             categoryIds={categoryIds}
+            onSearch={() => handleSearch(0)}
           />
           {products.map((product) => (
             <ProductItem
@@ -146,9 +137,7 @@ const ProductListPage = () => {
           <ProductPagination
             page={page}
             totalPages={totalPages}
-            onPageChange={(p) =>
-              handleSearch(p, categoryIds, searchFields, keyword, sortType)
-            }
+            onPageChange={(p) => handleSearch(p)}
           />
         </div>
       </div>
