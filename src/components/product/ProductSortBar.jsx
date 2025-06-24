@@ -6,8 +6,8 @@ const SORT_OPTIONS = [
   { value: "POPULAR", label: "인기순" },
   { value: "LATEST", label: "최신순" },
   { value: "RATING", label: "평점순" },
-  { value: "HIGH_PRICE", label: "높은 가격순" },
-  { value: "LOW_PRICE", label: "낮은 가격순" },
+  { value: "PRICE_HIGH", label: "높은 가격순" },
+  { value: "PRICE_LOW", label: "낮은 가격순" },
 ];
 
 const ProductSortBar = () => {
