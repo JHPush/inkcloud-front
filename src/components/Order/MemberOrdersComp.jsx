@@ -142,7 +142,9 @@ const MemberOrdersComp = () => {
   // 날짜 포맷팅
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR', {
+    const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+    return kstDate.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
