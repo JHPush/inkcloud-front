@@ -351,13 +351,14 @@ const OrderComp = () => {
                                                 <div className="text-lg font-semibold w-24 text-right text-gray-700">
                                                     {(item.price).toLocaleString()}원
                                                 </div>
+                                                <span className="w-6 text-center">{item.quantity}</span>
+
                                                 {/* <button
                                                     className="px-2 py-1 rounded border text-sm"
                                                     onClick={() => decreaseQuantity(item.id)}
                                                 >
                                                     -
                                                 </button>
-                                                <span className="w-6 text-center">{item.quantity}</span>
                                                 <button
                                                     className="px-2 py-1 rounded border text-sm"
                                                     onClick={() => increaseQuantity(item.id)}
