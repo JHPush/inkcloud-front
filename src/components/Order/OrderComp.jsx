@@ -351,7 +351,6 @@ const OrderComp = () => {
                                                 <div className="text-lg font-semibold w-24 text-right text-gray-700">
                                                     {(item.price).toLocaleString()}원
                                                 </div>
-                                                <span className="w-6 text-center">{item.quantity}</span>
 
                                                 {/* <button
                                                     className="px-2 py-1 rounded border text-sm"
@@ -377,6 +376,8 @@ const OrderComp = () => {
 
                                             {/* 합 금액을 버튼 아래 배치 */}
                                             <div className="flex self-end text-sm font-semibold text-gray-700 ">
+                                                <span className="w-6 text-center">수량 : {item.quantity}개</span>
+
                                                 합 {(item.price * item.quantity).toLocaleString()}원
                                             </div>
                                         </div>
