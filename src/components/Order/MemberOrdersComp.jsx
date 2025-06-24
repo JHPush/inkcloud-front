@@ -44,7 +44,7 @@ const MemberOrdersComp = () => {
 
     switch (type) {
       case "오늘":
-        start = new Date(today.setHours(23, 59, 59, 999));
+        start = new Date(today.setHours(23, 59, 59, 999)); 
         end = new Date(today.setHours(23, 59, 59, 999));
         break;
       case "이번주":
