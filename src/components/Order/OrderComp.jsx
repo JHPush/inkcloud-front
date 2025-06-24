@@ -364,14 +364,14 @@ const OrderComp = () => {
                                                 >
                                                     +
                                                 </button> */}
-                                                {cartItems.length > 1 ? (
+                                                {/* {cartItems.length > 1 ? (
                                                     <button
                                                         className="ml-2 text-red-500 hover:text-red-700"
                                                         onClick={() => removeItem(item.id)}
                                                     >
                                                         🗑
                                                     </button>
-                                                ) : null}
+                                                ) : null} */}
                                             </div>
 
                                             {/* 합 금액을 버튼 아래 배치 */}
