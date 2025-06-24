@@ -361,7 +361,7 @@ const OrderComp = () => {
                                                 </button>
                                                 <button
                                                     className="px-2 py-1 rounded border text-sm"
-                                                    onClick={() => increaseQuantity(item.id)}
+                                                    onClick={() => increaseQuantity(item.id)} 
                                                 >
                                                     +
                                                 </button> */}
